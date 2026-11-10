@@ -1,0 +1,15 @@
+/* Example theme. Use with `theme: midnight`. Themes only change tokens. */
+
+:root {
+  --deck-bg: #14161a;
+  --deck-panel: #1e2127;
+  --deck-ink: #f3f1ec;
+  --deck-ink-soft: #c3bfb6;
+  --deck-ink-faint: #8a847c;
+  --deck-rule: #2c2f36;
+  --deck-code-bg: rgba(243, 241, 236, 0.1);
+
+  --deck-accent: #f2b45c;
+  --deck-accent-2: #7fb2ff;
+  --deck-accent-3: #9fd8a8;
+}

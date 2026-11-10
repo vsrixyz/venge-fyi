@@ -1,0 +1,103 @@
+/* Deck values. Themes in themes/ override these.
+   Sizes are px on the fixed 1920×1080 frame; don't use vw/vh. */
+
+:root {
+  /* Insets. Some slide types set their own. */
+  --deck-inset-x: 128px;
+  --deck-inset-y: 64px;
+  --deck-split-inset-x: 96px;
+  --deck-split-inset-y: 90px;
+
+  /* Gaps between blocks */
+  --deck-gap-title: 64px;    /* cover */
+  --deck-gap-headline: 50px; /* big */
+  --deck-gap-prose: 32px;    /* default */
+  --deck-gap-figure: 40px;   /* figure text column, split halves */
+  --deck-gap-column: 50px;   /* figure: text to media */
+  --deck-gap-cards: 32px;
+  --deck-gap-columns: 64px;
+
+  /* Colours */
+  --deck-bg: #f7f5f2;
+  --deck-panel: #fffdfa;
+  --deck-ink: #1f1d1b;
+  --deck-ink-soft: #56524d;
+  --deck-ink-faint: #8a847c;
+  --deck-rule: #e4e0d9;
+  --deck-display-ink: var(--deck-ink); /* headings */
+
+  --deck-accent: #12467A;   /* front matter `accent:` overrides this */
+  --deck-accent-2: #e1361f;
+  --deck-accent-3: #fbbe25;
+
+  --deck-wash: rgba(20, 18, 16, 0.55); /* image overlay */
+  --deck-shadow: rgba(31, 29, 27, 0.14); /* overview cards */
+
+  /* Warnings (dev, source: true) and load errors */
+  --deck-warn: #c0392b;
+  --deck-warn-ink: #fff;
+
+  /* Code. The Markdown panel (source: true) uses these too. */
+  --deck-code-bg: rgba(31, 29, 27, 0.07); /* inline */
+  --deck-code-panel: #22201d;             /* blocks */
+  --deck-code-ink: #ece8e1;
+  --deck-code-comment: #8f887e;
+  --deck-code-keyword: #e8859b;
+  --deck-code-string: #93b0f0;
+  --deck-code-number: #f0c766;
+
+  /* Fonts */
+  --deck-font-display: Georgia, serif;
+  --deck-font-base: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --deck-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Type sizes. The slide type picks the heading size, not the tag. */
+  --deck-text-title: 200px;    /* cover # */
+  --deck-text-headline: 104px; /* big # */
+  --deck-text-prose: 56px;     /* ## titles; cover and big ## */
+  --deck-text-figure: 48px;    /* figure and split ## */
+  --deck-text-label: 36px;     /* card label, column ### */
+  --deck-text-body: 34px;
+  --deck-text-meta: 24px;      /* cover and big ### */
+  --deck-text-eyebrow: 22px;   /* #### */
+  --deck-text-quote-mark: 160px;
+
+  /* Leading and tracking */
+  --deck-leading-title: 0.82;
+  --deck-leading-display: 1.05;
+  --deck-leading-body: 1.5;
+  --deck-track-display: -0.02em;
+  --deck-track-eyebrow: 0.18em;
+  --deck-track-meta: 0.12em;
+
+  /* Widths */
+  --deck-measure-prose: 1040px;
+  --deck-measure-figure: 480px;
+  --deck-measure-quote: 1280px;
+  --deck-measure-chart: 1664px;
+
+  /* Space inside an element */
+  --deck-space-xs: 12px;
+  --deck-space-s: 20px;
+  --deck-space-m: 32px;
+
+  /* Overview (Esc) */
+  --deck-overview-mix: 45%;
+  --deck-overview-drift: 24s;
+}
+
+/* theme-dark, and the text on image overlay */
+.reveal section.theme-dark,
+.reveal section.image.overlay {
+  --deck-ink: #f7f5f2;
+  --deck-ink-soft: #d9d4cd;
+  --deck-ink-faint: rgba(247, 245, 242, 0.6);
+  --deck-rule: rgba(247, 245, 242, 0.24);
+  --deck-panel: rgba(255, 255, 255, 0.06);
+  --deck-code-bg: rgba(247, 245, 242, 0.12);
+  --deck-display-ink: #f7f5f2;
+}
+
+.reveal section.theme-dark {
+  --deck-bg: #1f1d1b;
+}
