@@ -1,0 +1,51 @@
+/* Signal: white, black and one loud colour, all sans. Use with `theme: signal`.
+   Written from the README's token tables only. */
+
+:root {
+  --deck-bg: #ffffff;
+  --deck-panel: #f2f2f0;
+  --deck-ink: #0b0b0c;
+  --deck-ink-soft: #3a3a3d;
+  --deck-ink-faint: #7a7a80;
+  --deck-rule: #dcdcdf;
+  --deck-display-ink: #0b0b0c;
+
+  --deck-accent: #ff4f1f;
+  --deck-accent-2: #1f5bff;
+  --deck-accent-3: #0b0b0c;
+
+  --deck-wash: rgba(11, 11, 12, 0.6);
+  --deck-shadow: rgba(11, 11, 12, 0.18);
+
+  --deck-warn: #d0021b;
+  --deck-warn-ink: #ffffff;
+
+  --deck-code-bg: rgba(11, 11, 12, 0.06);
+  --deck-code-panel: #0b0b0c;
+  --deck-code-ink: #f2f2f0;
+  --deck-code-comment: #7a7a80;
+  --deck-code-keyword: #ff8a66;
+  --deck-code-string: #8fb0ff;
+  --deck-code-number: #ffd23f;
+
+  --deck-font-display: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --deck-track-display: -0.04em;
+  --deck-leading-title: 0.9;
+  --deck-text-title: 180px;
+}
+
+.reveal section.theme-dark,
+.reveal section.image.overlay {
+  --deck-ink: #ffffff;
+  --deck-ink-soft: #c9c9cc;
+  --deck-ink-faint: rgba(255, 255, 255, 0.6);
+  --deck-rule: rgba(255, 255, 255, 0.22);
+  --deck-panel: rgba(255, 255, 255, 0.08);
+  --deck-code-bg: rgba(255, 255, 255, 0.14);
+  --deck-display-ink: #ffffff;
+}
+
+.reveal section.theme-dark {
+  --deck-bg: #ff4f1f;
+}

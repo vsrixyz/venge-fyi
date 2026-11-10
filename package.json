@@ -1,0 +1,25 @@
+{
+  "name": "venge-fyi",
+  "version": "0.1.0",
+  "description": "Show a markdown file as a slide deck on a static site, styled with your own theme.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "venge-fyi": "bin/venge-fyi.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "lib",
+    "src/deck-config.js"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "build": "node bin/venge-fyi.js build",
+    "dist": "node -e \"import('./lib/dist.js').then(m => m.writeDist())\"",
+    "test": "node --test"
+  }
+}

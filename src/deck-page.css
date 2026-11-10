@@ -1,0 +1,115 @@
+/* Page around the deck: load fade, Markdown panel, errors. */
+
+/* Hide slides until deck-chrome.js has built them. */
+.reveal .slides {
+  opacity: 0;
+}
+.reveal.deck-ready .slides {
+  opacity: 1;
+  transition: opacity 180ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal.deck-ready .slides {
+    transition: none;
+  }
+}
+
+/* Markdown panel (source: true). M toggles it. */
+body.has-source {
+  --source-width: clamp(360px, 34vw, 640px);
+  margin: 0;
+  background: var(--deck-code-panel);
+}
+body.has-source .reveal {
+  position: fixed;
+  inset: 0 var(--source-width) 0 0;
+  width: auto;
+  height: auto;
+}
+body.has-source.source-hidden .reveal { inset-inline-end: 0; }
+
+.deck-source {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 50;
+  box-sizing: border-box;
+  width: var(--source-width);
+  overflow-y: auto;
+  padding: 1.25rem 1.25rem 2rem;
+  background: var(--deck-code-panel);
+  color: var(--deck-code-ink);
+  font-family: var(--deck-font-base);
+  font-size: 0.9rem;
+}
+body.source-hidden .deck-source { display: none; }
+
+.deck-source__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.9rem;
+  margin-block-end: 1rem;
+}
+.deck-source__count {
+  font-family: var(--deck-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--deck-code-comment);
+}
+.deck-source__type {
+  font-family: var(--deck-font-mono);
+  font-size: 0.85rem;
+  color: var(--deck-code-number);
+}
+.deck-source button {
+  margin-inline-start: auto;
+  font: inherit;
+  font-size: 0.75rem;
+  color: var(--deck-code-ink);
+  background: none;
+  border: 1px solid var(--deck-code-comment);
+  border-radius: 4px;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+}
+.deck-source__check {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  background: var(--deck-warn);
+  color: var(--deck-warn-ink);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.deck-source__code {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--deck-font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--deck-code-ink);
+}
+
+@media (max-width: 900px) {
+  body.has-source { --source-width: 0px; }
+  body.has-source .reveal { inset: 0 0 45vh 0; }
+  .deck-source { inset: auto 0 0 0; width: auto; height: 45vh; }
+  body.source-hidden .reveal { inset: 0; }
+}
+
+/* Load or parse failure (deck-start.js). */
+.deck-error {
+  position: fixed;
+  inset: 1rem 1rem auto;
+  z-index: 60;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  font-family: var(--deck-font-mono);
+  font-size: 0.9rem;
+  background: var(--deck-warn);
+  color: var(--deck-warn-ink);
+}

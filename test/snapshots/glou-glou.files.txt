@@ -1,0 +1,23 @@
+assets/diagram.svg
+assets/screenshot.png
+assets/slide-mix.csv
+assets/slides-per-quarter.csv
+assets/square.jpg
+assets/tall.jpg
+assets/two-teams.csv
+assets/wide-1.jpg
+assets/wide-2.jpg
+assets/wide-3.jpg
+assets/wide-4.jpg
+assets/wide-5.jpg
+index.html
+runtime/chart.umd.min.js
+runtime/deck.css
+runtime/deck.js
+runtime/licenses/chartjs-LICENSE.md
+runtime/licenses/echarts-LICENSE
+runtime/licenses/echarts-NOTICE
+runtime/licenses/highlightjs-LICENSE
+runtime/licenses/marked-LICENSE.md
+runtime/licenses/reveal-LICENSE
+warning: not found: assets/not-here.jpg
