@@ -12,7 +12,7 @@ description: Showing how every slide in the system works.
 # Blank uses the theme's --deck-accent. Quote colours: '#12467A'.
 accent:
 
-# A built-in theme name (midnight, signal), or a path to your own CSS file.
+# A built-in theme name (dark, signal), or a path to your own CSS file.
 # Blank uses the default look.
 theme:
 
@@ -43,7 +43,7 @@ source: true
 
 ---
 
-<!-- .slide: class="cover theme-dark" -->
+<!-- .slide: class="cover dark" -->
 
 #### #### Use h4 for eyebrows
 
@@ -55,7 +55,7 @@ source: true
 
 ---
 
-<!-- .slide: class="big theme-dark" -->
+<!-- .slide: class="big dark" -->
 
 # Part 1: Big
 
@@ -97,11 +97,11 @@ If you need more than that, use a prose slide instead.
 
 ---
 
-<!-- .slide: class="theme-dark" -->
+<!-- .slide: class="dark" -->
 
 # A dark big slide
 
-### theme-dark
+### dark
 
 ---
 
@@ -113,7 +113,12 @@ Prose is for more than a few sentences. The text sits in one column and lines up
 
 - Use it for steps or notes
 - It can hold lists, tables and code
-- It is the only type that scrolls
+- It is the only type that scrolls  
+  - Lists look like this
+    - Level down
+      - Level down again
+
+You can add more text here.
 
 ---
 
@@ -123,12 +128,12 @@ Prose is for more than a few sentences. The text sits in one column and lines up
 
 A table on prose works well when you need to compare a few things.
 
-| Type | Use it for |
-| --- | --- |
-| big | One short point |
-| prose | Longer text |
-| figure | Text about one picture |
-| image | Photos |
+| Type | Use it for | Another column |
+| --- | --- | --- |
+| big | One short point | More text |
+| prose | Longer text | More text |
+| figure | Text about one picture | More text |
+| image | Photos | More text |
 
 ---
 
@@ -154,15 +159,11 @@ A short line of text.
 
 ## Prose that runs long
 
-This slide has more text than fits on the screen. Scroll down to read the rest. A fade at the bottom shows there is more.
-
-Each paragraph here is just filler so the slide runs long. It does not say anything new.
-
-Prose is the only slide type that is allowed to scroll. Every other type shows a red warning when its content does not fit.
+This slide has more text than fits on the screen. Scroll down to read the rest. A fade at the bottom shows there is more. Each paragraph here is just filler so the slide runs long. It does not say anything new. Prose is the only slide type that is allowed to scroll. Every other type shows a red warning when its content does not fit.
 
 If a slide feels too long, try to split it into two slides. Most of the time, two short slides are easier to follow than one long one.
 
-This is the last paragraph. If you can read it, scrolling works.
+**This is bold text.**
 
 ---
 
@@ -327,7 +328,7 @@ Each person builds slides their own way, so no two decks look the same.
 
 ---
 
-<!-- .slide: class="split theme-dark" -->
+<!-- .slide: class="split dark" -->
 
 ## Light
 
@@ -335,7 +336,7 @@ The usual look, on the page colour.
 
 ## Dark
 
-The same layout with `theme-dark`.
+The same layout with `dark`.
 
 ---
 

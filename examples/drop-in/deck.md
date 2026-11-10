@@ -1,6 +1,6 @@
 ---
 title: Drop-in deck
-theme: midnight
+theme: dark
 ---
 
 <!-- .slide: class="cover" -->

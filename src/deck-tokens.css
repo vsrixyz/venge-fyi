@@ -2,44 +2,27 @@
    Sizes are px on the fixed 1920×1080 frame; don't use vw/vh. */
 
 :root {
-  /* Insets. Some slide types set their own. */
-  --deck-inset-x: 128px;
-  --deck-inset-y: 64px;
-  --deck-split-inset-x: 96px;
-  --deck-split-inset-y: 90px;
-
-  /* Gaps between blocks */
-  --deck-gap-title: 64px;    /* cover */
-  --deck-gap-headline: 50px; /* big */
-  --deck-gap-prose: 32px;    /* default */
-  --deck-gap-figure: 40px;   /* figure text column, split halves */
-  --deck-gap-column: 50px;   /* figure: text to media */
-  --deck-gap-cards: 32px;
-  --deck-gap-columns: 64px;
-
-  /* Colours */
+  /* Colours. Set bg, panel and ink; the greys mix from them (below). */
   --deck-bg: #f7f5f2;
   --deck-panel: #fffdfa;
   --deck-ink: #1f1d1b;
-  --deck-ink-soft: #56524d;
-  --deck-ink-faint: #8a847c;
-  --deck-rule: #e4e0d9;
-  --deck-display-ink: var(--deck-ink); /* headings */
 
   --deck-accent: #12467A;   /* front matter `accent:` overrides this */
   --deck-accent-2: #e1361f;
   --deck-accent-3: #fbbe25;
 
+  /* Dark: `dark` slides, image overlays and `theme: dark`. Accents lighten to read on dark. */
+  --deck-dark-bg: #1f1d1b;
+  --deck-dark-panel: rgba(255, 255, 255, 0.06);
+  --deck-dark-ink: #f7f5f2;
+  --deck-dark-accent: color-mix(in oklab, var(--deck-accent) 60%, #fff);
+  --deck-dark-accent-2: color-mix(in oklab, var(--deck-accent-2) 60%, #fff);
+  --deck-dark-accent-3: color-mix(in oklab, var(--deck-accent-3) 60%, #fff);
+
   --deck-wash: rgba(20, 18, 16, 0.55); /* image overlay */
-  --deck-shadow: rgba(31, 29, 27, 0.14); /* overview cards */
 
-  /* Warnings (dev, source: true) and load errors */
-  --deck-warn: #c0392b;
-  --deck-warn-ink: #fff;
-
-  /* Code. The Markdown panel (source: true) uses these too. */
-  --deck-code-bg: rgba(31, 29, 27, 0.07); /* inline */
-  --deck-code-panel: #22201d;             /* blocks */
+  /* Code blocks. The Markdown panel (source: true) uses these too. */
+  --deck-code-panel: #22201d;
   --deck-code-ink: #ece8e1;
   --deck-code-comment: #8f887e;
   --deck-code-keyword: #e8859b;
@@ -47,57 +30,59 @@
   --deck-code-number: #f0c766;
 
   /* Fonts */
-  --deck-font-display: Georgia, serif;
-  --deck-font-base: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --deck-font-base: sans-serif;
+  --deck-font-display: var(--deck-font-base);
   --deck-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --deck-weight-display: 700;
 
   /* Type sizes. The slide type picks the heading size, not the tag. */
-  --deck-text-title: 200px;    /* cover # */
-  --deck-text-headline: 104px; /* big # */
-  --deck-text-prose: 56px;     /* ## titles; cover and big ## */
-  --deck-text-figure: 48px;    /* figure and split ## */
-  --deck-text-label: 36px;     /* card label, column ### */
+  --deck-text-title: 200px;        /* cover # */
+  --deck-text-headline: 104px;     /* big #, image */
+  --deck-text-heading: 56px;       /* other #/##, subheads, big quotes */
+  --deck-text-heading-small: 48px; /* figure and split */
   --deck-text-body: 34px;
-  --deck-text-meta: 24px;      /* cover and big ### */
-  --deck-text-eyebrow: 22px;   /* #### */
-  --deck-text-quote-mark: 160px;
+  --deck-text-small: 22px;         /* labels: ####, cover ###, table headers */
 
-  /* Leading and tracking */
   --deck-leading-title: 0.82;
   --deck-leading-display: 1.05;
+  --deck-leading-snug: 1.25;       /* default; ### and labels */
   --deck-leading-body: 1.5;
   --deck-track-display: -0.02em;
-  --deck-track-eyebrow: 0.18em;
-  --deck-track-meta: 0.12em;
+  --deck-track-caps: 0.18em;
 
-  /* Widths */
+  /* Space. Set --deck-space-m and the rest follow. */
+  --deck-space-m: 32px;
+  --deck-space-xs: calc(var(--deck-space-m) * 0.375);
+  --deck-space-s: calc(var(--deck-space-m) * 0.625);
+  --deck-space-l: calc(var(--deck-space-m) * 1.5);
+  --deck-space-xl: calc(var(--deck-space-m) * 2);
+  --deck-inset-x: calc(var(--deck-space-m) * 4);
+  --deck-inset-y: calc(var(--deck-space-m) * 2);
+  --deck-inset-tight: calc(var(--deck-space-m) * 3); /* figure, split */
+
   --deck-measure-prose: 1040px;
   --deck-measure-figure: 480px;
-  --deck-measure-quote: 1280px;
-  --deck-measure-chart: 1664px;
 
-  /* Space inside an element */
-  --deck-space-xs: 12px;
-  --deck-space-s: 20px;
-  --deck-space-m: 32px;
-
-  /* Overview (Esc) */
-  --deck-overview-mix: 45%;
-  --deck-overview-drift: 24s;
+  --deck-radius: 8px;
 }
 
-/* theme-dark, and the text on image overlay */
-.reveal section.theme-dark,
+/* A dark slide swaps in the dark values. */
+.reveal section.dark,
 .reveal section.image.overlay {
-  --deck-ink: #f7f5f2;
-  --deck-ink-soft: #d9d4cd;
-  --deck-ink-faint: rgba(247, 245, 242, 0.6);
-  --deck-rule: rgba(247, 245, 242, 0.24);
-  --deck-panel: rgba(255, 255, 255, 0.06);
-  --deck-code-bg: rgba(247, 245, 242, 0.12);
-  --deck-display-ink: #f7f5f2;
+  --deck-bg: var(--deck-dark-bg);
+  --deck-panel: var(--deck-dark-panel);
+  --deck-ink: var(--deck-dark-ink);
+  --deck-accent: var(--deck-dark-accent);
+  --deck-accent-2: var(--deck-dark-accent-2);
+  --deck-accent-3: var(--deck-dark-accent-3);
 }
 
-.reveal section.theme-dark {
-  --deck-bg: #1f1d1b;
+/* Worked out from ink and bg on every slide, so they follow light and dark.
+   Don't set these in a theme. */
+:root,
+.reveal .slides section {
+  --deck-ink-soft: color-mix(in oklab, var(--deck-ink) 76%, var(--deck-bg));
+  --deck-ink-faint: color-mix(in oklab, var(--deck-ink) 52%, var(--deck-bg));
+  --deck-rule: color-mix(in oklab, var(--deck-ink) 12%, var(--deck-bg));
+  --deck-code-bg: color-mix(in oklab, var(--deck-ink) 9%, transparent);
 }

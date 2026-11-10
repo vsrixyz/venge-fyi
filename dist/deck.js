@@ -170,7 +170,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
   // Old names.
   const ALIASES = {title: 'cover', headline: 'big'};
 
-  const MODIFIERS = ['theme-dark', 'is-reverse', 'overlay'];
+  const MODIFIERS = ['dark', 'is-reverse', 'overlay'];
 
   // Added by Reveal or this file.
   const RUNTIME = [
@@ -734,11 +734,25 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     return getComputedStyle(el).getPropertyValue(name).trim();
   }
 
+  // Colour tokens may be color-mix() or oklch(); Chart.js needs rgba().
+  const pixel = document.createElement('canvas').getContext('2d', {willReadFrequently: true});
+  function colour(el, name) {
+    const probe = document.createElement('span');
+    probe.style.color = `var(${name})`;
+    el.appendChild(probe);
+    pixel.clearRect(0, 0, 1, 1);
+    pixel.fillStyle = getComputedStyle(probe).color;
+    probe.remove();
+    pixel.fillRect(0, 0, 1, 1);
+    const [r, g, b, a] = pixel.getImageData(0, 0, 1, 1).data;
+    return `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(3)})`;
+  }
+
   function palette(el) {
     return [
-      token(el, '--deck-accent'),
-      token(el, '--deck-accent-2'),
-      token(el, '--deck-accent-3')
+      colour(el, '--deck-accent'),
+      colour(el, '--deck-accent-2'),
+      colour(el, '--deck-accent-3')
     ];
   }
 
@@ -853,8 +867,8 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 
   // Per chart, since light and dark slides can share a deck.
   function themed(config, el) {
-    const ink = token(el, '--deck-ink-faint');
-    const rule = token(el, '--deck-rule');
+    const ink = colour(el, '--deck-ink-faint');
+    const rule = colour(el, '--deck-rule');
     const options = (config.options = config.options || {});
     options.color = options.color || ink;
 
@@ -994,7 +1008,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       'split', 'cards', 'columns', 'chart'
     ];
     const type = types.find(name => section.classList.contains(name)) || 'big';
-    const extras = ['theme-dark', 'is-reverse', 'overlay'].filter(name =>
+    const extras = ['dark', 'is-reverse', 'overlay'].filter(name =>
       section.classList.contains(name)
     );
     return [type, ...extras].join(' · ');

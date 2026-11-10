@@ -10,7 +10,7 @@ const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 
 test('reference documents every token', () => {
   const tokens = new Set([...read('src/deck-tokens.css').matchAll(/(--deck-[\w-]+)\s*:/g)].map(m => m[1]));
-  assert.ok(tokens.size > 50);
+  assert.ok(tokens.size > 30);
   const missing = [...tokens].filter(token => !readme.includes('`' + token + '`'));
   assert.deepEqual(missing, []);
 });

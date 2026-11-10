@@ -13,7 +13,7 @@
   // Old names.
   const ALIASES = {title: 'cover', headline: 'big'};
 
-  const MODIFIERS = ['theme-dark', 'is-reverse', 'overlay'];
+  const MODIFIERS = ['dark', 'is-reverse', 'overlay'];
 
   // Added by Reveal or this file.
   const RUNTIME = [

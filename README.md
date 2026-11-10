@@ -31,7 +31,7 @@ Either build each deck with the command above, or copy `dist/` to your site and 
 ```markdown
 ---
 title: My talk
-theme: midnight
+theme: dark
 ---
 
 <!-- .slide: class="cover" -->
