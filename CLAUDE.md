@@ -12,7 +12,7 @@ Tooling may exist underneath, but the person using it shouldn't feel it. Later: 
 - **A slide type is a container, not a kind of content.** It's a layout that should hold many kinds of content: `split` can take text, a list, a picture or a chart on either side. We don't make slides for one kind of content (a "timeline slide", a "team slide"). Not now, maybe much later.
 - **Reuse before adding.** Stretch an existing container, or give it a general option (flip left/right or top/bottom), before making a new type.
 - **We can't predict what people need, so we enable them.** If someone wants many charts on one slide, make that possible and make it look as good as it can.
-- **Never block, never scold.** A container can have a limit. Past it, the slide stays calm and the preview panel shows a quiet hint ("cards shows up to 8"). No error banners on slides.
+- **Never block, never scold.** No hints, warnings or error labels on slides or in the preview. Whatever someone writes shows, in the order they wrote it; past a container's comfortable size, it just looks as good as it can.
 - **Markdown is the centre.** People write; they don't draw. A specific diagram is made elsewhere and brought in as an image. SVG and text-based diagrams (such as Mermaid) may come later.
 - **Output works anywhere.** Built decks are plain folders that drop into any static site or host, so we never need a plan per site builder.
 - **Base CSS is small and clean; themes add taste.** The base gives structure and good defaults. A theme (dark, literary, …) is an embellishment on top, not a rebuild. Before writing more themes, audit the base CSS and tokens for excess.

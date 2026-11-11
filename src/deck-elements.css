@@ -2,45 +2,52 @@
    The reset removes margins; the slide layout's gap spaces blocks. */
 
 .reveal-viewport {
-  background: var(--deck-bg);
+  background: var(--_bg);
 }
 
 .reveal {
   font-family: var(--deck-font-base);
   font-size: var(--deck-text-body);
   line-height: var(--deck-leading-snug);
-  color: var(--deck-ink);
+  color: var(--_ink);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* A dark slide paints its own background. */
-.reveal section.dark > .deck-stage {
-  background: var(--deck-bg);
+/* A dark or light slide paints its own background. */
+.reveal section:is(.dark, .light) > .deck-stage {
+  background-color: var(--_bg);
 }
 
-/* --- Headings. Size comes from the slide type (--deck-h-size). --- */
-.reveal :is(h1, h2) {
+/* --- Headings. Size comes from the slide type (--_h-size).
+   A split half's heading takes the ## look, a card's or column's the ### look,
+   whichever level was written. --- */
+.reveal :is(h1, h2),
+.reveal .deck-half > h3 {
   font-family: var(--deck-font-display);
-  font-size: var(--deck-h-size);
+  font-size: var(--_h-size);
   font-weight: var(--deck-weight-display);
   line-height: var(--deck-leading-display);
   letter-spacing: var(--deck-track-display);
-  color: var(--deck-ink);
+  color: var(--_ink);
   text-wrap: balance;
 }
 
-.reveal :where(h3, .deck-card__label) {
-  font-size: calc(var(--deck-p-size) * 1.05);
+/* :where keeps plain ### easy to override. */
+.reveal :where(h3),
+.reveal :is(.deck-card, .deck-column) > h2 {
+  font-family: var(--deck-font-base);
+  font-size: calc(var(--_p-size) * 1.05);
   font-weight: 700;
   line-height: var(--deck-leading-snug);
-  color: var(--deck-ink);
+  letter-spacing: normal;
+  color: var(--_ink);
 }
 
-/* Labels: ####, ### on cover and big, table headers. */
+/* Labels: ####, ### on big, table headers. :where keeps big's easy to override. */
 .reveal h4,
 .reveal th,
-.reveal :where(.cover, .big) > .deck-stage > h3 {
+.reveal :where(.big) > .deck-stage > h3 {
   font-family: var(--deck-font-mono);
   font-size: var(--deck-text-small);
   font-weight: 400;
@@ -51,33 +58,33 @@
 
 /* --- Text --- */
 .reveal p {
-  font-size: var(--deck-p-size);
+  font-size: var(--_p-size);
   line-height: var(--deck-leading-body);
   color: var(--deck-ink-soft);
 }
 
 .reveal strong {
   font-weight: 700;
-  color: var(--deck-ink);
+  color: var(--_ink);
 }
 .reveal em {
   font-style: italic;
 }
 
 .reveal a {
-  color: var(--deck-accent);
+  color: var(--_accent);
   text-decoration: none;
-  border-bottom: 2px solid color-mix(in oklab, var(--deck-accent) 35%, transparent);
+  border-bottom: 2px solid color-mix(in oklab, var(--_accent) 35%, transparent);
 }
 .reveal a:hover {
-  border-bottom-color: var(--deck-accent);
+  border-bottom-color: var(--_accent);
 }
 
 /* --- Lists. inline-block so a centred slide can centre the block. --- */
 .reveal :is(ul, ol) {
   display: inline-block;
   list-style: none;
-  font-size: var(--deck-p-size);
+  font-size: var(--_p-size);
   text-align: left;
 }
 
@@ -106,7 +113,7 @@
   width: 0.4em;
   height: 0.4em;
   border-radius: 50%;
-  background: var(--deck-accent);
+  background: var(--_accent);
 }
 
 .reveal ol {
@@ -123,16 +130,16 @@
   top: 0.12em;
   font-family: var(--deck-font-mono);
   font-size: 0.62em;
-  color: var(--deck-accent);
+  color: var(--_accent);
 }
 
 /* --- Quote --- */
 .reveal blockquote {
   padding-left: var(--deck-space-m);
-  border-left: 3px solid var(--deck-accent);
+  border-left: 3px solid var(--_accent);
   font-family: var(--deck-font-display);
-  font-size: calc(var(--deck-p-size) * 1.3);
-  color: var(--deck-ink);
+  font-size: calc(var(--_p-size) * 1.3);
+  color: var(--_ink);
   text-align: left;
 }
 .reveal blockquote p {
@@ -191,7 +198,7 @@
 /* --- Tables. th takes the label style. --- */
 .reveal table {
   border-collapse: collapse;
-  font-size: calc(var(--deck-p-size) * 0.86);
+  font-size: calc(var(--_p-size) * 0.86);
   text-align: left;
 }
 .reveal :is(th, td) {
@@ -212,19 +219,17 @@
   max-width: 100%;
 }
 
-/* --- Cards. The label takes the ### style. --- */
-.reveal li.deck-card {
-  margin: 0;
+/* --- Cards --- */
+.reveal .deck-card {
   padding: var(--deck-space-m);
   display: flex;
   flex-direction: column;
-  gap: var(--deck-space-xs);
-  background: var(--deck-panel);
+  align-items: flex-start;
+  gap: var(--deck-space-s);
+  text-align: left;
+  background: var(--_panel);
   border: 1px solid var(--deck-rule);
   border-radius: var(--deck-radius);
-}
-.reveal li.deck-card::before {
-  content: none;
 }
 
 /* --- Columns --- */
@@ -258,7 +263,7 @@
 .reveal .deck-missing__title {
   letter-spacing: var(--deck-track-caps);
   text-transform: uppercase;
-  color: var(--deck-ink);
+  color: var(--_ink);
 }
 .reveal .deck-missing__alt {
   font-family: var(--deck-font-base);
@@ -267,7 +272,7 @@
 /* --- Print --- */
 @media print {
   .reveal-viewport {
-    background: var(--deck-bg);
+    background: var(--_bg);
   }
   .reveal section.prose > .deck-stage {
     overflow: visible;

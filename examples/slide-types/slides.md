@@ -5,8 +5,6 @@ order: 0
 accent: '#12467A'
 ---
 
-<!-- .slide: class="cover" -->
-
 #### Look & Point
 
 # Slide types
@@ -23,9 +21,9 @@ accent: '#12467A'
 
 #### Part 1
 
-# There are nine slide types
+# There are eight slide types
 
-### If a slide uses any other type, the check will flag it.
+### A slide with no type is big.
 
 ---
 

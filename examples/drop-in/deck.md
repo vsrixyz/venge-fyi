@@ -3,8 +3,6 @@ title: Drop-in deck
 theme: dark
 ---
 
-<!-- .slide: class="cover" -->
-
 # A drop-in deck
 
 ## index.html loads this file

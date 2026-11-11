@@ -28,9 +28,9 @@
 
   function palette(el) {
     return [
-      colour(el, '--deck-accent'),
-      colour(el, '--deck-accent-2'),
-      colour(el, '--deck-accent-3')
+      colour(el, '--_accent'),
+      colour(el, '--_accent-2'),
+      colour(el, '--_accent-3')
     ];
   }
 

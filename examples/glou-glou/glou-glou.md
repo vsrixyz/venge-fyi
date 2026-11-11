@@ -14,7 +14,7 @@ accent:
 
 # A built-in theme name (dark, signal), or a path to your own CSS file.
 # Blank uses the default look.
-theme:
+theme: 
 
 # Chart libraries, for charts written as JSON: chartjs, echarts. CSV charts don't need this.
 charts: ["chartjs"]
@@ -23,11 +23,13 @@ charts: ["chartjs"]
 source: true
 ---
 
-<!-- .slide: class="cover" -->
+<!-- .slide: class="big" -->
 
 #### Venge-FYI
 
 # Easy Markdown Decks
+
+I want prose here
 
 ## A revenge project
 
@@ -35,7 +37,7 @@ source: true
 
 ---
 
-<!-- .slide: class="cover" -->
+<!-- .slide: class="big" -->
 
 # Cover Slide (#)
 
@@ -43,7 +45,7 @@ source: true
 
 ---
 
-<!-- .slide: class="cover dark" -->
+<!-- .slide: class="big dark" -->
 
 #### #### Use h4 for eyebrows
 
@@ -64,6 +66,8 @@ source: true
 #### Big
 
 # A short statement
+
+## this is smaller
 
 ### The chin goes at the bottom.
 
@@ -151,6 +155,9 @@ Code blocks wrap long lines, so nothing runs off the slide.
 A short line of text.
 
 ![A screenshot](assets/screenshot.png)
+
+Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+
 ```
 
 ---
@@ -159,7 +166,7 @@ A short line of text.
 
 ## Prose that runs long
 
-This slide has more text than fits on the screen. Scroll down to read the rest. A fade at the bottom shows there is more. Each paragraph here is just filler so the slide runs long. It does not say anything new. Prose is the only slide type that is allowed to scroll. Every other type shows a red warning when its content does not fit.
+This slide has more text than fits on the screen. Scroll down to read the rest. A fade at the bottom shows there is more. Each paragraph here is just filler so the slide runs long. It does not say anything new. Prose is the only slide type that is allowed to scroll. On every other type, content that does not fit runs off the slide.
 
 If a slide feels too long, try to split it into two slides. Most of the time, two short slides are easier to follow than one long one.
 
@@ -319,9 +326,10 @@ Each person builds slides their own way, so no two decks look the same.
 - The words you write
 - The order of your slides
 - Your speaker notes
+![First wide test photo](assets/wide-1.jpg)
 
 ## What changes
-
+![First wide test photo](assets/wide-1.jpg)
 - How each slide looks
 - Where things sit
 - The colours and type
@@ -344,16 +352,18 @@ The same layout with `dark`.
 
 ## One card
 
-- **Only one:** a single card is outside the rules, so this slide shows a warning.
+### Only one
+A single card still shows. It just looks lonely.
 
 ---
 
 <!-- .slide: class="cards" -->
 
-## Two cards
+## First
+Two cards sit side by side.
 
-- **First:** two cards sit side by side.
-- **Second:** each one starts with a bold label.
+## Second
+With only `##` headings, each one starts a card and there is no title.
 
 ---
 
@@ -361,9 +371,15 @@ The same layout with `dark`.
 
 ## Check these before you share a deck
 
-- **One idea:** each slide makes one point.
-- **Right type:** the slide type fits the content.
-- **Fits the frame:** nothing runs off the edge.
+### One idea
+Each slide makes one point.
+
+### Right type
+The slide type fits the content.
+
+### Fits the frame
+Nothing runs off the edge.
+
 
 ---
 
@@ -371,10 +387,17 @@ The same layout with `dark`.
 
 ## Four cards
 
-- **One:** four cards make two rows of two.
-- **Two:** keep each card short.
-- **Three:** one or two lines is enough.
-- **Four:** the label says the main idea.
+### One
+Four cards make two rows of two.
+
+### Two
+Keep each card short.
+
+### Three
+One or two lines is enough.
+
+### Four
+The heading says the main idea.
 
 ---
 
@@ -382,11 +405,20 @@ The same layout with `dark`.
 
 ## Five cards
 
-- **One:** five cards go three across.
-- **Two:** the last row has two.
-- **Three:** keep them short.
-- **Four:** start with a label.
-- **Five:** this is the last one.
+### One
+Five cards go three across.
+
+### Two
+The last row has two.
+
+### Three
+Keep them short.
+
+### Four
+Start with a heading.
+
+### Five
+This is the last one.
 
 ---
 
@@ -394,12 +426,53 @@ The same layout with `dark`.
 
 ## Six cards
 
-- **One:** six is the most cards.
-- **Two:** they make two rows.
-- **Three:** three in each row.
-- **Four:** keep them short.
-- **Five:** start with a label.
-- **Six:** more than six? Split the slide.
+### One
+Six is the most cards. ![First wide test photo](assets/wide-1.jpg)
+
+### Two
+They make two rows.
+
+### Three
+![First wide test photo](assets/wide-1.jpg) three in each row. three in each row.three in each row.three in each row.three in each row.three in each row.three in each row.three in each row.
+
+- Subbullet
+- Subbullet
+
+### Four
+Keep them short.
+
+### Five
+Start with a heading.
+
+### Six
+More than six? Split the slide. more than six? Split the slide. more than six? Split the slide.
+
+---
+
+<!-- .slide: class="cards" -->
+
+### One
+Six is the most cards.
+
+![First wide test photo](assets/wide-1.jpg)
+
+### Two
+They make two rows.
+
+### Three
+Three in each row.
+
+- Subbullet
+- Subbullet
+
+### Four
+Keep them short.
+
+### Five
+Start with a label.
+
+### Six
+More than six? Split the slide.
 
 ---
 

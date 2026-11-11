@@ -36,12 +36,13 @@
   --deck-weight-display: 700;
 
   /* Type sizes. The slide type picks the heading size, not the tag. */
-  --deck-text-title: 200px;        /* cover # */
-  --deck-text-headline: 104px;     /* big #, image */
-  --deck-text-heading: 56px;       /* other #/##, subheads, big quotes */
+  --deck-text-title: 200px;        /* big # with headings only */
+  --deck-text-headline: 144px;     /* big # with text, image */
+  --deck-text-subheading: 64px;    /* big ## */
+  --deck-text-heading: 56px;       /* other #/##, big quotes */
   --deck-text-heading-small: 48px; /* figure and split */
   --deck-text-body: 34px;
-  --deck-text-small: 22px;         /* labels: ####, cover ###, table headers */
+  --deck-text-small: 22px;         /* labels: ####, big ###, table headers */
 
   --deck-leading-title: 0.82;
   --deck-leading-display: 1.05;
@@ -66,23 +67,30 @@
   --deck-radius: 8px;
 }
 
-/* A dark slide swaps in the dark values. */
+/* Light or dark: each slide shows one side of every colour pair, chosen by its
+   color-scheme. Slides follow the page unless they say otherwise. */
 .reveal section.dark,
 .reveal section.image.overlay {
-  --deck-bg: var(--deck-dark-bg);
-  --deck-panel: var(--deck-dark-panel);
-  --deck-ink: var(--deck-dark-ink);
-  --deck-accent: var(--deck-dark-accent);
-  --deck-accent-2: var(--deck-dark-accent-2);
-  --deck-accent-3: var(--deck-dark-accent-3);
+  color-scheme: dark;
 }
 
-/* Worked out from ink and bg on every slide, so they follow light and dark.
-   Don't set these in a theme. */
+.reveal section.light {
+  color-scheme: light;
+}
+
+/* What the CSS uses: the pairs, resolved per slide, and greys mixed from them.
+   Declared on every slide so a theme can set the pairs anywhere. Don't set these in a theme. */
 :root,
 .reveal .slides section {
-  --deck-ink-soft: color-mix(in oklab, var(--deck-ink) 76%, var(--deck-bg));
-  --deck-ink-faint: color-mix(in oklab, var(--deck-ink) 52%, var(--deck-bg));
-  --deck-rule: color-mix(in oklab, var(--deck-ink) 12%, var(--deck-bg));
-  --deck-code-bg: color-mix(in oklab, var(--deck-ink) 9%, transparent);
+  --_bg: light-dark(var(--deck-bg), var(--deck-dark-bg));
+  --_panel: light-dark(var(--deck-panel), var(--deck-dark-panel));
+  --_ink: light-dark(var(--deck-ink), var(--deck-dark-ink));
+  --_accent: light-dark(var(--deck-accent), var(--deck-dark-accent));
+  --_accent-2: light-dark(var(--deck-accent-2), var(--deck-dark-accent-2));
+  --_accent-3: light-dark(var(--deck-accent-3), var(--deck-dark-accent-3));
+
+  --deck-ink-soft: color-mix(in oklab, var(--_ink) 76%, var(--_bg));
+  --deck-ink-faint: color-mix(in oklab, var(--_ink) 52%, var(--_bg));
+  --deck-rule: color-mix(in oklab, var(--_ink) 12%, var(--_bg));
+  --deck-code-bg: color-mix(in oklab, var(--_ink) 9%, transparent);
 }

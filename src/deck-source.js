@@ -14,13 +14,15 @@
       .map(chunk => chunk.split(VERTICAL).map(part => part.trim()));
   }
 
+  const MODIFIERS = ['dark', 'light', 'is-reverse', 'overlay'];
+
   function typeOf(section) {
     const types = [
-      'cover', 'big', 'prose', 'figure', 'image',
+      'big', 'prose', 'figure', 'image',
       'split', 'cards', 'columns', 'chart'
     ];
     const type = types.find(name => section.classList.contains(name)) || 'big';
-    const extras = ['dark', 'is-reverse', 'overlay'].filter(name =>
+    const extras = MODIFIERS.filter(name =>
       section.classList.contains(name)
     );
     return [type, ...extras].join(' · ');
@@ -36,7 +38,6 @@
       '<span class="deck-source__type"></span>' +
       '<button type="button" data-source-toggle>Hide (M)</button>' +
       '</div>' +
-      '<p class="deck-source__check" hidden></p>' +
       '<pre class="deck-source__code"></pre>';
     document.body.appendChild(panel);
     return panel;
@@ -50,7 +51,6 @@
     const count = panel.querySelector('.deck-source__count');
     const type = panel.querySelector('.deck-source__type');
     const code = panel.querySelector('.deck-source__code');
-    const check = panel.querySelector('.deck-source__check');
 
     const update = () => {
       const {h, v} = reveal.getIndices();
@@ -62,10 +62,6 @@
       type.textContent = section ? typeOf(section) : '';
       code.textContent = text;
       panel.scrollTop = 0;
-
-      const problem = section && section.dataset.deckCheck;
-      check.hidden = !problem;
-      check.textContent = problem || '';
     };
 
     const toggle = () => {
