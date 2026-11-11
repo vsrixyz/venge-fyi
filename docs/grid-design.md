@@ -8,7 +8,7 @@ A slide is a grid of cells. A cell holds one thing: text, a picture (or a group 
 
 ## Names
 
-The three layouts a grid slide picks are **headline** (text only), **figure** (text beside pictures) and **image** (pictures only). Text and pictures that take turns more than once fall back to **prose**. The other types keep their names: `prose`, `cards`, `columns`, `split`.
+The three layouts a grid slide picks are **headline** (text only), **figure** (text in a third, pictures in two thirds) and **image** (pictures only). Text and pictures that take turns more than once fall back to **prose**. The other types keep their names: `prose`, `split`, `cards`, `columns`.
 
 ## V1
 

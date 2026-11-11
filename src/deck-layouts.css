@@ -57,8 +57,21 @@
   justify-content: safe center;
   align-items: flex-start;
   gap: var(--deck-space-m);
-  --_h-size: clamp(36px, 6cqi, var(--deck-text-heading-small));
-  --_p-size: clamp(24px, 4.2cqi, var(--deck-text-body));
+  --_h-size: clamp(36px, 9cqi, var(--deck-text-heading-small));
+  --_p-size: clamp(24px, 6.4cqi, var(--deck-text-body));
+}
+
+/* figure: text takes a third, the pictures two thirds, in the order written. */
+.reveal section.grid > .deck-stage[data-shape="figure"] {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+
+  > .deck-cell {
+    grid-column-end: auto;
+  }
+}
+
+.reveal section.grid > .deck-stage[data-shape="figure"]:has(> .deck-pictures:first-child) {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
 }
 
 /* headline: one text cell, centred and big. */

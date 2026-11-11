@@ -151,12 +151,12 @@ A grid slide picks one of three layouts from what you write. Text that runs toge
 | Layout | You write | You get |
 | --- | --- | --- |
 | headline | Only text | One centred cell. `#` is headline size, or title size with headings only. `##` is a subtitle, `###` a small line. A `>` quote gets a big quote mark. |
-| figure | Text, then pictures | Text in one half, the pictures in the other. Write the pictures first to put them on the left. |
+| figure | Text, then pictures | Text in a third, the pictures in the other two thirds. Write the pictures first to put them on the left. |
 | image | Only pictures | The pictures fill the slide |
 
 Text and pictures that take turns more than once (text, a picture, more text) make a `prose` slide instead: one column, top to bottom. For parts side by side, use `columns` or `cards`.
 
-Both cells of a figure are the same size, and text scales with its cell. Pictures go 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3, and past 9 four across. A short last row is centred. Inside a half they turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
+Text scales with its cell. Pictures go 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3, and past 9 four across. A short last row is centred. Beside text they turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
 
 Pictures are shown whole, never cropped, unless you ask for `fill` or `bleed`.
 

@@ -168,7 +168,7 @@ If a slide feels too long, try to split it into two slides. Most of the time, tw
 
 ## Text beside a picture
 
-Text and a picture split the slide in half. The picture is never cropped.
+Text takes a third and the picture two thirds. The picture is never cropped.
 
 ![A plain screenshot of an app window](assets/screenshot.png)
 
@@ -195,7 +195,7 @@ A tall photo stays tall.
 
 ## Two pictures beside text
 
-The pictures share their half.
+The pictures share their two thirds.
 
 ![First wide test photo](assets/wide-1.jpg)
 ![Second wide test photo](assets/wide-2.jpg)
