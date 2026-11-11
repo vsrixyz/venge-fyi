@@ -109,7 +109,7 @@ All options are optional.
 | --- | --- | --- |
 | `title` | `Deck` | The browser tab title. |
 | `description` | none | The page's `<meta name="description">`. |
-| `accent` | the theme's | The colour for bullets, links, the quote mark and charts. Sets `--deck-accent`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
+| `accent` | the theme's | The colour for bullets, links, the quote mark and charts. Sets `--deck-theme-1`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
 | `theme` | none | A built-in theme name (`dark`, `signal`) or a path to your own CSS file, relative to the deck file. |
 | `charts` | `[]` | Chart libraries for charts written as JSON: `chartjs`, `echarts`. A deck that links a `.csv` file gets `chartjs` on its own. |
 | `source` | `false` | Shows each slide's markdown in a panel beside it. Press M to hide it. |
@@ -122,31 +122,82 @@ Other keys are ignored. Front matter is a small part of YAML: one `key: value` p
 | --- | --- |
 | `---` on its own line, with a blank line above and below | A new slide |
 | `--` on its own line, with blank lines around it | A slide below the current one |
-| `<!-- .slide: class="figure" -->` | The slide's type and modifiers |
+| `<!-- .slide: class="prose" -->` | The slide's type and modifiers |
+| `<!-- .cell: class="stack" -->` | Options for the cell that comes next. See [Cell options](#cell-options). |
 | `Note:` | Starts the slide's speaker notes. They are hidden. Reveal's speaker view plugin is not included. |
 
-Headings are sizes: `#` is the largest and `####` the smallest. The slide type decides the actual size. Everything shows in the order you write it.
+Headings are sizes: `#` is the largest and `####` the smallest. The slide decides the actual size. Everything shows in the order you write it.
 
-A `####` line is the eyebrow, a small label in capitals. On `big` and `image` it can go anywhere. On other types it must be the first line.
+A `####` line is the eyebrow, a small label in capitals. On `grid` slides it can go anywhere. On other types it must be the first line.
 
 Reveal's own markdown features still work, such as `<!-- .element: class="fragment" -->`.
 
 ## Slide types
 
-Each slide has one type. A slide with no type is `big`.
+Each slide has one type. A slide with no type is `grid`, and most slides need nothing else.
 
 | Class | Use it for | Works best with |
 | --- | --- | --- |
-| `big` | Titles, section breaks, one short point | `#` headline, `##` subtitle, `###` small line, plus up to 2 short paragraphs, a short list, or a `>` quote. No images. With headings only, `#` is title size. |
-| `prose` | Longer text | `##` title, then paragraphs, lists, tables and code. The only type that scrolls. No images. |
-| `figure` | Text about one picture | A text column plus exactly 1 image, video or chart. The picture is never cropped. |
-| `image` | Photos | 1 to 4 images as cropped tiles, plus an optional `####` label. |
+| `grid` | Almost everything | Text, pictures, or both. The slide finds its own [cells](#grid-slides). |
+| `prose` | Longer text | `##` title, then paragraphs, lists, tables and code. The only type that scrolls. |
 | `split` | Two sides | 2 [sections](#sections), one per half. Text only. |
 | `cards` | A few short points | 2 to 6 [sections](#sections), each in a box. 2 or 4 go two across; 3, 5 or 6 go three across. |
 | `columns` | Side-by-side text | 2 to 4 [sections](#sections) in one row. |
-| `chart` | One chart or diagram | `##` title, exactly 1 chart or image. Text after it is the source line. |
 
-`cover`, `title` and `headline` still work as old names for `big`.
+### Grid slides
+
+A grid slide is made of cells. Text that runs together is one cell. The pictures and charts beside it are another. Cells keep the order you wrote them in.
+
+| You write | You get |
+| --- | --- |
+| Only text | One centred cell. `#` is headline size, or title size with headings only. `##` is a subtitle, `###` a small line. A `>` quote gets a big quote mark. |
+| Text, then pictures | Text in one half, the pictures in the other |
+| Pictures, then text | The same, with the pictures on the left |
+| Only pictures | The pictures fill the slide |
+| Text, a picture, more text | Three cells in that order |
+
+Every cell is the same size, and text scales with its cell. Pictures go 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3, and past 9 four across. A short last row is centred. Inside a half they turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
+
+Pictures are shown whole, never cropped, unless you ask for `fill` or `bleed`.
+
+**Captions.** Text directly under a picture, with no blank line between, is its caption. Under several pictures, it captions them all.
+
+```markdown
+![The bar at night](assets/bar.jpg)
+Open since 2019.
+```
+
+#### Cell options
+
+A `<!-- .cell: … -->` comment sets options for the cell of whatever comes right after it.
+
+| Class | What it does |
+| --- | --- |
+| `fill` | Crops the pictures to fill their cell |
+| `bleed` | Like `fill`, and the cell runs off the slide's edge on the sides it touches |
+| `stack` | Puts the pictures on top of each other, centred. A fragment on a later picture fades it in over the first. |
+
+Other classes and attributes go on the cell too, such as `class="fragment"`.
+
+```markdown
+## My first try
+
+<!-- .cell: class="stack" -->
+![The first guidelines](assets/guidelines.png)
+![Not like this](assets/not-like-this.gif) <!-- .element: class="fragment" -->
+```
+
+### Backgrounds
+
+A slide's background uses Reveal's own attributes: `data-background-color`, `data-background-image`, `data-background-video`, `data-background-opacity` and the rest. Add `dark` for light text.
+
+```markdown
+<!-- .slide: class="dark" data-background-image="assets/street.jpg" data-background-color="#000" data-background-opacity="0.5" -->
+
+# Text on a photo
+```
+
+`data-background-color` also takes the theme's colour names: `theme-1` to `theme-5`, `background`, `card`, `ink` and `line`. Any CSS colour works too.
 
 ### Sections
 
@@ -176,12 +227,10 @@ Modifiers go in the same `class="…"`:
 | --- | --- | --- |
 | `dark` | any type | Makes this slide dark. See [Light and dark](#light-and-dark). |
 | `light` | any type | Makes this slide light on a dark deck. |
-| `is-reverse` | `figure` | Puts the picture on the left. |
-| `overlay` | `image` | Darkens the photos and puts one `#` heading over them. |
 
 ### When content doesn't fit the rules
 
-Slides never warn. Whatever you write shows, in the order you wrote it: a fifth image, a seventh card, text on an `image` slide. Text that doesn't fit the frame runs off it, except on `prose`, which scrolls.
+Slides never warn. Whatever you write shows, in the order you wrote it: a tenth picture, a seventh card. Text that doesn't fit the frame runs off it, except on `prose`, which scrolls.
 
 A missing image becomes a dashed box with its file name.
 
@@ -205,7 +254,7 @@ Q2,18
 
 Kinds: `bar` (the default), `line`, `pie`, `doughnut`. Add `horizontal` or `stacked`, as in `"horizontal stacked bar"`. Numbers may have `,`, `%`, `$`, `£` or `€`.
 
-Colours come from `--deck-accent`, `--deck-accent-2` and `--deck-accent-3`. Text and grid lines come from `--deck-ink-faint` and `--deck-rule`. Any CSS colour works, including `color-mix()`. Charts on `dark` slides use that slide's colours.
+Colours come from `--deck-theme-1` to `--deck-theme-5`. Text and grid lines come from `--deck-ink-faint` and `--deck-line`. Any CSS colour works, including `color-mix()`. Charts on `dark` slides use that slide's colours.
 
 The CLI puts the CSV data into the page, so built decks work from disk. Drop-in decks fetch the file.
 
@@ -229,9 +278,9 @@ The base theme is [`src/deck-tokens.css`](../src/deck-tokens.css). It is always 
 
 ```css
 :root {
-  --deck-bg: #ffffff;
+  --deck-background: #ffffff;
   --deck-ink: #0b0b0c;
-  --deck-accent: #ff4f1f;
+  --deck-theme-1: #ff4f1f;
 }
 ```
 
@@ -246,11 +295,10 @@ Slides are light unless you say otherwise:
 - `theme: dark` makes every slide dark.
 - `<!-- .slide: class="dark" -->` makes one slide dark. On a dark deck it changes nothing.
 - `<!-- .slide: class="light" -->` makes one slide light. On a light deck it changes nothing.
-- The text on `image overlay` slides uses the dark colours too.
 
-Every colour comes in a pair: `--deck-bg` and `--deck-dark-bg`, `--deck-ink` and `--deck-dark-ink`, and so on. Each slide shows one side of each pair, picked by its CSS `color-scheme`. The greys, lines and inline code are mixed from ink and bg on every slide, so they follow. `--deck-dark-accent`, `-2` and `-3` are the light accents lightened 40% toward white so they stay readable. An `accent` from the front matter is lightened too.
+Every colour comes in a pair: `--deck-background` and `--deck-dark-background`, `--deck-ink` and `--deck-dark-ink`, and so on. Each slide shows one side of each pair, picked by its CSS `color-scheme`. The greys, lines and inline code are mixed from ink and background on every slide, so they follow. `--deck-dark-theme-1` to `-5` are the theme colours lightened 40% toward white so they stay readable. An `accent` from the front matter is lightened too.
 
-To change how dark looks, set the `--deck-dark-*` tokens in your theme. To make your own theme dark all over, add `:root { color-scheme: dark; }`, as `themes/dark.css` does. Don't set `--deck-bg` to a dark colour for that: it is the light side, so `light` slides would turn dark too. Images are shown as they are: a diagram with dark lines on a clear background will be hard to see on a dark slide.
+To change how dark looks, set the `--deck-dark-*` tokens in your theme. To make your own theme dark all over, add `:root { color-scheme: dark; }`, as `themes/dark.css` does. Don't set `--deck-background` to a dark colour for that: it is the light side, so `light` slides would turn dark too. Images are shown as they are: a diagram with dark lines on a clear background will be hard to see on a dark slide.
 
 ### Fonts
 
@@ -274,33 +322,36 @@ The CLI copies a theme given by path, but not the files its `url()`s point to. C
 
 All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults are in [`src/deck-tokens.css`](../src/deck-tokens.css).
 
-**Colours.** Set `--deck-bg`, `--deck-panel` and `--deck-ink`. The four marked *mixed* are worked out from ink and bg on every slide, so they follow light and dark; don't set them.
+**Colours.** Set `--deck-background`, `--deck-card` and `--deck-ink`. The four marked *mixed* are worked out from ink and background on every slide, so they follow light and dark; don't set them.
 
 | Token | Default | Used for |
 | --- | --- | --- |
-| `--deck-bg` | `#f7f5f2` | Page and slide background |
-| `--deck-panel` | `#fffdfa` | Cards, the second half of `split` |
+| `--deck-background` | `#f7f5f2` | Page and slide background |
+| `--deck-card` | `#fffdfa` | Cards, the second half of `split` |
 | `--deck-ink` | `#1f1d1b` | Headings, bold text, `###` |
-| `--deck-ink-soft` | *mixed*: 76% ink | Paragraphs, list items, table cells, `##` on big |
-| `--deck-ink-faint` | *mixed*: 52% ink | Labels, source lines, chart text |
-| `--deck-rule` | *mixed*: 12% ink | Lines, borders, chart grid, scrollbar |
-| `--deck-code-bg` | *mixed*: ink at 9% | Inline code, the missing-image box |
-| `--deck-accent` | `#12467A` | Bullets, numbers, links, quote mark and border, first chart colour. Front matter `accent` sets it. |
-| `--deck-accent-2` | `#e1361f` | Second chart colour, overview background |
-| `--deck-accent-3` | `#fbbe25` | Third chart colour, overview background |
-| `--deck-wash` | `rgba(20, 18, 16, 0.55)` | The darkening on `image overlay` |
-| `--deck-dark-bg` | `#1f1d1b` | `--deck-bg` on dark slides |
-| `--deck-dark-panel` | `rgba(255, 255, 255, 0.06)` | `--deck-panel` on dark slides |
+| `--deck-ink-soft` | *mixed*: 76% ink | Paragraphs, list items, table cells, subtitles |
+| `--deck-ink-faint` | *mixed*: 52% ink | Labels, chart text |
+| `--deck-line` | *mixed*: 12% ink | Lines, borders, chart grid, scrollbar |
+| `--deck-code-inline` | *mixed*: ink at 9% | Inline code, the missing-image box |
+| `--deck-theme-1` | `#12467A` | Bullets, numbers, links, quote mark and border, first chart colour. Front matter `accent` sets it. |
+| `--deck-theme-2` | `#e1361f` | Second chart colour, overview background |
+| `--deck-theme-3` | `#fbbe25` | Third chart colour, overview background |
+| `--deck-theme-4` | `#2f7d5b` | Fourth chart colour |
+| `--deck-theme-5` | `#7b4fa8` | Fifth chart colour |
+| `--deck-dark-background` | `#1f1d1b` | `--deck-background` on dark slides |
+| `--deck-dark-card` | `rgba(255, 255, 255, 0.06)` | `--deck-card` on dark slides |
 | `--deck-dark-ink` | `#f7f5f2` | `--deck-ink` on dark slides |
-| `--deck-dark-accent` | accent, 40% toward white | `--deck-accent` on dark slides |
-| `--deck-dark-accent-2` | accent 2, 40% toward white | `--deck-accent-2` on dark slides |
-| `--deck-dark-accent-3` | accent 3, 40% toward white | `--deck-accent-3` on dark slides |
+| `--deck-dark-theme-1` | theme 1, 40% toward white | `--deck-theme-1` on dark slides |
+| `--deck-dark-theme-2` | theme 2, 40% toward white | `--deck-theme-2` on dark slides |
+| `--deck-dark-theme-3` | theme 3, 40% toward white | `--deck-theme-3` on dark slides |
+| `--deck-dark-theme-4` | theme 4, 40% toward white | `--deck-theme-4` on dark slides |
+| `--deck-dark-theme-5` | theme 5, 40% toward white | `--deck-theme-5` on dark slides |
 
 **Code blocks.** The markdown panel (`source: true`) uses these too.
 
 | Token | Default | Used for |
 | --- | --- | --- |
-| `--deck-code-panel` | `#22201d` | Code blocks; the markdown panel's background |
+| `--deck-code-background` | `#22201d` | Code blocks; the markdown panel's background |
 | `--deck-code-ink` | `#ece8e1` | Code block text, titles; the panel's text |
 | `--deck-code-comment` | `#8f887e` | Comments; the panel's slide count and button border |
 | `--deck-code-keyword` | `#e8859b` | Keywords, tags |
@@ -315,14 +366,14 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-font-display` | `var(--deck-font-base)` | `#` and `##` headings, quotes |
 | `--deck-font-mono` | `ui-monospace, …, monospace` | Code, labels, numbered list markers |
 | `--deck-weight-display` | `700` | `#` and `##` headings, the big quote mark |
-| `--deck-text-title` | `200px` | `#` on `big` with headings only |
-| `--deck-text-headline` | `144px` | `#` on `big` with text; `#` on `image` |
-| `--deck-text-subheading` | `64px` | `##` on `big` |
-| `--deck-text-heading` | `56px` | `#`/`##` on other types; quotes on `big` |
-| `--deck-text-heading-small` | `48px` | `#`/`##` on `figure` and `split` |
+| `--deck-text-title` | `200px` | `#` on a one-cell slide with headings only |
+| `--deck-text-headline` | `144px` | `#` on a one-cell slide with text |
+| `--deck-text-subheading` | `64px` | `##` on a one-cell slide |
+| `--deck-text-heading` | `56px` | `#`/`##` on prose, cards and columns; quotes on a one-cell slide |
+| `--deck-text-heading-small` | `48px` | `#`/`##` beside pictures, and on `split` |
 | `--deck-text-body` | `34px` | Paragraphs and lists. `###` and card labels are 5% larger. |
-| `--deck-text-small` | `22px` | Labels: `####`, `###` on `big`, table headers; the missing-image box |
-| `--deck-leading-title` | `0.82` | `#` on `big` with headings only |
+| `--deck-text-small` | `22px` | Labels: `####`, `###` on a one-cell slide, table headers; the missing-image box |
+| `--deck-leading-title` | `0.82` | `#` on a one-cell slide with headings only |
 | `--deck-leading-display` | `1.05` | Other `#` and `##` |
 | `--deck-leading-snug` | `1.25` | The default; `###`, card labels, labels, tables |
 | `--deck-leading-body` | `1.5` | Paragraphs, lists, code blocks |
@@ -336,13 +387,12 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-space-m` | `32px` | Between blocks; card and code padding, quote indent |
 | `--deck-space-xs` | `12px` | The missing-image box |
 | `--deck-space-s` | `20px` | Between list items; between the parts of a card or column |
-| `--deck-space-l` | `48px` | Between blocks on `big`, `figure` and `split`; `figure`'s text-to-picture gap |
-| `--deck-space-xl` | `64px` | Between blocks on `big` with headings only; between columns |
+| `--deck-space-l` | `48px` | Between cells, and between blocks on a one-cell slide and `split` |
+| `--deck-space-xl` | `64px` | Between blocks on a one-cell slide with headings only; between columns |
 | `--deck-inset-x` | `128px` | Left and right space inside a slide |
 | `--deck-inset-y` | `64px` | Top and bottom space inside a slide |
-| `--deck-inset-tight` | `96px` | Space inside `figure` and each `split` half |
-| `--deck-measure-prose` | `1040px` | Text width on `prose` and `big`. Quotes on `big` are 25% wider. |
-| `--deck-measure-figure` | `480px` | Text column width on `figure` |
+| `--deck-inset-tight` | `96px` | Space inside each `split` half |
+| `--deck-measure-prose` | `1040px` | Text width on `prose` and a one-cell slide. Quotes there are 25% wider. |
 | `--deck-radius` | `8px` | Cards, code blocks. Inline code uses half. |
 
 ## Class names
@@ -357,21 +407,20 @@ These are public: themes and your own CSS can rely on them.
 | --- | --- | --- |
 | `deck-stage` | `div`, the only child of each slide besides notes | Holds the slide's content. Insets and gaps are set here. |
 | `deck-eyebrow` | `h4` | The `####` label |
-| `deck-col` | `figure` | The text column |
-| `deck-tiles` | `image` | The grid of photos. `data-count` is 1 to 4. |
-| `deck-band` | `image` | The strip that holds the label |
-| `deck-wash` | `image overlay` | The darkening layer |
+| `data-shape` | `grid` slide's `deck-stage` | `single` (one text cell), `half` (text and pictures), `pictures` (pictures only) or `cells` (anything else) |
+| `deck-cell` | `grid` | Each cell. Also `deck-text` or `deck-pictures`, and any classes from a `.cell:` comment. |
+| `deck-text` | `grid` | A text cell. `data-headings` when it holds only headings. |
+| `deck-pictures` | `grid` | A cell of pictures. `data-count` is the number of pictures. |
+| `deck-caption` | `grid` | A caption, the last child of its `deck-pictures` |
 | `deck-head` | `split` | Holds anything above the halves, such as the eyebrow and title |
 | `deck-half` | `split` | Each half |
 | `deck-cards` | `cards` | The grid. `data-count` is the number of cards. |
 | `deck-card` | `cards` | Each card |
 | `deck-columns` | `columns` | The row. `data-count` is the number of columns. |
 | `deck-column` | `columns` | Each column |
-| `deck-chart` | `chart`, `figure` | The box around a chart or diagram |
-| `deck-source-line` | `chart` | Text after the chart |
+| `deck-chart` | any | The box around a chart |
 | `deck-missing` | any | Stands in for a missing image or a failed chart. Children: `deck-missing__title`, `deck-missing__file`, `deck-missing__alt`. |
 | `is-scrollable` | `prose` slide | The text is taller than the slide |
-| `data-count` | `image` slide | Number of images |
 
 **On the page:**
 
@@ -410,7 +459,7 @@ Rebuilds `dist/` from `src/` and `vendor/`. `deck.js` and `deck.css` are the fil
 
 | Folder | Holds |
 | --- | --- |
-| `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides), `deck-charts.js`, `deck-source.js` (markdown panel), `deck-start.js` (starts it all). CSS: `deck-tokens.css` (the base theme), `deck-layouts.css` (where blocks go on each slide type), `deck-elements.css` (how text, lists, code, tables and cards look), `deck-page.css` (the panel, overview, load errors) |
+| `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides), `deck-charts.js`, `deck-source.js` (markdown panel), `deck-start.js` (starts it all). CSS: `deck-tokens.css` (the base theme), `deck-layouts.css` (where cells and blocks go on each slide type), `deck-elements.css` (how text, lists, code, tables and cards look), `deck-page.css` (the panel, overview, load errors) |
 | `src/themes/` | Built-in themes: `dark`, `signal` |
 | `lib/`, `bin/` | The CLI and the dev server's renderer |
 | `vendor/` | Third-party files, unchanged |

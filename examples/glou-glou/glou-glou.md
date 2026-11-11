@@ -9,7 +9,7 @@ title: How Decks Works
 description: Showing how every slide in the system works.
 
 # The colour for bullets, links, the quote mark and charts.
-# Blank uses the theme's --deck-accent. Quote colours: '#12467A'.
+# Blank uses the theme's --deck-theme-1. Quote colours: '#12467A'.
 accent:
 
 # A built-in theme name (dark, signal), or a path to your own CSS file.
@@ -23,8 +23,6 @@ charts: ["chartjs"]
 source: true
 ---
 
-<!-- .slide: class="big" -->
-
 #### Venge-FYI
 
 # Easy Markdown Decks
@@ -37,15 +35,13 @@ I want prose here
 
 ---
 
-<!-- .slide: class="big" -->
-
 # Cover Slide (#)
 
 ### This line is called a chin (###)
 
 ---
 
-<!-- .slide: class="big dark" -->
+<!-- .slide: class="dark" -->
 
 #### #### Use h4 for eyebrows
 
@@ -57,13 +53,13 @@ I want prose here
 
 ---
 
-<!-- .slide: class="big dark" -->
+<!-- .slide: class="dark" -->
 
-# Part 1: Big
+# Part 1: Text
 
 ---
 
-#### Big
+#### Text alone
 
 # A short statement
 
@@ -75,7 +71,7 @@ I want prose here
 
 # One paragraph
 
-This slide has no type line, so it is a big slide. A big slide can hold one or two short paragraphs.
+A slide with only text is one centred cell. It can hold one or two short paragraphs.
 
 ---
 
@@ -95,17 +91,9 @@ If you need more than that, use a prose slide instead.
 
 ---
 
-> Write the words first. Then pick the slide type that fits them.
+> Write the words first. Then add the pictures they need.
 
 ### Sample quote
-
----
-
-<!-- .slide: class="dark" -->
-
-# A dark big slide
-
-### dark
 
 ---
 
@@ -132,12 +120,12 @@ You can add more text here.
 
 A table on prose works well when you need to compare a few things.
 
-| Type | Use it for | Another column |
+| You write | You get | Another column |
 | --- | --- | --- |
-| big | One short point | More text |
-| prose | Longer text | More text |
-| figure | Text about one picture | More text |
-| image | Photos | More text |
+| Text alone | One centred cell | More text |
+| Text and a picture | Text beside the picture | More text |
+| Pictures alone | The pictures fill the slide | More text |
+| A line under a picture | A caption | More text |
 
 ---
 
@@ -148,8 +136,6 @@ A table on prose works well when you need to compare a few things.
 Code blocks wrap long lines, so nothing runs off the slide.
 
 ```markdown
-<!-- .slide: class="figure" -->
-
 ## A heading
 
 A short line of text.
@@ -174,31 +160,31 @@ If a slide feels too long, try to split it into two slides. Most of the time, tw
 
 ---
 
-<!-- .slide: class="figure" -->
+<!-- .slide: class="dark" -->
 
-## Figure with a screenshot
+# Part 2: Pictures
 
-Use a figure when you need a few lines of text to explain one picture.
+---
+
+## Text beside a picture
+
+Text and a picture split the slide in half. The picture is never cropped.
 
 ![A plain screenshot of an app window](assets/screenshot.png)
 
 ---
 
-<!-- .slide: class="figure is-reverse" -->
-
-## Figure, reversed
-
-Add `is-reverse` to put the picture on the left.
-
 ![A plain screenshot of an app window](assets/screenshot.png)
+
+## Picture first
+
+Write the picture first to put it on the left.
 
 ---
 
-<!-- .slide: class="figure" -->
+## A tall photo
 
-## Figure with a tall photo
-
-The picture is never cropped. A tall photo stays tall.
+A tall photo stays tall.
 
 - Short points work here too
 - Keep them brief
@@ -207,30 +193,18 @@ The picture is never cropped. A tall photo stays tall.
 
 ---
 
-<!-- .slide: class="figure" -->
+## Two pictures beside text
 
-## Figure with a chart
-
-A chart from a CSV file can sit beside the text too.
-
-![Bar chart of slides made each quarter](assets/slides-per-quarter.csv "bar")
-
----
-
-<!-- .slide: class="image" -->
-
-![A wide test photo](assets/wide-1.jpg)
-
----
-
-<!-- .slide: class="image" -->
+The pictures share their half.
 
 ![First wide test photo](assets/wide-1.jpg)
 ![Second wide test photo](assets/wide-2.jpg)
 
 ---
 
-<!-- .slide: class="image" -->
+## Three pictures beside text
+
+Three make two on top and one centred under them.
 
 ![First wide test photo](assets/wide-1.jpg)
 ![Second wide test photo](assets/wide-2.jpg)
@@ -238,7 +212,20 @@ A chart from a CSV file can sit beside the text too.
 
 ---
 
-<!-- .slide: class="image" -->
+![A wide test photo](assets/wide-1.jpg)
+
+---
+
+![First wide test photo](assets/wide-1.jpg)
+![Second wide test photo](assets/wide-2.jpg)
+
+---
+
+![First wide test photo](assets/wide-1.jpg)
+![Second wide test photo](assets/wide-2.jpg)
+![Third wide test photo](assets/wide-3.jpg)
+
+---
 
 ![First wide test photo](assets/wide-1.jpg)
 ![Second wide test photo](assets/wide-2.jpg)
@@ -246,8 +233,6 @@ A chart from a CSV file can sit beside the text too.
 ![Fourth wide test photo](assets/wide-4.jpg)
 
 ---
-
-<!-- .slide: class="image" -->
 
 ![First wide test photo](assets/wide-1.jpg)
 ![Second wide test photo](assets/wide-2.jpg)
@@ -257,51 +242,76 @@ A chart from a CSV file can sit beside the text too.
 
 ---
 
-<!-- .slide: class="image" -->
-
 ![A tall test photo](assets/tall.jpg)
 ![A square test photo](assets/square.jpg)
 
 ---
 
-<!-- .slide: class="image" -->
-
-#### Workshop, October 2026
-
 ![A wide test photo](assets/wide-3.jpg)
+Workshop, October 2026. A line right under a picture is its caption.
 
 ---
-
-<!-- .slide: class="image" -->
-
-#### Two photos with a label
 
 ![First wide test photo](assets/wide-2.jpg)
 ![Second wide test photo](assets/wide-4.jpg)
+One caption for both photos.
 
 ---
 
-<!-- .slide: class="image overlay" -->
-
-# Part 2: Images
-
-![A wide test photo](assets/wide-2.jpg)
+<!-- .cell: class="fill" -->
+![First wide test photo](assets/wide-1.jpg)
+![A tall test photo](assets/tall.jpg)
+![A square test photo](assets/square.jpg)
 
 ---
 
-<!-- .slide: class="image overlay" -->
+## Bleed
 
-# Heading over three photos
+`bleed` crops the photo and runs it off the slide's edge.
 
+<!-- .cell: class="bleed" -->
+![A tall test photo](assets/tall.jpg)
+
+---
+
+<!-- .cell: class="bleed" -->
 ![First wide test photo](assets/wide-1.jpg)
 ![Second wide test photo](assets/wide-3.jpg)
 ![Third wide test photo](assets/wide-5.jpg)
 
 ---
 
-<!-- .slide: class="image" -->
+## Stack
+
+The second picture fades in on top of the first.
+
+<!-- .cell: class="stack" -->
+![A plain screenshot of an app window](assets/screenshot.png)
+![A square test photo](assets/square.jpg) <!-- .element: class="fragment" -->
+
+---
+
+<!-- .slide: class="dark" data-background-image="assets/wide-2.jpg" data-background-color="#000" data-background-opacity="0.5" -->
+
+# Text on a photo
+
+---
+
+<!-- .slide: class="dark" data-background-color="theme-1" -->
+
+# A slide in theme-1
+
+### data-background-color="theme-1"
+
+---
 
 ![This file does not exist](assets/not-here.jpg)
+
+---
+
+<!-- .slide: class="dark" -->
+
+# Part 3: Parts
 
 ---
 
@@ -313,26 +323,9 @@ Each person builds slides their own way, so no two decks look the same.
 
 ## After
 
-- Everyone picks from the same nine types
+- Everyone writes Markdown
 - Text and images go in the right place on their own
-- A check finds mistakes before the deck goes live
-
----
-
-<!-- .slide: class="split" -->
-
-## What stays
-
-- The words you write
-- The order of your slides
-- Your speaker notes
-![First wide test photo](assets/wide-1.jpg)
-
-## What changes
-![First wide test photo](assets/wide-1.jpg)
-- How each slide looks
-- Where things sit
-- The colours and type
+- The preview shows each slide as you type
 
 ---
 
@@ -345,15 +338,6 @@ The usual look, on the page colour.
 ## Dark
 
 The same layout with `dark`.
-
----
-
-<!-- .slide: class="cards" -->
-
-## One card
-
-### Only one
-A single card still shows. It just looks lonely.
 
 ---
 
@@ -374,30 +358,11 @@ With only `##` headings, each one starts a card and there is no title.
 ### One idea
 Each slide makes one point.
 
-### Right type
-The slide type fits the content.
+### Right pictures
+Each picture earns its place.
 
 ### Fits the frame
 Nothing runs off the edge.
-
-
----
-
-<!-- .slide: class="cards" -->
-
-## Four cards
-
-### One
-Four cards make two rows of two.
-
-### Two
-Keep each card short.
-
-### Three
-One or two lines is enough.
-
-### Four
-The heading says the main idea.
 
 ---
 
@@ -422,161 +387,57 @@ This is the last one.
 
 ---
 
-<!-- .slide: class="cards" -->
-
-## Six cards
-
-### One
-Six is the most cards. ![First wide test photo](assets/wide-1.jpg)
-
-### Two
-They make two rows.
-
-### Three
-![First wide test photo](assets/wide-1.jpg) three in each row. three in each row.three in each row.three in each row.three in each row.three in each row.three in each row.three in each row.
-
-- Subbullet
-- Subbullet
-
-### Four
-Keep them short.
-
-### Five
-Start with a heading.
-
-### Six
-More than six? Split the slide. more than six? Split the slide. more than six? Split the slide.
-
----
-
-<!-- .slide: class="cards" -->
-
-### One
-Six is the most cards.
-
-![First wide test photo](assets/wide-1.jpg)
-
-### Two
-They make two rows.
-
-### Three
-Three in each row.
-
-- Subbullet
-- Subbullet
-
-### Four
-Keep them short.
-
-### Five
-Start with a label.
-
-### Six
-More than six? Split the slide.
-
----
-
-<!-- .slide: class="columns" -->
-
-## Two columns
-
-### Writers
-
-Write the slides in Markdown and pick a type for each one.
-
-### Designers
-
-Design the slide types in Figma and set the colours and sizes.
-
----
-
 <!-- .slide: class="columns" -->
 
 ## Who does what
 
 ### Writers
 
-Write the slides in Markdown and pick a type for each one.
+Write the slides in Markdown.
 
 ### Designers
 
-Design the slide types in Figma and set the colours and sizes.
+Set the colours and sizes in a theme.
 
 ### Developers
 
-Keep the code working and run the check on every deck.
+Keep the code working.
 
 ---
 
-<!-- .slide: class="columns" -->
+<!-- .slide: class="dark" -->
 
-## Four columns
-
-### Write
-
-Put your words in a Markdown file.
-
-### Pick
-
-Choose a type for each slide.
-
-### Check
-
-Look at each slide in the browser.
-
-### Share
-
-Send the link when it looks right.
+# Part 4: Charts
 
 ---
-
-<!-- .slide: class="chart" -->
 
 ## Slides made each quarter
 
-![Bar chart of slides made each quarter](assets/slides-per-quarter.csv "bar")
+A chart is a picture, so text sits beside it.
 
+![Bar chart of slides made each quarter](assets/slides-per-quarter.csv "bar")
 Sample data, not real numbers.
 
 ---
-
-<!-- .slide: class="chart" -->
 
 ## Two teams, by month
 
 ![Line chart comparing two teams by month](assets/two-teams.csv "line")
 
-Sample data, not real numbers.
-
 ---
-
-<!-- .slide: class="chart" -->
-
-## The same data as bars
 
 ![Bar chart comparing two teams by month](assets/two-teams.csv "bar")
-
----
-
-<!-- .slide: class="chart" -->
-
-## Stacked and sideways
-
 ![Stacked horizontal bar chart of two teams by month](assets/two-teams.csv "horizontal stacked bar")
+The same data, two ways.
 
 ---
-
-<!-- .slide: class="chart" -->
 
 ## Slides by type
 
 ![Doughnut chart of slides by type](assets/slide-mix.csv "doughnut")
-
 Sample data, not real numbers.
 
 ---
-
-<!-- .slide: class="chart" -->
 
 ## A diagram
 
@@ -584,13 +445,9 @@ Sample data, not real numbers.
 
 ---
 
-<!-- .slide: class="chart" -->
-
 ## A chart written as JSON
 
 <canvas data-chart="chartjs" data-config='{"type":"bar","data":{"labels":["Q1","Q2","Q3","Q4"],"datasets":[{"data":[12,18,9,27]}]},"options":{"plugins":{"legend":{"display":false}}}}'></canvas>
-
-Sample data, not real numbers.
 
 ---
 

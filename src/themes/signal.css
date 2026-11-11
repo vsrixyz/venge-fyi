@@ -1,24 +1,26 @@
 /* Signal: white, black and one loud colour, all sans. Use with `theme: signal`. */
 
 :root {
-  --deck-bg: #ffffff;
-  --deck-panel: #f2f2f0;
+  --deck-background: #ffffff;
+  --deck-card: #f2f2f0;
   --deck-ink: #0b0b0c;
 
-  --deck-accent: #ff4f1f;
-  --deck-accent-2: #1f5bff;
-  --deck-accent-3: #0b0b0c;
+  --deck-theme-1: #ff4f1f;
+  --deck-theme-2: #1f5bff;
+  --deck-theme-3: #0b0b0c;
+  --deck-theme-4: #ffd23f;
+  --deck-theme-5: #00a878;
 
   /* Dark slides are orange, so the accents are set by hand. */
-  --deck-dark-bg: #ff4f1f;
+  --deck-dark-background: #ff4f1f;
   --deck-dark-ink: #ffffff;
-  --deck-dark-accent: #ffffff;
-  --deck-dark-accent-2: #0b0b0c;
-  --deck-dark-accent-3: #0b2a8f;
+  --deck-dark-theme-1: #ffffff;
+  --deck-dark-theme-2: #0b0b0c;
+  --deck-dark-theme-3: #0b2a8f;
+  --deck-dark-theme-4: #ffd23f;
+  --deck-dark-theme-5: #0b0b0c;
 
-  --deck-wash: rgba(11, 11, 12, 0.6);
-
-  --deck-code-panel: #0b0b0c;
+  --deck-code-background: #0b0b0c;
   --deck-code-ink: #f2f2f0;
   --deck-code-comment: #7a7a80;
   --deck-code-keyword: #ff8a66;

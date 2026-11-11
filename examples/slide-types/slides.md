@@ -1,6 +1,6 @@
 ---
 title: Slide types
-description: All nine slide types, with sample content.
+description: The slide types, with sample content.
 order: 0
 accent: '#12467A'
 ---
@@ -21,19 +21,19 @@ accent: '#12467A'
 
 #### Part 1
 
-# There are eight slide types
+# Most slides need no type
 
-### A slide with no type is big.
-
----
-
-# Pick a type for each slide
-
-Each slide starts with a line that names its type. If you leave that line out, the slide is a big slide like this one.
+### A slide with no type finds its own layout.
 
 ---
 
-> Write the words first. Then pick the slide type that fits them.
+# Write, and the slide follows
+
+Text alone sits in the middle, like this. Add a picture and the text moves to one side.
+
+---
+
+> Write the words first. Then add the pictures they need.
 
 ### Sample quote
 
@@ -55,40 +55,30 @@ Note: This is a speaker note. Only the speaker can see it.
 
 ---
 
-<!-- .slide: class="figure" -->
+## Text and a picture
 
-## Figure
-
-Use this type when you need a few lines of text to explain a picture or a screenshot.
+A few lines of text beside a picture or a screenshot.
 
 ![Screenshot of the slide type picker](picker.png)
 
 ---
 
-<!-- .slide: class="figure is-reverse" -->
-
-## Figure (reverse)
-
-Add `is-reverse` to put the image on the left. Everything else stays the same.
-
 ![A Markdown file next to the slide it makes](editor-and-slide.png)
 
----
+## Picture first
 
-<!-- .slide: class="image" -->
+Write the picture first to put it on the left.
+
+---
 
 ![Photo of a meeting room with a slide on the screen](room.jpg)
 
 ---
 
-<!-- .slide: class="image" -->
-
 ![Photo of a whiteboard after a workshop](whiteboard-before.jpg)
 ![Photo of the same whiteboard, cleaned up](whiteboard-after.jpg)
 
 ---
-
-<!-- .slide: class="image" -->
 
 ![Photo of the front of the office](office-front.jpg)
 
@@ -98,8 +88,6 @@ Add `is-reverse` to put the image on the left. Everything else stays the same.
 
 ---
 
-<!-- .slide: class="image" -->
-
 ![Sticky notes, group 1](notes-1.jpg)
 ![Sticky notes, group 2](notes-2.jpg)
 ![Sticky notes, group 3](notes-3.jpg)
@@ -107,19 +95,14 @@ Add `is-reverse` to put the image on the left. Everything else stays the same.
 
 ---
 
-<!-- .slide: class="image" -->
-
-#### Workshop, October 2026
-
 ![Photo of people sorting sticky notes on a wall](workshop.jpg)
+Workshop, October 2026
 
 ---
 
-<!-- .slide: class="image overlay" -->
+<!-- .slide: class="dark" data-background-image="stage.jpg" data-background-color="#000" data-background-opacity="0.5" -->
 
 # Part 2: Images
-
-![Photo of a person giving a talk](stage.jpg)
 
 ---
 
@@ -131,7 +114,7 @@ Each person builds slides their own way, so no two decks look the same.
 
 ## After
 
-- Everyone picks from the same nine types
+- Everyone writes Markdown the same way
 - Text and images go in the right place on their own
 - A check finds mistakes before the deck goes live
 
@@ -173,12 +156,9 @@ Keep the code working and run the check on every deck.
 
 ---
 
-<!-- .slide: class="chart" -->
-
 ## Slides made each quarter
 
 ![Bar chart of slides made each quarter](assets/slides-per-quarter.csv "bar")
-
 Sample data, not real numbers.
 
 ---

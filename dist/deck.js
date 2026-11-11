@@ -155,34 +155,25 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 })(globalThis);
 
 /* ---- src/deck-chrome.js ---- */
-/* Builds each slide's structure for its type, then flags rule breaks.
+/* Builds each slide's structure for its type.
    Call deckChrome(Reveal) after Reveal.initialize() resolves. */
 
 (function (global) {
   'use strict';
 
-  // A slide with no type is big.
-  const LAYOUTS = [
-    'big', 'prose', 'figure', 'image',
-    'split', 'cards', 'columns', 'chart'
-  ];
-
-  // Old names.
-  const ALIASES = {cover: 'big', title: 'big', headline: 'big'};
+  // A slide with no type is grid: it finds its own cells.
+  const LAYOUTS = ['grid', 'prose', 'split', 'cards', 'columns'];
 
   const MEDIA =
     'img, picture, video, svg, iframe, canvas, [data-chart], ' +
     '.deck-chart, .deck-missing';
 
   function layoutOf(section) {
-    return LAYOUTS.find(name => section.classList.contains(name)) || 'big';
+    return LAYOUTS.find(name => section.classList.contains(name)) || 'grid';
   }
 
-  // Puts the type name on the section, so CSS only needs the nine names.
+  // Puts the type name on the section, so CSS only needs these names.
   function normalizeLayout(section) {
-    Object.entries(ALIASES).forEach(([old, name]) => {
-      if (section.classList.contains(old)) section.classList.add(name);
-    });
     const layout = layoutOf(section);
     section.classList.add(layout);
     return layout;
@@ -229,10 +220,6 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       kids.forEach(kid => stage.insertBefore(kid, p));
       p.remove();
     });
-  }
-
-  function isMedia(el) {
-    return el.matches(MEDIA) || el.tagName === 'FIGURE';
   }
 
   function el(tag, className, text) {
@@ -288,11 +275,9 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     });
   }
 
-  // The eyebrow is a #### line. On big and image it can be anywhere;
-  // elsewhere it must come first.
+  // The eyebrow is a #### line. On grid it can be anywhere; elsewhere it must come first.
   function resolveEyebrow(stage, layout) {
-    const anywhere = ['big', 'image'].includes(layout);
-    const h4 = anywhere
+    const h4 = layout === 'grid'
       ? stage.querySelector(':scope > h4')
       : stage.firstElementChild && stage.firstElementChild.tagName === 'H4'
         ? stage.firstElementChild
@@ -303,65 +288,134 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     return h4;
   }
 
-  // Text goes in one column so it can't size the media's grid row.
-  function buildFigure(stage, eyebrow) {
-    if (stage.querySelector(':scope > .deck-col')) return;
+  // --- grid: the slide finds its own cells. Text that runs together is one
+  // cell; the pictures beside it are another. ---
 
-    const col = el('div', 'deck-col');
-    const media = [];
+  // Columns per number of cells or pictures: on the whole slide, and in a half.
+  const WHOLE = {1: 1, 2: 2, 3: 3, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 3};
+  const HALF = {1: 1, 2: 1, 3: 2, 4: 2, 5: 2, 6: 2, 7: 3, 8: 3, 9: 3};
+  const columnsFor = (table, count) => table[count] || (table === WHOLE ? 4 : 3);
 
-    Array.from(stage.children).forEach(child => {
-      if (isMedia(child)) {
-        media.push(child);
-        return;
-      }
-      col.appendChild(child);
-    });
-
-    if (eyebrow) col.prepend(eyebrow);
-    if (col.children.length) stage.prepend(col);
+  // <!-- .cell: class="stack" --> → {class: 'stack'}
+  function cellOptions(comment) {
+    const match = comment.textContent.match(/^\s*\.cell:([\s\S]*)$/);
+    if (!match) return null;
+    const options = {};
+    match[1].replace(/([\w-]+)="([^"]*)"/g, (_, key, value) => { options[key] = value; });
+    return options;
   }
 
-  function buildImage(section, stage, eyebrow) {
-    if (stage.querySelector(':scope > .deck-tiles')) return;
+  function applyOptions(cell, options) {
+    Object.entries(options).forEach(([key, value]) => {
+      if (key === 'class') cell.classList.add(...value.split(/\s+/).filter(Boolean));
+      else cell.setAttribute(key, value);
+    });
+  }
 
-    const overlay = section.classList.contains('overlay');
-    const tiles = el('div', 'deck-tiles');
-    const extra = [];
-    let heading = null;
+  // Equal cells, two half-tracks each, so a short last row can be centred.
+  function place(container, items, cols) {
+    container.style.setProperty('--_cols', cols);
+    container.style.setProperty('--_rows', Math.ceil(items.length / cols));
+    const rest = items.length % cols;
+    if (cols > 1 && rest) {
+      items[items.length - rest].style.gridColumnStart = String(cols - rest + 1);
+    }
+  }
 
-    Array.from(stage.children).forEach(child => {
-      if (child === eyebrow) return;
-      if (isMedia(child)) {
-        tiles.appendChild(child);
-      } else if (overlay && !heading && child.tagName === 'H1') {
-        heading = child;
-      } else if (child.textContent.trim() !== '') {
-        extra.push(child);
-      } else {
-        child.remove();
+  // A chart written as JSON gets the same box as a CSV chart.
+  function boxChart(node) {
+    if (!node.matches('[data-chart]') || node.closest('.deck-chart')) return node;
+    const box = el('div', 'deck-chart');
+    node.replaceWith(box);
+    box.appendChild(node);
+    return box;
+  }
+
+  function buildGrid(stage) {
+    if (stage.querySelector(':scope > .deck-cell')) return;
+
+    const cells = [];
+    let cell = null;
+    let options = null;
+
+    const add = (node, kind) => {
+      if (!cell || cell.kind !== kind) {
+        cell = {kind, el: el('div', `deck-cell deck-${kind}`), count: 0};
+        cells.push(cell);
       }
+      if (options) {
+        applyOptions(cell.el, options);
+        options = null;
+      }
+      cell.el.appendChild(node);
+      if (kind === 'pictures') cell.count += 1;
+    };
+
+    Array.from(stage.childNodes).forEach(node => {
+      if (node.nodeType === Node.COMMENT_NODE) {
+        const found = cellOptions(node);
+        if (found) {
+          options = found;
+          node.remove();
+        }
+        return;
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        if (!node.textContent.trim()) node.remove();
+        return;
+      }
+
+      // Text in the same paragraph as a picture is its caption.
+      const pictures = node.tagName === 'P'
+        ? Array.from(node.children).filter(kid => kid.matches(MEDIA))
+        : [];
+      if (pictures.length && node.textContent.trim()) {
+        pictures.forEach(pic => add(boxChart(pic), 'pictures'));
+        node.classList.add('deck-caption');
+        cell.el.appendChild(node);
+        return;
+      }
+
+      if (node.matches(MEDIA)) add(boxChart(node), 'pictures');
+      else add(node, 'text');
     });
 
-    const count = tiles.children.length;
-    tiles.dataset.count = String(Math.min(count, 4));
-    section.dataset.count = String(count);
+    const texts = cells.filter(c => c.kind === 'text').length;
+    let shape = 'cells';
+    if (cells.length === 1) shape = texts ? 'single' : 'pictures';
+    else if (cells.length === 2 && texts === 1) shape = 'half';
 
-    if (eyebrow) {
-      const band = el('div', 'deck-band');
-      band.appendChild(eyebrow);
-      stage.appendChild(band);
-      section.classList.add('has-label');
+    stage.dataset.shape = shape;
+    place(stage, cells.map(c => c.el), shape === 'half' ? 2 : columnsFor(WHOLE, cells.length));
+
+    cells.forEach(c => {
+      if (c.kind === 'text') {
+        if (!c.el.querySelector(':scope > :not(h1, h2, h3, h4)')) c.el.dataset.headings = '';
+        return;
+      }
+      const pictures = Array.from(c.el.children).filter(kid => !kid.matches('.deck-caption'));
+      const cols = c.el.classList.contains('stack') ? 1
+        : columnsFor(shape === 'pictures' ? WHOLE : HALF, c.count);
+      place(c.el, pictures, cols);
+      c.el.dataset.count = String(c.count);
+    });
+
+    stage.append(...cells.map(c => c.el));
+  }
+
+  // data-background-color takes theme colour names. Reveal ignores them,
+  // so they become the theme's colours before Reveal draws the backgrounds.
+  const COLOUR_NAMES = {
+    'theme-1': '--_theme-1', 'theme-2': '--_theme-2', 'theme-3': '--_theme-3',
+    'theme-4': '--_theme-4', 'theme-5': '--_theme-5',
+    background: '--_bg', card: '--_card', ink: '--_ink', line: '--deck-line'
+  };
+
+  function backgroundNames(section) {
+    const name = section.getAttribute('data-background-color');
+    if (COLOUR_NAMES[name]) {
+      section.setAttribute('data-background-color', `var(${COLOUR_NAMES[name]})`);
     }
-    stage.appendChild(tiles);
-
-    if (overlay) {
-      stage.appendChild(el('div', 'deck-wash'));
-      if (heading) stage.appendChild(heading);
-    }
-
-    // Other text shows at the foot.
-    extra.forEach(child => stage.appendChild(child));
   }
 
   // Split, cards and columns: the smallest heading on the slide (### if there
@@ -407,29 +461,6 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     row.dataset.count = String(columns.length);
     row.append(...columns);
     stage.appendChild(row);
-  }
-
-  function buildChart(stage, eyebrow) {
-    const media = Array.from(stage.children).filter(isMedia);
-
-    media.forEach(item => {
-      if (item.classList.contains('deck-chart')) return;
-      const box = el('div', 'deck-chart');
-      item.replaceWith(box);
-      box.appendChild(item);
-    });
-
-    if (eyebrow) stage.prepend(eyebrow);
-
-    const box = stage.querySelector(':scope > .deck-chart');
-    if (box) {
-      // Text after the chart is the source line.
-      let next = box.nextElementSibling;
-      while (next) {
-        if (next.tagName === 'P') next.classList.add('deck-source-line');
-        next = next.nextElementSibling;
-      }
-    }
   }
 
   const INLINE = 'strong, em, code, span, a, b, i, mark, small, sub, sup';
@@ -482,11 +513,8 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     const eyebrow = resolveEyebrow(stage, layout);
 
     switch (layout) {
-      case 'figure':
-        buildFigure(stage, eyebrow);
-        break;
-      case 'image':
-        buildImage(section, stage, eyebrow);
+      case 'grid':
+        buildGrid(stage);
         break;
       case 'split':
         buildSplit(stage, eyebrow);
@@ -496,9 +524,6 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
         break;
       case 'columns':
         buildColumns(stage, eyebrow);
-        break;
-      case 'chart':
-        buildChart(stage, eyebrow);
         break;
     }
 
@@ -525,6 +550,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     if (!root) return;
 
     leafSlides(root).forEach(buildSlide);
+    leafSlides(root).forEach(backgroundNames);
 
     watchImages(root);
 
@@ -547,7 +573,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
    each other column a series. Kinds: bar, line, pie, doughnut, plus
    "horizontal" or "stacked". Or inline JSON: data-chart + data-config.
    CSV comes from the page's #deck-csv data (CLI builds) or is fetched.
-   Colours come from the accent tokens. Call deckCharts() after deckChrome(). */
+   Colours come from the theme tokens. Call deckCharts() after deckChrome(). */
 
 (function (global) {
   'use strict';
@@ -572,9 +598,11 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 
   function palette(el) {
     return [
-      colour(el, '--_accent'),
-      colour(el, '--_accent-2'),
-      colour(el, '--_accent-3')
+      colour(el, '--_theme-1'),
+      colour(el, '--_theme-2'),
+      colour(el, '--_theme-3'),
+      colour(el, '--_theme-4'),
+      colour(el, '--_theme-5')
     ];
   }
 
@@ -651,7 +679,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
           borderWidth: 4, pointRadius: 6, tension: 0.3
         };
       }
-      // One series: each bar takes the next accent.
+      // One series: each bar takes the next theme colour.
       const fill = series.length === 1
         ? labels.map((_, j) => colors[j % colors.length])
         : color;
@@ -690,7 +718,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
   // Per chart, since light and dark slides can share a deck.
   function themed(config, el) {
     const ink = colour(el, '--deck-ink-faint');
-    const rule = colour(el, '--deck-rule');
+    const rule = colour(el, '--deck-line');
     const options = (config.options = config.options || {});
     options.color = options.color || ink;
 
@@ -824,14 +852,11 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       .map(chunk => chunk.split(VERTICAL).map(part => part.trim()));
   }
 
-  const MODIFIERS = ['dark', 'light', 'is-reverse', 'overlay'];
+  const MODIFIERS = ['dark', 'light'];
 
   function typeOf(section) {
-    const types = [
-      'big', 'prose', 'figure', 'image',
-      'split', 'cards', 'columns', 'chart'
-    ];
-    const type = types.find(name => section.classList.contains(name)) || 'big';
+    const types = ['grid', 'prose', 'split', 'cards', 'columns'];
+    const type = types.find(name => section.classList.contains(name)) || 'grid';
     const extras = MODIFIERS.filter(name =>
       section.classList.contains(name)
     );
@@ -935,7 +960,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 
     if (deck.title) document.title = deck.title;
     if (deck.accent) {
-      document.documentElement.style.setProperty('--deck-accent', deck.accent);
+      document.documentElement.style.setProperty('--deck-theme-1', deck.accent);
     }
     if (deck.source) root.setAttribute('data-source', '');
 

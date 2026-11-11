@@ -2,27 +2,30 @@
    Sizes are px on the fixed 1920×1080 frame; don't use vw/vh. */
 
 :root {
-  /* Colours. Set bg, panel and ink; the greys mix from them (below). */
-  --deck-bg: #f7f5f2;
-  --deck-panel: #fffdfa;
+  /* Colours. Set background, card and ink; the greys mix from them (below). */
+  --deck-background: #f7f5f2;
+  --deck-card: #fffdfa;
   --deck-ink: #1f1d1b;
 
-  --deck-accent: #12467A;   /* front matter `accent:` overrides this */
-  --deck-accent-2: #e1361f;
-  --deck-accent-3: #fbbe25;
+  /* The palette: bullets, links, quotes, charts, backgrounds. */
+  --deck-theme-1: #12467A;   /* front matter `accent:` overrides this */
+  --deck-theme-2: #e1361f;
+  --deck-theme-3: #fbbe25;
+  --deck-theme-4: #2f7d5b;
+  --deck-theme-5: #7b4fa8;
 
-  /* Dark: `dark` slides, image overlays and `theme: dark`. Accents lighten to read on dark. */
-  --deck-dark-bg: #1f1d1b;
-  --deck-dark-panel: rgba(255, 255, 255, 0.06);
+  /* Dark: `dark` slides and `theme: dark`. The palette lightens to read on dark. */
+  --deck-dark-background: #1f1d1b;
+  --deck-dark-card: rgba(255, 255, 255, 0.06);
   --deck-dark-ink: #f7f5f2;
-  --deck-dark-accent: color-mix(in oklab, var(--deck-accent) 60%, #fff);
-  --deck-dark-accent-2: color-mix(in oklab, var(--deck-accent-2) 60%, #fff);
-  --deck-dark-accent-3: color-mix(in oklab, var(--deck-accent-3) 60%, #fff);
-
-  --deck-wash: rgba(20, 18, 16, 0.55); /* image overlay */
+  --deck-dark-theme-1: color-mix(in oklab, var(--deck-theme-1) 60%, #fff);
+  --deck-dark-theme-2: color-mix(in oklab, var(--deck-theme-2) 60%, #fff);
+  --deck-dark-theme-3: color-mix(in oklab, var(--deck-theme-3) 60%, #fff);
+  --deck-dark-theme-4: color-mix(in oklab, var(--deck-theme-4) 60%, #fff);
+  --deck-dark-theme-5: color-mix(in oklab, var(--deck-theme-5) 60%, #fff);
 
   /* Code blocks. The Markdown panel (source: true) uses these too. */
-  --deck-code-panel: #22201d;
+  --deck-code-background: #22201d;
   --deck-code-ink: #ece8e1;
   --deck-code-comment: #8f887e;
   --deck-code-keyword: #e8859b;
@@ -35,14 +38,14 @@
   --deck-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --deck-weight-display: 700;
 
-  /* Type sizes. The slide type picks the heading size, not the tag. */
-  --deck-text-title: 200px;        /* big # with headings only */
-  --deck-text-headline: 144px;     /* big # with text, image */
-  --deck-text-subheading: 64px;    /* big ## */
-  --deck-text-heading: 56px;       /* other #/##, big quotes */
-  --deck-text-heading-small: 48px; /* figure and split */
+  /* Type sizes. Text in a cell scales down from these as the cell gets smaller. */
+  --deck-text-title: 200px;        /* # on a one-cell slide with headings only */
+  --deck-text-headline: 144px;     /* # on a one-cell slide with text */
+  --deck-text-subheading: 64px;    /* ## on a one-cell slide */
+  --deck-text-heading: 56px;       /* #/## on prose, cards, columns; quotes on a one-cell slide */
+  --deck-text-heading-small: 48px; /* #/## beside pictures, and on split */
   --deck-text-body: 34px;
-  --deck-text-small: 22px;         /* labels: ####, big ###, table headers */
+  --deck-text-small: 22px;         /* labels: ####, ### on a one-cell slide, table headers */
 
   --deck-leading-title: 0.82;
   --deck-leading-display: 1.05;
@@ -59,18 +62,16 @@
   --deck-space-xl: calc(var(--deck-space-m) * 2);
   --deck-inset-x: calc(var(--deck-space-m) * 4);
   --deck-inset-y: calc(var(--deck-space-m) * 2);
-  --deck-inset-tight: calc(var(--deck-space-m) * 3); /* figure, split */
+  --deck-inset-tight: calc(var(--deck-space-m) * 3); /* split */
 
   --deck-measure-prose: 1040px;
-  --deck-measure-figure: 480px;
 
   --deck-radius: 8px;
 }
 
 /* Light or dark: each slide shows one side of every colour pair, chosen by its
    color-scheme. Slides follow the page unless they say otherwise. */
-.reveal section.dark,
-.reveal section.image.overlay {
+.reveal section.dark {
   color-scheme: dark;
 }
 
@@ -82,15 +83,17 @@
    Declared on every slide so a theme can set the pairs anywhere. Don't set these in a theme. */
 :root,
 .reveal .slides section {
-  --_bg: light-dark(var(--deck-bg), var(--deck-dark-bg));
-  --_panel: light-dark(var(--deck-panel), var(--deck-dark-panel));
+  --_bg: light-dark(var(--deck-background), var(--deck-dark-background));
+  --_card: light-dark(var(--deck-card), var(--deck-dark-card));
   --_ink: light-dark(var(--deck-ink), var(--deck-dark-ink));
-  --_accent: light-dark(var(--deck-accent), var(--deck-dark-accent));
-  --_accent-2: light-dark(var(--deck-accent-2), var(--deck-dark-accent-2));
-  --_accent-3: light-dark(var(--deck-accent-3), var(--deck-dark-accent-3));
+  --_theme-1: light-dark(var(--deck-theme-1), var(--deck-dark-theme-1));
+  --_theme-2: light-dark(var(--deck-theme-2), var(--deck-dark-theme-2));
+  --_theme-3: light-dark(var(--deck-theme-3), var(--deck-dark-theme-3));
+  --_theme-4: light-dark(var(--deck-theme-4), var(--deck-dark-theme-4));
+  --_theme-5: light-dark(var(--deck-theme-5), var(--deck-dark-theme-5));
 
   --deck-ink-soft: color-mix(in oklab, var(--_ink) 76%, var(--_bg));
   --deck-ink-faint: color-mix(in oklab, var(--_ink) 52%, var(--_bg));
-  --deck-rule: color-mix(in oklab, var(--_ink) 12%, var(--_bg));
-  --deck-code-bg: color-mix(in oklab, var(--_ink) 9%, transparent);
+  --deck-line: color-mix(in oklab, var(--_ink) 12%, var(--_bg));
+  --deck-code-inline: color-mix(in oklab, var(--_ink) 9%, transparent);
 }

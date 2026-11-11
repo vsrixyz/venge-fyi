@@ -46,27 +46,30 @@ footer, header, hgroup, main, menu, nav, section {
    Sizes are px on the fixed 1920×1080 frame; don't use vw/vh. */
 
 :root {
-  /* Colours. Set bg, panel and ink; the greys mix from them (below). */
-  --deck-bg: #f7f5f2;
-  --deck-panel: #fffdfa;
+  /* Colours. Set background, card and ink; the greys mix from them (below). */
+  --deck-background: #f7f5f2;
+  --deck-card: #fffdfa;
   --deck-ink: #1f1d1b;
 
-  --deck-accent: #12467A;   /* front matter `accent:` overrides this */
-  --deck-accent-2: #e1361f;
-  --deck-accent-3: #fbbe25;
+  /* The palette: bullets, links, quotes, charts, backgrounds. */
+  --deck-theme-1: #12467A;   /* front matter `accent:` overrides this */
+  --deck-theme-2: #e1361f;
+  --deck-theme-3: #fbbe25;
+  --deck-theme-4: #2f7d5b;
+  --deck-theme-5: #7b4fa8;
 
-  /* Dark: `dark` slides, image overlays and `theme: dark`. Accents lighten to read on dark. */
-  --deck-dark-bg: #1f1d1b;
-  --deck-dark-panel: rgba(255, 255, 255, 0.06);
+  /* Dark: `dark` slides and `theme: dark`. The palette lightens to read on dark. */
+  --deck-dark-background: #1f1d1b;
+  --deck-dark-card: rgba(255, 255, 255, 0.06);
   --deck-dark-ink: #f7f5f2;
-  --deck-dark-accent: color-mix(in oklab, var(--deck-accent) 60%, #fff);
-  --deck-dark-accent-2: color-mix(in oklab, var(--deck-accent-2) 60%, #fff);
-  --deck-dark-accent-3: color-mix(in oklab, var(--deck-accent-3) 60%, #fff);
-
-  --deck-wash: rgba(20, 18, 16, 0.55); /* image overlay */
+  --deck-dark-theme-1: color-mix(in oklab, var(--deck-theme-1) 60%, #fff);
+  --deck-dark-theme-2: color-mix(in oklab, var(--deck-theme-2) 60%, #fff);
+  --deck-dark-theme-3: color-mix(in oklab, var(--deck-theme-3) 60%, #fff);
+  --deck-dark-theme-4: color-mix(in oklab, var(--deck-theme-4) 60%, #fff);
+  --deck-dark-theme-5: color-mix(in oklab, var(--deck-theme-5) 60%, #fff);
 
   /* Code blocks. The Markdown panel (source: true) uses these too. */
-  --deck-code-panel: #22201d;
+  --deck-code-background: #22201d;
   --deck-code-ink: #ece8e1;
   --deck-code-comment: #8f887e;
   --deck-code-keyword: #e8859b;
@@ -79,14 +82,14 @@ footer, header, hgroup, main, menu, nav, section {
   --deck-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --deck-weight-display: 700;
 
-  /* Type sizes. The slide type picks the heading size, not the tag. */
-  --deck-text-title: 200px;        /* big # with headings only */
-  --deck-text-headline: 144px;     /* big # with text, image */
-  --deck-text-subheading: 64px;    /* big ## */
-  --deck-text-heading: 56px;       /* other #/##, big quotes */
-  --deck-text-heading-small: 48px; /* figure and split */
+  /* Type sizes. Text in a cell scales down from these as the cell gets smaller. */
+  --deck-text-title: 200px;        /* # on a one-cell slide with headings only */
+  --deck-text-headline: 144px;     /* # on a one-cell slide with text */
+  --deck-text-subheading: 64px;    /* ## on a one-cell slide */
+  --deck-text-heading: 56px;       /* #/## on prose, cards, columns; quotes on a one-cell slide */
+  --deck-text-heading-small: 48px; /* #/## beside pictures, and on split */
   --deck-text-body: 34px;
-  --deck-text-small: 22px;         /* labels: ####, big ###, table headers */
+  --deck-text-small: 22px;         /* labels: ####, ### on a one-cell slide, table headers */
 
   --deck-leading-title: 0.82;
   --deck-leading-display: 1.05;
@@ -103,18 +106,16 @@ footer, header, hgroup, main, menu, nav, section {
   --deck-space-xl: calc(var(--deck-space-m) * 2);
   --deck-inset-x: calc(var(--deck-space-m) * 4);
   --deck-inset-y: calc(var(--deck-space-m) * 2);
-  --deck-inset-tight: calc(var(--deck-space-m) * 3); /* figure, split */
+  --deck-inset-tight: calc(var(--deck-space-m) * 3); /* split */
 
   --deck-measure-prose: 1040px;
-  --deck-measure-figure: 480px;
 
   --deck-radius: 8px;
 }
 
 /* Light or dark: each slide shows one side of every colour pair, chosen by its
    color-scheme. Slides follow the page unless they say otherwise. */
-.reveal section.dark,
-.reveal section.image.overlay {
+.reveal section.dark {
   color-scheme: dark;
 }
 
@@ -126,17 +127,19 @@ footer, header, hgroup, main, menu, nav, section {
    Declared on every slide so a theme can set the pairs anywhere. Don't set these in a theme. */
 :root,
 .reveal .slides section {
-  --_bg: light-dark(var(--deck-bg), var(--deck-dark-bg));
-  --_panel: light-dark(var(--deck-panel), var(--deck-dark-panel));
+  --_bg: light-dark(var(--deck-background), var(--deck-dark-background));
+  --_card: light-dark(var(--deck-card), var(--deck-dark-card));
   --_ink: light-dark(var(--deck-ink), var(--deck-dark-ink));
-  --_accent: light-dark(var(--deck-accent), var(--deck-dark-accent));
-  --_accent-2: light-dark(var(--deck-accent-2), var(--deck-dark-accent-2));
-  --_accent-3: light-dark(var(--deck-accent-3), var(--deck-dark-accent-3));
+  --_theme-1: light-dark(var(--deck-theme-1), var(--deck-dark-theme-1));
+  --_theme-2: light-dark(var(--deck-theme-2), var(--deck-dark-theme-2));
+  --_theme-3: light-dark(var(--deck-theme-3), var(--deck-dark-theme-3));
+  --_theme-4: light-dark(var(--deck-theme-4), var(--deck-dark-theme-4));
+  --_theme-5: light-dark(var(--deck-theme-5), var(--deck-dark-theme-5));
 
   --deck-ink-soft: color-mix(in oklab, var(--_ink) 76%, var(--_bg));
   --deck-ink-faint: color-mix(in oklab, var(--_ink) 52%, var(--_bg));
-  --deck-rule: color-mix(in oklab, var(--_ink) 12%, var(--_bg));
-  --deck-code-bg: color-mix(in oklab, var(--_ink) 9%, transparent);
+  --deck-line: color-mix(in oklab, var(--_ink) 12%, var(--_bg));
+  --deck-code-inline: color-mix(in oklab, var(--_ink) 9%, transparent);
 }
 
 /* ---- src/deck-layouts.css ---- */
@@ -174,15 +177,46 @@ footer, header, hgroup, main, menu, nav, section {
   flex-shrink: 0;
 }
 
-/* --- big --- */
-.reveal section.big > .deck-stage {
-  --_h-size: var(--deck-text-headline);
+/* --- grid: deck-chrome.js finds the cells. Every cell is the same size;
+   each spans two half-tracks so a short last row can be centred. --- */
+.reveal section.grid > .deck-stage {
+  display: grid;
+  grid-template-columns: repeat(calc(var(--_cols, 1) * 2), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--_rows, 1), minmax(0, 1fr));
+  align-items: stretch;
   gap: var(--deck-space-l);
+  text-align: left;
+}
+
+.reveal .deck-cell {
+  grid-column-end: span 2;
+  container-type: size;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Text: sizes scale with the cell, up to the tokens. */
+.reveal .deck-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  align-items: flex-start;
+  gap: var(--deck-space-m);
+  --_h-size: clamp(36px, 6cqi, var(--deck-text-heading-small));
+  --_p-size: clamp(24px, 4.2cqi, var(--deck-text-body));
+}
+
+/* One text cell: centred and big. */
+.reveal [data-shape="single"] > .deck-text {
+  align-items: center;
+  text-align: center;
+  gap: var(--deck-space-l);
+  --_h-size: clamp(64px, 9cqi, var(--deck-text-headline));
 }
 
 /* Headings only (a title or a section break): # goes up to title size. */
-.reveal section.big > .deck-stage:not(:has(> :not(h1, h2, h3, h4))) {
-  --_h-size: var(--deck-text-title);
+.reveal [data-shape="single"] > .deck-text[data-headings] {
+  --_h-size: clamp(80px, 12cqi, var(--deck-text-title));
   gap: var(--deck-space-xl);
 
   > h1 {
@@ -190,18 +224,18 @@ footer, header, hgroup, main, menu, nav, section {
   }
 }
 
-/* ## subhead. ### takes the label style (Part 2). */
-.reveal section.big > .deck-stage > h2 {
-  font-size: var(--deck-text-subheading);
+/* ## subhead. ### takes the label style. */
+.reveal [data-shape="single"] > .deck-text > h2 {
+  font-size: clamp(40px, 4cqi, var(--deck-text-subheading));
   font-weight: 400;
   color: var(--deck-ink-soft);
 }
 
-.reveal section.big > .deck-stage > p {
+.reveal [data-shape="single"] > .deck-text > p {
   max-width: var(--deck-measure-prose);
 }
 
-.reveal section.big > .deck-stage > blockquote {
+.reveal [data-shape="single"] > .deck-text > blockquote {
   width: 100%;
   max-width: calc(var(--deck-measure-prose) * 1.25);
   padding: 0;
@@ -210,14 +244,83 @@ footer, header, hgroup, main, menu, nav, section {
   text-align: center;
 }
 
-.reveal section.big > .deck-stage > blockquote::before {
+.reveal [data-shape="single"] > .deck-text > blockquote::before {
   content: "\201C";
   display: block;
   height: 0.6em;
   font-size: 2.85em;
   font-weight: var(--deck-weight-display);
   line-height: 1;
-  color: var(--_accent);
+  color: var(--_theme-1);
+}
+
+/* Pictures: a grid of their own. Whole by default; fill and bleed crop. */
+.reveal .deck-pictures {
+  display: grid;
+  grid-template-columns: repeat(calc(var(--_cols, 1) * 2), minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: var(--deck-space-s);
+}
+
+.reveal .deck-pictures > :not(.deck-caption) {
+  grid-column-end: span 2;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-width: none;
+  object-fit: contain;
+}
+
+.reveal .deck-pictures > .deck-chart {
+  position: relative;
+}
+
+.reveal .deck-pictures:is(.fill, .bleed) > :is(img, video, picture) {
+  object-fit: cover;
+}
+
+.reveal .deck-pictures.bleed {
+  gap: 0;
+  max-width: none;
+}
+
+/* bleed runs off the slide's edge on the sides the cell touches. */
+.reveal [data-shape="pictures"] > .deck-pictures.bleed {
+  margin: calc(-1 * var(--deck-inset-y)) calc(-1 * var(--deck-inset-x));
+}
+
+.reveal [data-shape="half"] > .deck-pictures.bleed:first-child {
+  margin: calc(-1 * var(--deck-inset-y)) 0 calc(-1 * var(--deck-inset-y)) calc(-1 * var(--deck-inset-x));
+}
+
+.reveal [data-shape="half"] > .deck-pictures.bleed:last-child {
+  margin: calc(-1 * var(--deck-inset-y)) calc(-1 * var(--deck-inset-x)) calc(-1 * var(--deck-inset-y)) 0;
+}
+
+/* stack: pictures on top of each other, centred, each at its own size. */
+.reveal .deck-pictures.stack > :not(.deck-caption) {
+  grid-area: 1 / 1 / 2 / -1;
+  place-self: center;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* A caption: text in the same paragraph as the pictures, in a row under them. */
+.reveal .deck-pictures:has(> .deck-caption) {
+  grid-template-rows: repeat(var(--_rows, 1), minmax(0, 1fr)) auto;
+}
+
+.reveal .deck-pictures > .deck-caption {
+  grid-column: 1 / -1;
+  font-size: clamp(22px, 3.4cqi, var(--deck-text-body));
+  text-align: center;
+}
+
+.reveal .deck-pictures.bleed > .deck-caption {
+  padding: var(--deck-space-s) var(--deck-inset-x);
 }
 
 /* --- prose: the only type that scrolls --- */
@@ -225,14 +328,14 @@ footer, header, hgroup, main, menu, nav, section {
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: var(--deck-rule) transparent;
+  scrollbar-color: var(--deck-line) transparent;
 }
 
 .reveal section.prose > .deck-stage::-webkit-scrollbar {
   width: 10px;
 }
 .reveal section.prose > .deck-stage::-webkit-scrollbar-thumb {
-  background: var(--deck-rule);
+  background: var(--deck-line);
   border-radius: 5px;
 }
 
@@ -248,114 +351,6 @@ footer, header, hgroup, main, menu, nav, section {
 .reveal section.prose.is-scrollable > .deck-stage {
   /* A mask uses only alpha, so #000 is not a colour here. */
   mask-image: linear-gradient(to bottom, #000 calc(100% - 60px), transparent);
-}
-
-/* --- figure: deck-chrome.js puts the text in .deck-col --- */
-.reveal section.figure > .deck-stage {
-  --deck-inset-x: var(--deck-inset-tight);
-  --deck-inset-y: var(--deck-inset-tight);
-  --_h-size: var(--deck-text-heading-small);
-  display: grid;
-  grid-template-columns: var(--deck-measure-figure) 1fr;
-  grid-template-rows: 100%;
-  grid-template-areas: "text media";
-  column-gap: var(--deck-space-l);
-  align-items: start;
-  text-align: left;
-}
-
-.reveal section.figure.is-reverse > .deck-stage {
-  grid-template-columns: 1fr var(--deck-measure-figure);
-  grid-template-areas: "media text";
-}
-
-.reveal section.figure .deck-col {
-  grid-area: text;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--deck-space-l);
-  min-width: 0;
-  width: 100%;
-}
-
-.reveal section.figure > .deck-stage
-  > :is(img, picture, video, svg, table, pre, [data-chart], .deck-chart, .deck-missing) {
-  grid-area: media;
-  align-self: center;
-  width: 100%;
-  height: auto;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.reveal section.figure > .deck-stage > :is(.deck-chart, .deck-missing) {
-  height: 100%;
-}
-
-/* --- image: 1–4 tiles, cropped, no gaps --- */
-.reveal section.image > .deck-stage {
-  padding: 0;
-  gap: 0;
-  align-items: stretch;
-  justify-content: flex-start;
-  --_h-size: var(--deck-text-headline);
-}
-
-.reveal section.image .deck-band {
-  flex: none;
-  padding: var(--deck-inset-y) var(--deck-inset-x) var(--deck-space-m);
-  text-align: left;
-}
-
-.reveal section.image .deck-tiles {
-  flex: 1 1 0;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-auto-rows: 1fr;
-}
-.reveal section.image .deck-tiles:is([data-count="2"], [data-count="4"]) { grid-template-columns: repeat(2, 1fr); }
-.reveal section.image .deck-tiles[data-count="3"] { grid-template-columns: repeat(3, 1fr); }
-
-.reveal section.image .deck-tiles > * {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-  max-width: none;
-  object-fit: cover;
-}
-
-/* Text image doesn't allow: shown at the foot and flagged. */
-.reveal section.image > .deck-stage > :is(p, h1, h2, h3, ul, ol, blockquote) {
-  flex: none;
-  padding: var(--deck-space-s) var(--deck-inset-x);
-}
-
-.reveal section.image.overlay .deck-band,
-.reveal section.image.overlay > .deck-stage > h1 {
-  position: absolute;
-  z-index: 2;
-}
-
-.reveal section.image.overlay .deck-band {
-  inset: 0 0 auto;
-}
-
-.reveal section.image.overlay .deck-wash {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: var(--deck-wash);
-}
-
-.reveal section.image.overlay > .deck-stage > h1 {
-  inset: 0;
-  padding: 0 var(--deck-inset-x);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* --- split: one half per heading; .deck-head holds anything above --- */
@@ -380,7 +375,7 @@ footer, header, hgroup, main, menu, nav, section {
   z-index: -1;
   grid-column: 2;
   grid-row: 1 / -1;
-  background: var(--_panel);
+  background: var(--_card);
 }
 
 .reveal section.split .deck-half {
@@ -441,21 +436,7 @@ footer, header, hgroup, main, menu, nav, section {
   gap: var(--deck-space-s);
 }
 
-/* --- chart: the box takes the free height --- */
-.reveal section.chart .deck-chart {
-  position: relative;
-  flex: 1 1 0;
-  min-height: 0;
-  width: 100%;
-}
-
-.reveal section.chart .deck-chart > :is(img, svg, picture, video, .deck-missing) {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: contain;
-}
-
+/* --- charts: the canvas fills its box --- */
 .reveal .deck-chart > :is(canvas, div[data-chart]) {
   width: 100% !important; /* Chart.js sets inline sizes */
   height: 100% !important;
@@ -478,8 +459,8 @@ footer, header, hgroup, main, menu, nav, section {
   text-rendering: optimizeLegibility;
 }
 
-/* A dark or light slide paints its own background. */
-.reveal section:is(.dark, .light) > .deck-stage {
+/* A dark or light slide paints its own background, unless Reveal draws one. */
+.reveal section:is(.dark, .light):not([data-background-color], [data-background-image], [data-background-video], [data-background-gradient], [data-background-iframe]) > .deck-stage {
   background-color: var(--_bg);
 }
 
@@ -508,10 +489,10 @@ footer, header, hgroup, main, menu, nav, section {
   color: var(--_ink);
 }
 
-/* Labels: ####, ### on big, table headers. :where keeps big's easy to override. */
+/* Labels: ####, ### on a one-cell slide, table headers. :where keeps it easy to override. */
 .reveal h4,
 .reveal th,
-.reveal :where(.big) > .deck-stage > h3 {
+.reveal :where([data-shape="single"]) > .deck-text > h3 {
   font-family: var(--deck-font-mono);
   font-size: var(--deck-text-small);
   font-weight: 400;
@@ -536,12 +517,12 @@ footer, header, hgroup, main, menu, nav, section {
 }
 
 .reveal a {
-  color: var(--_accent);
+  color: var(--_theme-1);
   text-decoration: none;
-  border-bottom: 2px solid color-mix(in oklab, var(--_accent) 35%, transparent);
+  border-bottom: 2px solid color-mix(in oklab, var(--_theme-1) 35%, transparent);
 }
 .reveal a:hover {
-  border-bottom-color: var(--_accent);
+  border-bottom-color: var(--_theme-1);
 }
 
 /* --- Lists. inline-block so a centred slide can centre the block. --- */
@@ -577,7 +558,7 @@ footer, header, hgroup, main, menu, nav, section {
   width: 0.4em;
   height: 0.4em;
   border-radius: 50%;
-  background: var(--_accent);
+  background: var(--_theme-1);
 }
 
 .reveal ol {
@@ -594,13 +575,13 @@ footer, header, hgroup, main, menu, nav, section {
   top: 0.12em;
   font-family: var(--deck-font-mono);
   font-size: 0.62em;
-  color: var(--_accent);
+  color: var(--_theme-1);
 }
 
 /* --- Quote --- */
 .reveal blockquote {
   padding-left: var(--deck-space-m);
-  border-left: 3px solid var(--_accent);
+  border-left: 3px solid var(--_theme-1);
   font-family: var(--deck-font-display);
   font-size: calc(var(--_p-size) * 1.3);
   color: var(--_ink);
@@ -615,7 +596,7 @@ footer, header, hgroup, main, menu, nav, section {
 .reveal code {
   font-family: var(--deck-font-mono);
   font-size: 0.88em;
-  background: var(--deck-code-bg);
+  background: var(--deck-code-inline);
   padding: 0.08em 0.32em;
   border-radius: calc(var(--deck-radius) / 2);
 }
@@ -636,9 +617,9 @@ footer, header, hgroup, main, menu, nav, section {
   overflow-wrap: anywhere;
   line-height: var(--deck-leading-body);
   color: var(--deck-code-ink);
-  background: var(--deck-code-panel);
+  background: var(--deck-code-background);
   border-radius: var(--deck-radius);
-  box-shadow: 0 0 0 1px var(--deck-rule); /* edge on dark backgrounds */
+  box-shadow: 0 0 0 1px var(--deck-line); /* edge on dark backgrounds */
 }
 
 .reveal :is(.hljs-comment, .hljs-quote) {
@@ -668,7 +649,7 @@ footer, header, hgroup, main, menu, nav, section {
 .reveal :is(th, td) {
   padding: 0.6em 1.4em 0.6em 0;
   text-align: left;
-  border-bottom: 1px solid var(--deck-rule);
+  border-bottom: 1px solid var(--deck-line);
 }
 .reveal th {
   border-bottom-width: 2px;
@@ -691,20 +672,15 @@ footer, header, hgroup, main, menu, nav, section {
   align-items: flex-start;
   gap: var(--deck-space-s);
   text-align: left;
-  background: var(--_panel);
-  border: 1px solid var(--deck-rule);
+  background: var(--_card);
+  border: 1px solid var(--deck-line);
   border-radius: var(--deck-radius);
 }
 
 /* --- Columns --- */
 .reveal .deck-column {
   padding-top: var(--deck-space-m);
-  border-top: 2px solid var(--deck-rule);
-}
-
-/* --- Chart source line --- */
-.reveal p.deck-source-line {
-  color: var(--deck-ink-faint);
+  border-top: 2px solid var(--deck-line);
 }
 
 /* --- Missing image (deck-chrome.js) --- */
@@ -717,7 +693,7 @@ footer, header, hgroup, main, menu, nav, section {
   gap: var(--deck-space-xs);
   min-height: 240px;
   padding: var(--deck-space-m);
-  background: var(--deck-code-bg);
+  background: var(--deck-code-inline);
   outline: 2px dashed var(--deck-ink-faint);
   outline-offset: -2px;
   font-family: var(--deck-font-mono);
@@ -765,10 +741,10 @@ footer, header, hgroup, main, menu, nav, section {
 .reveal-viewport.reveal.overview {
   background: linear-gradient(
     118deg,
-    color-mix(in oklab, var(--_accent) 45%, var(--_bg)) 0%,
-    color-mix(in oklab, var(--_accent-3) 27%, var(--_bg)) 30%,
-    color-mix(in oklab, var(--_accent-2) 45%, var(--_bg)) 64%,
-    color-mix(in oklab, var(--_accent) 36%, var(--_bg)) 100%
+    color-mix(in oklab, var(--_theme-1) 45%, var(--_bg)) 0%,
+    color-mix(in oklab, var(--_theme-3) 27%, var(--_bg)) 30%,
+    color-mix(in oklab, var(--_theme-2) 45%, var(--_bg)) 64%,
+    color-mix(in oklab, var(--_theme-1) 36%, var(--_bg)) 100%
   );
   background-size: 320% 320%;
   animation: deck-overview-drift 24s ease-in-out infinite;
@@ -786,7 +762,7 @@ footer, header, hgroup, main, menu, nav, section {
 }
 
 .reveal.overview .slides section.present {
-  outline: 2px solid var(--_accent);
+  outline: 2px solid var(--_theme-1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -800,7 +776,7 @@ footer, header, hgroup, main, menu, nav, section {
 body.has-source {
   --source-width: clamp(360px, 34vw, 640px);
   margin: 0;
-  background: var(--deck-code-panel);
+  background: var(--deck-code-background);
 }
 body.has-source .reveal {
   position: fixed;
@@ -818,7 +794,7 @@ body.has-source.source-hidden .reveal { inset-inline-end: 0; }
   width: var(--source-width);
   overflow-y: auto;
   padding: 1.25rem 1.25rem 2rem;
-  background: var(--deck-code-panel);
+  background: var(--deck-code-background);
   color: var(--deck-code-ink);
   font-family: var(--deck-font-base);
   font-size: 0.9rem;

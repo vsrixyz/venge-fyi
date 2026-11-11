@@ -3,7 +3,7 @@
    each other column a series. Kinds: bar, line, pie, doughnut, plus
    "horizontal" or "stacked". Or inline JSON: data-chart + data-config.
    CSV comes from the page's #deck-csv data (CLI builds) or is fetched.
-   Colours come from the accent tokens. Call deckCharts() after deckChrome(). */
+   Colours come from the theme tokens. Call deckCharts() after deckChrome(). */
 
 (function (global) {
   'use strict';
@@ -28,9 +28,11 @@
 
   function palette(el) {
     return [
-      colour(el, '--_accent'),
-      colour(el, '--_accent-2'),
-      colour(el, '--_accent-3')
+      colour(el, '--_theme-1'),
+      colour(el, '--_theme-2'),
+      colour(el, '--_theme-3'),
+      colour(el, '--_theme-4'),
+      colour(el, '--_theme-5')
     ];
   }
 
@@ -107,7 +109,7 @@
           borderWidth: 4, pointRadius: 6, tension: 0.3
         };
       }
-      // One series: each bar takes the next accent.
+      // One series: each bar takes the next theme colour.
       const fill = series.length === 1
         ? labels.map((_, j) => colors[j % colors.length])
         : color;
@@ -146,7 +148,7 @@
   // Per chart, since light and dark slides can share a deck.
   function themed(config, el) {
     const ink = colour(el, '--deck-ink-faint');
-    const rule = colour(el, '--deck-rule');
+    const rule = colour(el, '--deck-line');
     const options = (config.options = config.options || {});
     options.color = options.color || ink;
 

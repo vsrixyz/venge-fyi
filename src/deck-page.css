@@ -19,10 +19,10 @@
 .reveal-viewport.reveal.overview {
   background: linear-gradient(
     118deg,
-    color-mix(in oklab, var(--_accent) 45%, var(--_bg)) 0%,
-    color-mix(in oklab, var(--_accent-3) 27%, var(--_bg)) 30%,
-    color-mix(in oklab, var(--_accent-2) 45%, var(--_bg)) 64%,
-    color-mix(in oklab, var(--_accent) 36%, var(--_bg)) 100%
+    color-mix(in oklab, var(--_theme-1) 45%, var(--_bg)) 0%,
+    color-mix(in oklab, var(--_theme-3) 27%, var(--_bg)) 30%,
+    color-mix(in oklab, var(--_theme-2) 45%, var(--_bg)) 64%,
+    color-mix(in oklab, var(--_theme-1) 36%, var(--_bg)) 100%
   );
   background-size: 320% 320%;
   animation: deck-overview-drift 24s ease-in-out infinite;
@@ -40,7 +40,7 @@
 }
 
 .reveal.overview .slides section.present {
-  outline: 2px solid var(--_accent);
+  outline: 2px solid var(--_theme-1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -54,7 +54,7 @@
 body.has-source {
   --source-width: clamp(360px, 34vw, 640px);
   margin: 0;
-  background: var(--deck-code-panel);
+  background: var(--deck-code-background);
 }
 body.has-source .reveal {
   position: fixed;
@@ -72,7 +72,7 @@ body.has-source.source-hidden .reveal { inset-inline-end: 0; }
   width: var(--source-width);
   overflow-y: auto;
   padding: 1.25rem 1.25rem 2rem;
-  background: var(--deck-code-panel);
+  background: var(--deck-code-background);
   color: var(--deck-code-ink);
   font-family: var(--deck-font-base);
   font-size: 0.9rem;

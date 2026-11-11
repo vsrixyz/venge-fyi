@@ -41,7 +41,7 @@
 
     if (deck.title) document.title = deck.title;
     if (deck.accent) {
-      document.documentElement.style.setProperty('--deck-accent', deck.accent);
+      document.documentElement.style.setProperty('--deck-theme-1', deck.accent);
     }
     if (deck.source) root.setAttribute('data-source', '');
 

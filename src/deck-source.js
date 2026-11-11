@@ -14,14 +14,11 @@
       .map(chunk => chunk.split(VERTICAL).map(part => part.trim()));
   }
 
-  const MODIFIERS = ['dark', 'light', 'is-reverse', 'overlay'];
+  const MODIFIERS = ['dark', 'light'];
 
   function typeOf(section) {
-    const types = [
-      'big', 'prose', 'figure', 'image',
-      'split', 'cards', 'columns', 'chart'
-    ];
-    const type = types.find(name => section.classList.contains(name)) || 'big';
+    const types = ['grid', 'prose', 'split', 'cards', 'columns'];
+    const type = types.find(name => section.classList.contains(name)) || 'grid';
     const extras = MODIFIERS.filter(name =>
       section.classList.contains(name)
     );
