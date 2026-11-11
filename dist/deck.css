@@ -80,12 +80,13 @@ footer, header, hgroup, main, menu, nav, section {
   --deck-weight-display: 700;
 
   /* Type sizes. The slide type picks the heading size, not the tag. */
-  --deck-text-title: 200px;        /* cover # */
-  --deck-text-headline: 104px;     /* big #, image */
-  --deck-text-heading: 56px;       /* other #/##, subheads, big quotes */
+  --deck-text-title: 200px;        /* big # with headings only */
+  --deck-text-headline: 144px;     /* big # with text, image */
+  --deck-text-subheading: 64px;    /* big ## */
+  --deck-text-heading: 56px;       /* other #/##, big quotes */
   --deck-text-heading-small: 48px; /* figure and split */
   --deck-text-body: 34px;
-  --deck-text-small: 22px;         /* labels: ####, cover ###, table headers */
+  --deck-text-small: 22px;         /* labels: ####, big ###, table headers */
 
   --deck-leading-title: 0.82;
   --deck-leading-display: 1.05;
@@ -110,25 +111,32 @@ footer, header, hgroup, main, menu, nav, section {
   --deck-radius: 8px;
 }
 
-/* A dark slide swaps in the dark values. */
+/* Light or dark: each slide shows one side of every colour pair, chosen by its
+   color-scheme. Slides follow the page unless they say otherwise. */
 .reveal section.dark,
 .reveal section.image.overlay {
-  --deck-bg: var(--deck-dark-bg);
-  --deck-panel: var(--deck-dark-panel);
-  --deck-ink: var(--deck-dark-ink);
-  --deck-accent: var(--deck-dark-accent);
-  --deck-accent-2: var(--deck-dark-accent-2);
-  --deck-accent-3: var(--deck-dark-accent-3);
+  color-scheme: dark;
 }
 
-/* Worked out from ink and bg on every slide, so they follow light and dark.
-   Don't set these in a theme. */
+.reveal section.light {
+  color-scheme: light;
+}
+
+/* What the CSS uses: the pairs, resolved per slide, and greys mixed from them.
+   Declared on every slide so a theme can set the pairs anywhere. Don't set these in a theme. */
 :root,
 .reveal .slides section {
-  --deck-ink-soft: color-mix(in oklab, var(--deck-ink) 76%, var(--deck-bg));
-  --deck-ink-faint: color-mix(in oklab, var(--deck-ink) 52%, var(--deck-bg));
-  --deck-rule: color-mix(in oklab, var(--deck-ink) 12%, var(--deck-bg));
-  --deck-code-bg: color-mix(in oklab, var(--deck-ink) 9%, transparent);
+  --_bg: light-dark(var(--deck-bg), var(--deck-dark-bg));
+  --_panel: light-dark(var(--deck-panel), var(--deck-dark-panel));
+  --_ink: light-dark(var(--deck-ink), var(--deck-dark-ink));
+  --_accent: light-dark(var(--deck-accent), var(--deck-dark-accent));
+  --_accent-2: light-dark(var(--deck-accent-2), var(--deck-dark-accent-2));
+  --_accent-3: light-dark(var(--deck-accent-3), var(--deck-dark-accent-3));
+
+  --deck-ink-soft: color-mix(in oklab, var(--_ink) 76%, var(--_bg));
+  --deck-ink-faint: color-mix(in oklab, var(--_ink) 52%, var(--_bg));
+  --deck-rule: color-mix(in oklab, var(--_ink) 12%, var(--_bg));
+  --deck-code-bg: color-mix(in oklab, var(--_ink) 9%, transparent);
 }
 
 /* ---- src/deck-layouts.css ---- */
@@ -156,8 +164,8 @@ footer, header, hgroup, main, menu, nav, section {
   align-items: center;
   text-align: center;
   gap: var(--deck-space-m);
-  --deck-h-size: var(--deck-text-heading);
-  --deck-p-size: var(--deck-text-body);
+  --_h-size: var(--deck-text-heading);
+  --_p-size: var(--deck-text-body);
 }
 
 /* Don't let flex squash blocks; overflow is flagged instead. */
@@ -166,24 +174,25 @@ footer, header, hgroup, main, menu, nav, section {
   flex-shrink: 0;
 }
 
-/* --- cover, big --- */
-.reveal section.cover > .deck-stage {
-  --deck-h-size: var(--deck-text-title);
-  gap: var(--deck-space-xl);
-}
-
-.reveal section.cover > .deck-stage > h1 {
-  line-height: var(--deck-leading-title);
-}
-
+/* --- big --- */
 .reveal section.big > .deck-stage {
-  --deck-h-size: var(--deck-text-headline);
+  --_h-size: var(--deck-text-headline);
   gap: var(--deck-space-l);
 }
 
+/* Headings only (a title or a section break): # goes up to title size. */
+.reveal section.big > .deck-stage:not(:has(> :not(h1, h2, h3, h4))) {
+  --_h-size: var(--deck-text-title);
+  gap: var(--deck-space-xl);
+
+  > h1 {
+    line-height: var(--deck-leading-title);
+  }
+}
+
 /* ## subhead. ### takes the label style (Part 2). */
-.reveal section:is(.cover, .big) > .deck-stage > h2 {
-  font-size: var(--deck-text-heading);
+.reveal section.big > .deck-stage > h2 {
+  font-size: var(--deck-text-subheading);
   font-weight: 400;
   color: var(--deck-ink-soft);
 }
@@ -208,7 +217,7 @@ footer, header, hgroup, main, menu, nav, section {
   font-size: 2.85em;
   font-weight: var(--deck-weight-display);
   line-height: 1;
-  color: var(--deck-accent);
+  color: var(--_accent);
 }
 
 /* --- prose: the only type that scrolls --- */
@@ -245,7 +254,7 @@ footer, header, hgroup, main, menu, nav, section {
 .reveal section.figure > .deck-stage {
   --deck-inset-x: var(--deck-inset-tight);
   --deck-inset-y: var(--deck-inset-tight);
-  --deck-h-size: var(--deck-text-heading-small);
+  --_h-size: var(--deck-text-heading-small);
   display: grid;
   grid-template-columns: var(--deck-measure-figure) 1fr;
   grid-template-rows: 100%;
@@ -290,7 +299,7 @@ footer, header, hgroup, main, menu, nav, section {
   gap: 0;
   align-items: stretch;
   justify-content: flex-start;
-  --deck-h-size: var(--deck-text-headline);
+  --_h-size: var(--deck-text-headline);
 }
 
 .reveal section.image .deck-band {
@@ -349,40 +358,62 @@ footer, header, hgroup, main, menu, nav, section {
   justify-content: center;
 }
 
-/* --- split: one half per ## --- */
+/* --- split: one half per heading; .deck-head holds anything above --- */
 .reveal section.split > .deck-stage {
   padding: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 100%;
+  grid-template-rows: auto 1fr; /* head, halves */
+  align-items: stretch;
   gap: 0;
   text-align: left;
-  --deck-h-size: var(--deck-text-heading-small);
+  isolation: isolate;
+  --_h-size: var(--deck-text-heading-small);
+}
+
+/* The panel: the whole second column, top to bottom, behind the text.
+   Absolute, so it doesn't take a grid cell from the halves. */
+.reveal section.split > .deck-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  grid-column: 2;
+  grid-row: 1 / -1;
+  background: var(--_panel);
 }
 
 .reveal section.split .deck-half {
+  grid-row: 2;
   box-sizing: border-box;
   min-width: 0;
   padding: var(--deck-inset-tight);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: var(--deck-space-l);
 }
 
-.reveal section.split .deck-half + .deck-half {
-  background: var(--deck-panel);
+.reveal section.split .deck-head {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--deck-space-s);
+  padding: var(--deck-inset-tight) var(--deck-inset-tight) 0;
 }
 
-.reveal section.split > .deck-stage > .deck-eyebrow {
-  position: absolute;
-  z-index: 1;
-  top: var(--deck-inset-tight);
-  left: var(--deck-inset-tight);
+.reveal section.split .deck-head > h2 {
+  font-size: var(--deck-text-heading);
 }
 
-/* --- cards: 2 or 4 go two across, 3/5/6 three across --- */
+.reveal section.split > .deck-stage:has(> .deck-head) .deck-half {
+  padding-top: var(--deck-space-l);
+}
+
+/* --- cards: one per heading. 2 or 4 go two across, 3/5/6 three across --- */
 .reveal section.cards .deck-cards {
   display: grid;
   width: 100%;
@@ -392,7 +423,7 @@ footer, header, hgroup, main, menu, nav, section {
 .reveal section.cards .deck-cards[data-count="1"] { grid-template-columns: 1fr; }
 .reveal section.cards .deck-cards:is([data-count="2"], [data-count="4"]) { grid-template-columns: repeat(2, 1fr); }
 
-/* --- columns: one per ### --- */
+/* --- columns: one per heading --- */
 .reveal section.columns .deck-columns {
   display: grid;
   width: 100%;
@@ -435,45 +466,52 @@ footer, header, hgroup, main, menu, nav, section {
    The reset removes margins; the slide layout's gap spaces blocks. */
 
 .reveal-viewport {
-  background: var(--deck-bg);
+  background: var(--_bg);
 }
 
 .reveal {
   font-family: var(--deck-font-base);
   font-size: var(--deck-text-body);
   line-height: var(--deck-leading-snug);
-  color: var(--deck-ink);
+  color: var(--_ink);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* A dark slide paints its own background. */
-.reveal section.dark > .deck-stage {
-  background: var(--deck-bg);
+/* A dark or light slide paints its own background. */
+.reveal section:is(.dark, .light) > .deck-stage {
+  background-color: var(--_bg);
 }
 
-/* --- Headings. Size comes from the slide type (--deck-h-size). --- */
-.reveal :is(h1, h2) {
+/* --- Headings. Size comes from the slide type (--_h-size).
+   A split half's heading takes the ## look, a card's or column's the ### look,
+   whichever level was written. --- */
+.reveal :is(h1, h2),
+.reveal .deck-half > h3 {
   font-family: var(--deck-font-display);
-  font-size: var(--deck-h-size);
+  font-size: var(--_h-size);
   font-weight: var(--deck-weight-display);
   line-height: var(--deck-leading-display);
   letter-spacing: var(--deck-track-display);
-  color: var(--deck-ink);
+  color: var(--_ink);
   text-wrap: balance;
 }
 
-.reveal :where(h3, .deck-card__label) {
-  font-size: calc(var(--deck-p-size) * 1.05);
+/* :where keeps plain ### easy to override. */
+.reveal :where(h3),
+.reveal :is(.deck-card, .deck-column) > h2 {
+  font-family: var(--deck-font-base);
+  font-size: calc(var(--_p-size) * 1.05);
   font-weight: 700;
   line-height: var(--deck-leading-snug);
-  color: var(--deck-ink);
+  letter-spacing: normal;
+  color: var(--_ink);
 }
 
-/* Labels: ####, ### on cover and big, table headers. */
+/* Labels: ####, ### on big, table headers. :where keeps big's easy to override. */
 .reveal h4,
 .reveal th,
-.reveal :where(.cover, .big) > .deck-stage > h3 {
+.reveal :where(.big) > .deck-stage > h3 {
   font-family: var(--deck-font-mono);
   font-size: var(--deck-text-small);
   font-weight: 400;
@@ -484,33 +522,33 @@ footer, header, hgroup, main, menu, nav, section {
 
 /* --- Text --- */
 .reveal p {
-  font-size: var(--deck-p-size);
+  font-size: var(--_p-size);
   line-height: var(--deck-leading-body);
   color: var(--deck-ink-soft);
 }
 
 .reveal strong {
   font-weight: 700;
-  color: var(--deck-ink);
+  color: var(--_ink);
 }
 .reveal em {
   font-style: italic;
 }
 
 .reveal a {
-  color: var(--deck-accent);
+  color: var(--_accent);
   text-decoration: none;
-  border-bottom: 2px solid color-mix(in oklab, var(--deck-accent) 35%, transparent);
+  border-bottom: 2px solid color-mix(in oklab, var(--_accent) 35%, transparent);
 }
 .reveal a:hover {
-  border-bottom-color: var(--deck-accent);
+  border-bottom-color: var(--_accent);
 }
 
 /* --- Lists. inline-block so a centred slide can centre the block. --- */
 .reveal :is(ul, ol) {
   display: inline-block;
   list-style: none;
-  font-size: var(--deck-p-size);
+  font-size: var(--_p-size);
   text-align: left;
 }
 
@@ -539,7 +577,7 @@ footer, header, hgroup, main, menu, nav, section {
   width: 0.4em;
   height: 0.4em;
   border-radius: 50%;
-  background: var(--deck-accent);
+  background: var(--_accent);
 }
 
 .reveal ol {
@@ -556,16 +594,16 @@ footer, header, hgroup, main, menu, nav, section {
   top: 0.12em;
   font-family: var(--deck-font-mono);
   font-size: 0.62em;
-  color: var(--deck-accent);
+  color: var(--_accent);
 }
 
 /* --- Quote --- */
 .reveal blockquote {
   padding-left: var(--deck-space-m);
-  border-left: 3px solid var(--deck-accent);
+  border-left: 3px solid var(--_accent);
   font-family: var(--deck-font-display);
-  font-size: calc(var(--deck-p-size) * 1.3);
-  color: var(--deck-ink);
+  font-size: calc(var(--_p-size) * 1.3);
+  color: var(--_ink);
   text-align: left;
 }
 .reveal blockquote p {
@@ -624,7 +662,7 @@ footer, header, hgroup, main, menu, nav, section {
 /* --- Tables. th takes the label style. --- */
 .reveal table {
   border-collapse: collapse;
-  font-size: calc(var(--deck-p-size) * 0.86);
+  font-size: calc(var(--_p-size) * 0.86);
   text-align: left;
 }
 .reveal :is(th, td) {
@@ -645,19 +683,17 @@ footer, header, hgroup, main, menu, nav, section {
   max-width: 100%;
 }
 
-/* --- Cards. The label takes the ### style. --- */
-.reveal li.deck-card {
-  margin: 0;
+/* --- Cards --- */
+.reveal .deck-card {
   padding: var(--deck-space-m);
   display: flex;
   flex-direction: column;
-  gap: var(--deck-space-xs);
-  background: var(--deck-panel);
+  align-items: flex-start;
+  gap: var(--deck-space-s);
+  text-align: left;
+  background: var(--_panel);
   border: 1px solid var(--deck-rule);
   border-radius: var(--deck-radius);
-}
-.reveal li.deck-card::before {
-  content: none;
 }
 
 /* --- Columns --- */
@@ -691,7 +727,7 @@ footer, header, hgroup, main, menu, nav, section {
 .reveal .deck-missing__title {
   letter-spacing: var(--deck-track-caps);
   text-transform: uppercase;
-  color: var(--deck-ink);
+  color: var(--_ink);
 }
 .reveal .deck-missing__alt {
   font-family: var(--deck-font-base);
@@ -700,7 +736,7 @@ footer, header, hgroup, main, menu, nav, section {
 /* --- Print --- */
 @media print {
   .reveal-viewport {
-    background: var(--deck-bg);
+    background: var(--_bg);
   }
   .reveal section.prose > .deck-stage {
     overflow: visible;
@@ -708,7 +744,7 @@ footer, header, hgroup, main, menu, nav, section {
 }
 
 /* ---- src/deck-page.css ---- */
-/* Page around the deck: load fade, overview, Markdown panel, checks, errors. */
+/* Page around the deck: load fade, overview, Markdown panel, errors. */
 
 /* Hide slides until deck-chrome.js has built them. */
 .reveal .slides {
@@ -729,10 +765,10 @@ footer, header, hgroup, main, menu, nav, section {
 .reveal-viewport.reveal.overview {
   background: linear-gradient(
     118deg,
-    color-mix(in oklab, var(--deck-accent) 45%, var(--deck-bg)) 0%,
-    color-mix(in oklab, var(--deck-accent-3) 27%, var(--deck-bg)) 30%,
-    color-mix(in oklab, var(--deck-accent-2) 45%, var(--deck-bg)) 64%,
-    color-mix(in oklab, var(--deck-accent) 36%, var(--deck-bg)) 100%
+    color-mix(in oklab, var(--_accent) 45%, var(--_bg)) 0%,
+    color-mix(in oklab, var(--_accent-3) 27%, var(--_bg)) 30%,
+    color-mix(in oklab, var(--_accent-2) 45%, var(--_bg)) 64%,
+    color-mix(in oklab, var(--_accent) 36%, var(--_bg)) 100%
   );
   background-size: 320% 320%;
   animation: deck-overview-drift 24s ease-in-out infinite;
@@ -744,13 +780,13 @@ footer, header, hgroup, main, menu, nav, section {
 }
 
 .reveal.overview .slides section {
-  background: var(--deck-bg);
-  outline: 1px solid color-mix(in oklab, var(--deck-ink) 12%, transparent);
-  box-shadow: 0 18px 40px color-mix(in oklab, var(--deck-ink) 14%, transparent);
+  background: var(--_bg);
+  outline: 1px solid color-mix(in oklab, var(--_ink) 12%, transparent);
+  box-shadow: 0 18px 40px color-mix(in oklab, var(--_ink) 14%, transparent);
 }
 
 .reveal.overview .slides section.present {
-  outline: 2px solid var(--deck-accent);
+  outline: 2px solid var(--_accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -819,11 +855,6 @@ body.source-hidden .deck-source { display: none; }
   padding: 0.25rem 0.6rem;
   cursor: pointer;
 }
-.deck-source__check {
-  margin: 0 0 1rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.85rem;
-}
 .deck-source__code {
   margin: 0;
   white-space: pre-wrap;
@@ -841,49 +872,6 @@ body.source-hidden .deck-source { display: none; }
   body.source-hidden .reveal { inset: 0; }
 }
 
-/* Checks on slides (dev, and source: true), the panel's problem line, load errors. */
-.reveal section[data-deck-overflow]::after,
-.reveal.deck-dev section[data-deck-check]::before,
-.deck-source__check,
-.deck-error {
-  border-radius: 4px;
-  line-height: 1.4;
-  color: #fff;
-  background: #c0392b;
-}
-
-.reveal section[data-deck-overflow]::after,
-.reveal.deck-dev section[data-deck-check]::before {
-  position: absolute;
-  right: 16px;
-  z-index: 60;
-  max-width: 70%;
-  padding: 6px 12px;
-  font-family: var(--deck-font-mono);
-  font-size: 18px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-align: left;
-  pointer-events: none;
-}
-
-.reveal section[data-deck-overflow]::after {
-  content: "overflows by " attr(data-deck-overflow) "px";
-  bottom: 14px;
-}
-
-.reveal.deck-dev section[data-deck-check]::before {
-  content: attr(data-deck-check);
-  top: 14px;
-}
-
-@media print {
-  .reveal section[data-deck-overflow]::after,
-  .reveal section[data-deck-check]::before {
-    display: none;
-  }
-}
-
 /* Load or parse failure (deck-start.js). */
 .deck-error {
   position: fixed;
@@ -894,4 +882,8 @@ body.source-hidden .deck-source { display: none; }
   white-space: pre-wrap;
   font-family: var(--deck-font-mono);
   font-size: 0.9rem;
+  line-height: 1.4;
+  color: #fff;
+  background: #c0392b;
+  border-radius: 4px;
 }

@@ -34,8 +34,6 @@ title: My talk
 theme: dark
 ---
 
-<!-- .slide: class="cover" -->
-
 # My talk
 
 ---
@@ -43,7 +41,7 @@ theme: dark
 # One point per slide
 ```
 
-Slide types: `cover`, `big`, `prose`, `figure`, `image`, `split`, `cards`, `columns`, `chart`. A theme is one CSS file that changes the `--deck-*` tokens.
+Slide types: `big`, `prose`, `figure`, `image`, `split`, `cards`, `columns`, `chart`. A theme is one CSS file that changes the `--deck-*` tokens.
 
 Everything else (front matter, slide rules, charts, themes, tokens, class names) is in [docs/reference.md](docs/reference.md).
 

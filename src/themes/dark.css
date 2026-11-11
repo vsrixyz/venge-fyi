@@ -1,15 +1,6 @@
 /* Dark: the default look with every slide dark. Use with `theme: dark`.
-   It uses the base theme's --deck-dark-* values, so set those to change it. */
+   Colours come from the --deck-dark-* tokens; set those to change it. */
 
-:root,
-.reveal .slides section {
-  --deck-bg: var(--deck-dark-bg);
-  --deck-panel: var(--deck-dark-panel);
-  --deck-ink: var(--deck-dark-ink);
-}
-
-.reveal .slides section {
-  --deck-accent: var(--deck-dark-accent);
-  --deck-accent-2: var(--deck-dark-accent-2);
-  --deck-accent-3: var(--deck-dark-accent-3);
+:root {
+  color-scheme: dark;
 }
