@@ -20,7 +20,7 @@
       'split', 'cards', 'columns', 'chart'
     ];
     const type = types.find(name => section.classList.contains(name)) || 'big';
-    const extras = ['theme-dark', 'is-reverse', 'overlay'].filter(name =>
+    const extras = ['dark', 'is-reverse', 'overlay'].filter(name =>
       section.classList.contains(name)
     );
     return [type, ...extras].join(' · ');

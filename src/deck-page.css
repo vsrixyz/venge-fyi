@@ -1,4 +1,4 @@
-/* Page around the deck: load fade, Markdown panel, errors. */
+/* Page around the deck: load fade, overview, Markdown panel, checks, errors. */
 
 /* Hide slides until deck-chrome.js has built them. */
 .reveal .slides {
@@ -11,6 +11,42 @@
 @media (prefers-reduced-motion: reduce) {
   .reveal.deck-ready .slides {
     transition: none;
+  }
+}
+
+/* Overview (Esc): accents drift behind the slides. */
+.reveal-viewport:has(.reveal.overview),
+.reveal-viewport.reveal.overview {
+  background: linear-gradient(
+    118deg,
+    color-mix(in oklab, var(--deck-accent) 45%, var(--deck-bg)) 0%,
+    color-mix(in oklab, var(--deck-accent-3) 27%, var(--deck-bg)) 30%,
+    color-mix(in oklab, var(--deck-accent-2) 45%, var(--deck-bg)) 64%,
+    color-mix(in oklab, var(--deck-accent) 36%, var(--deck-bg)) 100%
+  );
+  background-size: 320% 320%;
+  animation: deck-overview-drift 24s ease-in-out infinite;
+}
+
+@keyframes deck-overview-drift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.reveal.overview .slides section {
+  background: var(--deck-bg);
+  outline: 1px solid color-mix(in oklab, var(--deck-ink) 12%, transparent);
+  box-shadow: 0 18px 40px color-mix(in oklab, var(--deck-ink) 14%, transparent);
+}
+
+.reveal.overview .slides section.present {
+  outline: 2px solid var(--deck-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-viewport:has(.reveal.overview),
+  .reveal-viewport.reveal.overview {
+    animation: none;
   }
 }
 
@@ -76,11 +112,7 @@ body.source-hidden .deck-source { display: none; }
 .deck-source__check {
   margin: 0 0 1rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 4px;
-  background: var(--deck-warn);
-  color: var(--deck-warn-ink);
   font-size: 0.85rem;
-  line-height: 1.4;
 }
 .deck-source__code {
   margin: 0;
@@ -99,6 +131,49 @@ body.source-hidden .deck-source { display: none; }
   body.source-hidden .reveal { inset: 0; }
 }
 
+/* Checks on slides (dev, and source: true), the panel's problem line, load errors. */
+.reveal section[data-deck-overflow]::after,
+.reveal.deck-dev section[data-deck-check]::before,
+.deck-source__check,
+.deck-error {
+  border-radius: 4px;
+  line-height: 1.4;
+  color: #fff;
+  background: #c0392b;
+}
+
+.reveal section[data-deck-overflow]::after,
+.reveal.deck-dev section[data-deck-check]::before {
+  position: absolute;
+  right: 16px;
+  z-index: 60;
+  max-width: 70%;
+  padding: 6px 12px;
+  font-family: var(--deck-font-mono);
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: left;
+  pointer-events: none;
+}
+
+.reveal section[data-deck-overflow]::after {
+  content: "overflows by " attr(data-deck-overflow) "px";
+  bottom: 14px;
+}
+
+.reveal.deck-dev section[data-deck-check]::before {
+  content: attr(data-deck-check);
+  top: 14px;
+}
+
+@media print {
+  .reveal section[data-deck-overflow]::after,
+  .reveal section[data-deck-check]::before {
+    display: none;
+  }
+}
+
 /* Load or parse failure (deck-start.js). */
 .deck-error {
   position: fixed;
@@ -106,10 +181,7 @@ body.source-hidden .deck-source { display: none; }
   z-index: 60;
   margin: 0;
   padding: 0.75rem 1rem;
-  border-radius: 4px;
   white-space: pre-wrap;
   font-family: var(--deck-font-mono);
   font-size: 0.9rem;
-  background: var(--deck-warn);
-  color: var(--deck-warn-ink);
 }

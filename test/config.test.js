@@ -7,7 +7,7 @@ test('reads front matter and markdown', () => {
 # comment
 title: "A: deck"
 accent: '#12467A'
-theme: midnight # trailing comment
+theme: dark # trailing comment
 charts: ["echarts"]
 source: true
 order: 3
@@ -17,7 +17,7 @@ order: 3
 `);
   assert.equal(deck.title, 'A: deck');
   assert.equal(deck.accent, '#12467A');
-  assert.equal(deck.theme, 'midnight');
+  assert.equal(deck.theme, 'dark');
   assert.deepEqual([...deck.charts], ['echarts']);
   assert.equal(deck.source, true);
   assert.equal(deck.markdown, '# Hello');

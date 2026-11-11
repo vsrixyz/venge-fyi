@@ -91,7 +91,7 @@ A deck is one markdown file. It can start with front matter:
 ```markdown
 ---
 title: My talk
-theme: midnight
+theme: dark
 ---
 
 <!-- .slide: class="cover" -->
@@ -112,7 +112,7 @@ All options are optional.
 | `title` | `Deck` | The browser tab title. |
 | `description` | none | The page's `<meta name="description">`. |
 | `accent` | the theme's | The colour for bullets, links, the quote mark and charts. Sets `--deck-accent`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
-| `theme` | none | A built-in theme name (`midnight`, `signal`) or a path to your own CSS file, relative to the deck file. |
+| `theme` | none | A built-in theme name (`dark`, `signal`) or a path to your own CSS file, relative to the deck file. |
 | `charts` | `[]` | Chart libraries for charts written as JSON: `chartjs`, `echarts`. A deck that links a `.csv` file gets `chartjs` on its own. |
 | `source` | `false` | Shows each slide's markdown in a panel beside it. Press M to hide it. Also turns on the [checks](#checks). |
 
@@ -155,7 +155,7 @@ Modifiers go in the same `class="…"`:
 
 | Class | Works on | What it does |
 | --- | --- | --- |
-| `theme-dark` | any type | Dark background and light text for this slide. |
+| `dark` | any type | Makes this slide dark. See [Light and dark](#light-and-dark). |
 | `is-reverse` | `figure` | Puts the picture on the left. |
 | `overlay` | `image` | Darkens the photos and puts one `#` heading over them. |
 
@@ -185,7 +185,7 @@ Q2,18
 
 Kinds: `bar` (the default), `line`, `pie`, `doughnut`. Add `horizontal` or `stacked`, as in `"horizontal stacked bar"`. Numbers may have `,`, `%`, `$`, `£` or `€`.
 
-Colours come from `--deck-accent`, `--deck-accent-2` and `--deck-accent-3`. Text and grid lines come from `--deck-ink-faint` and `--deck-rule`. Charts on `theme-dark` slides use that slide's colours.
+Colours come from `--deck-accent`, `--deck-accent-2` and `--deck-accent-3`. Text and grid lines come from `--deck-ink-faint` and `--deck-rule`. Any CSS colour works, including `color-mix()`. Charts on `dark` slides use that slide's colours.
 
 The CLI puts the CSV data into the page, so built decks work from disk. Drop-in decks fetch the file.
 
@@ -205,41 +205,35 @@ Chart.js configs get the deck's colours and fonts where you don't set them. ECha
 
 ## Themes
 
-A theme is one CSS file that changes [tokens](#tokens). Nothing else is needed:
+The base theme is [`src/deck-tokens.css`](../src/deck-tokens.css). It is always loaded and holds every [token](#tokens). A theme is one CSS file that sets only the tokens it changes:
 
 ```css
 :root {
-  --deck-bg: #14161a;
-  --deck-ink: #f3f1ec;
-  --deck-accent: #f2b45c;
+  --deck-bg: #ffffff;
+  --deck-ink: #0b0b0c;
+  --deck-accent: #ff4f1f;
 }
 ```
 
-Use it with `theme: path/to/my-theme.css` in the front matter, or add a `<link>` after `deck.css`. The built-in themes are in [`src/themes/`](../src/themes/).
+Use it with `theme: path/to/my-theme.css` in the front matter, or add a `<link>` after `deck.css`. The built-in themes are `dark` and `signal`, in [`src/themes/`](../src/themes/).
 
 Order matters: `deck.css`, then the theme, then the front matter `accent`.
 
-### Dark slides
+### Light and dark
 
-`theme-dark` slides, and the text on `image overlay` slides, set their own colour tokens. To change them, set tokens on this selector too:
+Slides are light unless you say otherwise:
 
-```css
-.reveal section.theme-dark,
-.reveal section.image.overlay {
-  --deck-ink: #ffffff;
-  --deck-ink-soft: #d0d0d0;
-}
+- `theme: dark` makes every slide dark.
+- `<!-- .slide: class="dark" -->` makes one slide dark. On a dark deck it changes nothing.
+- The text on `image overlay` slides uses the dark colours too.
 
-.reveal section.theme-dark {
-  --deck-bg: #000000;
-}
-```
+A dark slide swaps in `--deck-dark-bg`, `--deck-dark-panel` and `--deck-dark-ink`. The greys, lines and inline code are mixed from ink and bg on every slide, so they follow. Accents use `--deck-dark-accent`, `-2` and `-3`, which are the light accents lightened 40% toward white so they stay readable. An `accent` from the front matter is lightened too.
 
-The tokens that dark slides set are `--deck-bg`, `--deck-ink`, `--deck-ink-soft`, `--deck-ink-faint`, `--deck-rule`, `--deck-panel`, `--deck-code-bg` and `--deck-display-ink`.
+To change how dark looks, set the `--deck-dark-*` tokens in your theme. Images are shown as they are: a diagram with dark lines on a clear background will be hard to see on a dark slide.
 
 ### Fonts
 
-The default fonts are the system's. To use a web font, add its `@font-face` to the theme and set the font tokens. Paths in `url()` are relative to the theme file.
+The default is the browser's sans-serif font for everything except code. Headings follow `--deck-font-base` unless you set `--deck-font-display`. To use a web font, add its `@font-face` to the theme and set the font tokens. Paths in `url()` are relative to the theme file.
 
 ```css
 @font-face {
@@ -249,7 +243,7 @@ The default fonts are the system's. To use a web font, add its `@font-face` to t
 }
 
 :root {
-  --deck-font-base: "Inter", system-ui, sans-serif;
+  --deck-font-base: "Inter", sans-serif;
 }
 ```
 
@@ -259,30 +253,32 @@ The CLI copies a theme given by path, but not the files its `url()`s point to. C
 
 All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults are in [`src/deck-tokens.css`](../src/deck-tokens.css).
 
-**Colours**
+**Colours.** Set `--deck-bg`, `--deck-panel` and `--deck-ink`. The four marked *mixed* are worked out from ink and bg on every slide, so they follow light and dark; don't set them.
 
 | Token | Default | Used for |
 | --- | --- | --- |
 | `--deck-bg` | `#f7f5f2` | Page and slide background |
 | `--deck-panel` | `#fffdfa` | Cards, the second half of `split` |
-| `--deck-ink` | `#1f1d1b` | Main text, bold text, `###` headings |
-| `--deck-ink-soft` | `#56524d` | Paragraphs, list items, table cells, `##` on cover and big |
-| `--deck-ink-faint` | `#8a847c` | Eyebrows, small lines, table headers, chart text, source lines |
-| `--deck-rule` | `#e4e0d9` | Lines, borders, chart grid, scrollbar |
-| `--deck-display-ink` | `var(--deck-ink)` | `#` and `##` headings |
+| `--deck-ink` | `#1f1d1b` | Headings, bold text, `###` |
+| `--deck-ink-soft` | *mixed*: 76% ink | Paragraphs, list items, table cells, `##` on cover and big |
+| `--deck-ink-faint` | *mixed*: 52% ink | Labels, source lines, chart text |
+| `--deck-rule` | *mixed*: 12% ink | Lines, borders, chart grid, scrollbar |
+| `--deck-code-bg` | *mixed*: ink at 9% | Inline code, the missing-image box |
 | `--deck-accent` | `#12467A` | Bullets, numbers, links, quote mark and border, first chart colour. Front matter `accent` sets it. |
 | `--deck-accent-2` | `#e1361f` | Second chart colour, overview background |
 | `--deck-accent-3` | `#fbbe25` | Third chart colour, overview background |
 | `--deck-wash` | `rgba(20, 18, 16, 0.55)` | The darkening on `image overlay` |
-| `--deck-shadow` | `rgba(31, 29, 27, 0.14)` | Slide shadow in the overview (Esc) |
-| `--deck-warn` | `#c0392b` | Check labels, the panel's problem line, load errors |
-| `--deck-warn-ink` | `#fff` | Text on `--deck-warn` |
+| `--deck-dark-bg` | `#1f1d1b` | `--deck-bg` on dark slides |
+| `--deck-dark-panel` | `rgba(255, 255, 255, 0.06)` | `--deck-panel` on dark slides |
+| `--deck-dark-ink` | `#f7f5f2` | `--deck-ink` on dark slides |
+| `--deck-dark-accent` | accent, 40% toward white | `--deck-accent` on dark slides |
+| `--deck-dark-accent-2` | accent 2, 40% toward white | `--deck-accent-2` on dark slides |
+| `--deck-dark-accent-3` | accent 3, 40% toward white | `--deck-accent-3` on dark slides |
 
-**Code.** The markdown panel (`source: true`) uses these too.
+**Code blocks.** The markdown panel (`source: true`) uses these too.
 
 | Token | Default | Used for |
 | --- | --- | --- |
-| `--deck-code-bg` | `rgba(31, 29, 27, 0.07)` | Inline code, the missing-image box |
 | `--deck-code-panel` | `#22201d` | Code blocks; the markdown panel's background |
 | `--deck-code-ink` | `#ece8e1` | Code block text, titles; the panel's text |
 | `--deck-code-comment` | `#8f887e` | Comments; the panel's slide count and button border |
@@ -290,68 +286,42 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-code-string` | `#93b0f0` | Strings, attributes |
 | `--deck-code-number` | `#f0c766` | Numbers, literals, built-ins; the panel's slide type |
 
-**Fonts**
+**Type**
 
 | Token | Default | Used for |
 | --- | --- | --- |
-| `--deck-font-display` | `Georgia, serif` | `#` and `##` headings, quotes |
-| `--deck-font-base` | `system-ui, …, sans-serif` | Body text, `###`, chart text |
-| `--deck-font-mono` | `ui-monospace, …, monospace` | Code, eyebrows, table headers, numbered list markers, check labels |
-
-**Type sizes.** The slide type picks the heading size, not the tag.
-
-| Token | Default | Used for |
-| --- | --- | --- |
+| `--deck-font-base` | `sans-serif` | Body text, `###`, chart text |
+| `--deck-font-display` | `var(--deck-font-base)` | `#` and `##` headings, quotes |
+| `--deck-font-mono` | `ui-monospace, …, monospace` | Code, labels, numbered list markers |
+| `--deck-weight-display` | `700` | `#` and `##` headings, the big quote mark |
 | `--deck-text-title` | `200px` | `#` on `cover` |
-| `--deck-text-headline` | `104px` | `#` on `big` and `image overlay` |
-| `--deck-text-prose` | `56px` | `#`/`##` on `prose`, `cards`, `columns`, `chart`; `##` on `cover` and `big`; quotes on `big` |
-| `--deck-text-figure` | `48px` | `#`/`##` on `figure` and `split` |
-| `--deck-text-label` | `36px` | Card labels, column `###` |
-| `--deck-text-body` | `34px` | Paragraphs and lists |
-| `--deck-text-meta` | `24px` | `###` on `cover` and `big` |
-| `--deck-text-eyebrow` | `22px` | `####`, the missing-image box |
-| `--deck-text-quote-mark` | `160px` | The big quote mark on `big` |
-
-**Leading and tracking**
-
-| Token | Default | Used for |
-| --- | --- | --- |
+| `--deck-text-headline` | `104px` | `#` on `big` and `image` |
+| `--deck-text-heading` | `56px` | `#`/`##` on other types; `##` on `cover` and `big`; quotes on `big` |
+| `--deck-text-heading-small` | `48px` | `#`/`##` on `figure` and `split` |
+| `--deck-text-body` | `34px` | Paragraphs and lists. `###` and card labels are 5% larger. |
+| `--deck-text-small` | `22px` | Labels: `####`, `###` on `cover` and `big`, table headers; the missing-image box |
 | `--deck-leading-title` | `0.82` | `#` on `cover` |
 | `--deck-leading-display` | `1.05` | Other `#` and `##` |
-| `--deck-leading-body` | `1.5` | Paragraphs and lists |
+| `--deck-leading-snug` | `1.25` | The default; `###`, card labels, labels, tables |
+| `--deck-leading-body` | `1.5` | Paragraphs, lists, code blocks |
 | `--deck-track-display` | `-0.02em` | `#` and `##` |
-| `--deck-track-eyebrow` | `0.18em` | `####` |
-| `--deck-track-meta` | `0.12em` | `###` on `cover` and `big` |
+| `--deck-track-caps` | `0.18em` | Labels |
 
-**Layout**
+**Space.** Set `--deck-space-m` and the others scale with it. You can still set one yourself.
 
 | Token | Default | Used for |
 | --- | --- | --- |
-| `--deck-inset-x` | `128px` | Left and right space inside a slide |
-| `--deck-inset-y` | `64px` | Top and bottom space inside a slide |
-| `--deck-split-inset-x` | `96px` | Left and right space inside each `split` half |
-| `--deck-split-inset-y` | `90px` | Top and bottom space inside each `split` half |
-| `--deck-gap-title` | `64px` | Between blocks on `cover` |
-| `--deck-gap-headline` | `50px` | Between blocks on `big` |
-| `--deck-gap-prose` | `32px` | Between blocks on other types |
-| `--deck-gap-figure` | `40px` | Between blocks in the `figure` text column and `split` halves |
-| `--deck-gap-column` | `50px` | `figure`: between text and picture |
-| `--deck-gap-cards` | `32px` | Between cards |
-| `--deck-gap-columns` | `64px` | Between columns |
-| `--deck-measure-prose` | `1040px` | Text width on `prose` and `big` |
-| `--deck-measure-figure` | `480px` | Text column width on `figure` |
-| `--deck-measure-quote` | `1280px` | Quote width on `big` |
-| `--deck-measure-chart` | `1664px` | Chart width on `chart` |
+| `--deck-space-m` | `32px` | Between blocks; card and code padding, quote indent |
 | `--deck-space-xs` | `12px` | Inside cards, the missing-image box |
 | `--deck-space-s` | `20px` | Between list items and column parts |
-| `--deck-space-m` | `32px` | Card and code padding, quote indent |
-
-**Overview (Esc)**
-
-| Token | Default | Used for |
-| --- | --- | --- |
-| `--deck-overview-mix` | `45%` | How much accent colour is in the background |
-| `--deck-overview-drift` | `24s` | How long the background takes to drift |
+| `--deck-space-l` | `48px` | Between blocks on `big`, `figure` and `split`; `figure`'s text-to-picture gap |
+| `--deck-space-xl` | `64px` | Between blocks on `cover`; between columns |
+| `--deck-inset-x` | `128px` | Left and right space inside a slide |
+| `--deck-inset-y` | `64px` | Top and bottom space inside a slide |
+| `--deck-inset-tight` | `96px` | Space inside `figure` and each `split` half |
+| `--deck-measure-prose` | `1040px` | Text width on `prose` and `big`. Quotes on `big` are 25% wider. |
+| `--deck-measure-figure` | `480px` | Text column width on `figure` |
+| `--deck-radius` | `8px` | Cards, code blocks. Inline code uses half. |
 
 `--deck-h-size` and `--deck-p-size` are set by each slide type. They are not tokens; don't set them in a theme.
 
@@ -423,8 +393,8 @@ Rebuilds `dist/` from `src/` and `vendor/`. `deck.js` and `deck.css` are the fil
 
 | Folder | Holds |
 | --- | --- |
-| `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides, checks), `deck-charts.js`, `deck-source.js` (markdown panel), `deck-start.js` (starts it all), and the CSS |
-| `src/themes/` | Built-in themes |
+| `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides, checks), `deck-charts.js`, `deck-source.js` (markdown panel), `deck-start.js` (starts it all). CSS: `deck-tokens.css` (the base theme), `deck-layouts.css` (where blocks go on each slide type), `deck-elements.css` (how text, lists, code, tables and cards look), `deck-page.css` (the panel, overview, checks) |
+| `src/themes/` | Built-in themes: `dark`, `signal` |
 | `lib/`, `bin/` | The CLI and the dev server's renderer |
 | `vendor/` | Third-party files, unchanged |
 | `examples/` | `glou-glou` (every slide type and option; the test deck), `slide-types`, `drop-in` |

@@ -1,0 +1,275 @@
+/* Elements: how text, lists, code, tables and cards look. Values live in deck-tokens.css.
+   The reset removes margins; the slide layout's gap spaces blocks. */
+
+.reveal-viewport {
+  background: var(--deck-bg);
+}
+
+.reveal {
+  font-family: var(--deck-font-base);
+  font-size: var(--deck-text-body);
+  line-height: var(--deck-leading-snug);
+  color: var(--deck-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* A dark slide paints its own background. */
+.reveal section.dark > .deck-stage {
+  background: var(--deck-bg);
+}
+
+/* --- Headings. Size comes from the slide type (--deck-h-size). --- */
+.reveal :is(h1, h2) {
+  font-family: var(--deck-font-display);
+  font-size: var(--deck-h-size);
+  font-weight: var(--deck-weight-display);
+  line-height: var(--deck-leading-display);
+  letter-spacing: var(--deck-track-display);
+  color: var(--deck-ink);
+  text-wrap: balance;
+}
+
+.reveal :where(h3, .deck-card__label) {
+  font-size: calc(var(--deck-p-size) * 1.05);
+  font-weight: 700;
+  line-height: var(--deck-leading-snug);
+  color: var(--deck-ink);
+}
+
+/* Labels: ####, ### on cover and big, table headers. */
+.reveal h4,
+.reveal th,
+.reveal :where(.cover, .big) > .deck-stage > h3 {
+  font-family: var(--deck-font-mono);
+  font-size: var(--deck-text-small);
+  font-weight: 400;
+  letter-spacing: var(--deck-track-caps);
+  text-transform: uppercase;
+  color: var(--deck-ink-faint);
+}
+
+/* --- Text --- */
+.reveal p {
+  font-size: var(--deck-p-size);
+  line-height: var(--deck-leading-body);
+  color: var(--deck-ink-soft);
+}
+
+.reveal strong {
+  font-weight: 700;
+  color: var(--deck-ink);
+}
+.reveal em {
+  font-style: italic;
+}
+
+.reveal a {
+  color: var(--deck-accent);
+  text-decoration: none;
+  border-bottom: 2px solid color-mix(in oklab, var(--deck-accent) 35%, transparent);
+}
+.reveal a:hover {
+  border-bottom-color: var(--deck-accent);
+}
+
+/* --- Lists. inline-block so a centred slide can centre the block. --- */
+.reveal :is(ul, ol) {
+  display: inline-block;
+  list-style: none;
+  font-size: var(--deck-p-size);
+  text-align: left;
+}
+
+.reveal li {
+  position: relative;
+  margin-bottom: var(--deck-space-s);
+  padding-left: 1.4em;
+  line-height: var(--deck-leading-body);
+  color: var(--deck-ink-soft);
+}
+.reveal li:last-child {
+  margin-bottom: 0;
+}
+
+/* A nested list sits under its item. */
+.reveal li > :is(ul, ol) {
+  display: block;
+  margin-top: var(--deck-space-s);
+}
+
+.reveal ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.56em;
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background: var(--deck-accent);
+}
+
+.reveal ol {
+  counter-reset: deck-counter;
+}
+.reveal ol > li {
+  counter-increment: deck-counter;
+  padding-left: 1.8em;
+}
+.reveal ol > li::before {
+  content: counter(deck-counter);
+  position: absolute;
+  left: 0;
+  top: 0.12em;
+  font-family: var(--deck-font-mono);
+  font-size: 0.62em;
+  color: var(--deck-accent);
+}
+
+/* --- Quote --- */
+.reveal blockquote {
+  padding-left: var(--deck-space-m);
+  border-left: 3px solid var(--deck-accent);
+  font-family: var(--deck-font-display);
+  font-size: calc(var(--deck-p-size) * 1.3);
+  color: var(--deck-ink);
+  text-align: left;
+}
+.reveal blockquote p {
+  font-size: inherit;
+  color: inherit;
+}
+
+/* --- Code --- */
+.reveal code {
+  font-family: var(--deck-font-mono);
+  font-size: 0.88em;
+  background: var(--deck-code-bg);
+  padding: 0.08em 0.32em;
+  border-radius: calc(var(--deck-radius) / 2);
+}
+
+.reveal pre {
+  box-sizing: border-box;
+  width: 100%;
+  font-size: calc(var(--deck-text-body) * 0.72);
+  text-align: left;
+}
+
+/* No inner scroll: long lines wrap, long blocks are flagged as overflow. */
+.reveal pre code {
+  box-sizing: border-box;
+  display: block;
+  padding: var(--deck-space-m);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: var(--deck-leading-body);
+  color: var(--deck-code-ink);
+  background: var(--deck-code-panel);
+  border-radius: var(--deck-radius);
+  box-shadow: 0 0 0 1px var(--deck-rule); /* edge on dark backgrounds */
+}
+
+.reveal :is(.hljs-comment, .hljs-quote) {
+  color: var(--deck-code-comment);
+  font-style: italic;
+}
+.reveal :is(.hljs-keyword, .hljs-selector-tag, .hljs-tag, .hljs-name, .hljs-meta) {
+  color: var(--deck-code-keyword);
+}
+.reveal :is(.hljs-string, .hljs-attr, .hljs-attribute, .hljs-symbol) {
+  color: var(--deck-code-string);
+}
+.reveal :is(.hljs-number, .hljs-literal, .hljs-built_in, .hljs-type) {
+  color: var(--deck-code-number);
+}
+.reveal :is(.hljs-title, .hljs-section, .hljs-function) {
+  color: var(--deck-code-ink);
+  font-weight: 700;
+}
+
+/* --- Tables. th takes the label style. --- */
+.reveal table {
+  border-collapse: collapse;
+  font-size: calc(var(--deck-p-size) * 0.86);
+  text-align: left;
+}
+.reveal :is(th, td) {
+  padding: 0.6em 1.4em 0.6em 0;
+  text-align: left;
+  border-bottom: 1px solid var(--deck-rule);
+}
+.reveal th {
+  border-bottom-width: 2px;
+}
+.reveal td {
+  color: var(--deck-ink-soft);
+}
+
+/* --- Media --- */
+.reveal :is(img, video) {
+  display: block;
+  max-width: 100%;
+}
+
+/* --- Cards. The label takes the ### style. --- */
+.reveal li.deck-card {
+  margin: 0;
+  padding: var(--deck-space-m);
+  display: flex;
+  flex-direction: column;
+  gap: var(--deck-space-xs);
+  background: var(--deck-panel);
+  border: 1px solid var(--deck-rule);
+  border-radius: var(--deck-radius);
+}
+.reveal li.deck-card::before {
+  content: none;
+}
+
+/* --- Columns --- */
+.reveal .deck-column {
+  padding-top: var(--deck-space-m);
+  border-top: 2px solid var(--deck-rule);
+}
+
+/* --- Chart source line --- */
+.reveal p.deck-source-line {
+  color: var(--deck-ink-faint);
+}
+
+/* --- Missing image (deck-chrome.js) --- */
+.reveal .deck-missing {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--deck-space-xs);
+  min-height: 240px;
+  padding: var(--deck-space-m);
+  background: var(--deck-code-bg);
+  outline: 2px dashed var(--deck-ink-faint);
+  outline-offset: -2px;
+  font-family: var(--deck-font-mono);
+  font-size: var(--deck-text-small);
+  color: var(--deck-ink-faint);
+}
+.reveal .deck-missing__title {
+  letter-spacing: var(--deck-track-caps);
+  text-transform: uppercase;
+  color: var(--deck-ink);
+}
+.reveal .deck-missing__alt {
+  font-family: var(--deck-font-base);
+}
+
+/* --- Print --- */
+@media print {
+  .reveal-viewport {
+    background: var(--deck-bg);
+  }
+  .reveal section.prose > .deck-stage {
+    overflow: visible;
+  }
+}
