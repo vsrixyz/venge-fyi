@@ -18,7 +18,10 @@
 
   function typeOf(section) {
     const types = ['grid', 'prose', 'split', 'cards', 'columns'];
-    const type = types.find(name => section.classList.contains(name)) || 'grid';
+    let type = types.find(name => section.classList.contains(name)) || 'grid';
+    // A grid slide shows the layout it found: headline, figure or image.
+    const stage = section.querySelector(':scope > .deck-stage');
+    if (type === 'grid' && stage && stage.dataset.shape) type = stage.dataset.shape;
     const extras = MODIFIERS.filter(name =>
       section.classList.contains(name)
     );

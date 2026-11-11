@@ -174,8 +174,23 @@
     return box;
   }
 
-  function buildGrid(stage) {
+  const isCaptioned = node => node.tagName === 'P' && node.textContent.trim() !== '' &&
+    Array.from(node.children).some(kid => kid.matches(MEDIA));
+
+  // Text and pictures that take turns more than once read top to bottom: prose.
+  function takesTurns(stage) {
+    const kinds = Array.from(stage.children)
+      .map(node => (node.matches(MEDIA) || isCaptioned(node) ? 'pictures' : 'text'))
+      .filter((kind, i, all) => kind !== all[i - 1]);
+    return kinds.length > 2;
+  }
+
+  function buildGrid(section, stage) {
     if (stage.querySelector(':scope > .deck-cell')) return;
+    if (takesTurns(stage)) {
+      section.classList.replace('grid', 'prose');
+      return;
+    }
 
     const cells = [];
     let cell = null;
@@ -209,11 +224,10 @@
       }
 
       // Text in the same paragraph as a picture is its caption.
-      const pictures = node.tagName === 'P'
-        ? Array.from(node.children).filter(kid => kid.matches(MEDIA))
-        : [];
-      if (pictures.length && node.textContent.trim()) {
-        pictures.forEach(pic => add(boxChart(pic), 'pictures'));
+      if (isCaptioned(node)) {
+        Array.from(node.children)
+          .filter(kid => kid.matches(MEDIA))
+          .forEach(pic => add(boxChart(pic), 'pictures'));
         node.classList.add('deck-caption');
         cell.el.appendChild(node);
         return;
@@ -223,13 +237,10 @@
       else add(node, 'text');
     });
 
-    const texts = cells.filter(c => c.kind === 'text').length;
-    let shape = 'cells';
-    if (cells.length === 1) shape = texts ? 'single' : 'pictures';
-    else if (cells.length === 2 && texts === 1) shape = 'half';
-
+    // headline: text only. image: pictures only. figure: text beside pictures.
+    const shape = cells.length === 2 ? 'figure' : cells[0] && cells[0].kind === 'text' ? 'headline' : 'image';
     stage.dataset.shape = shape;
-    place(stage, cells.map(c => c.el), shape === 'half' ? 2 : columnsFor(WHOLE, cells.length));
+    place(stage, cells.map(c => c.el), cells.length);
 
     cells.forEach(c => {
       if (c.kind === 'text') {
@@ -238,7 +249,7 @@
       }
       const pictures = Array.from(c.el.children).filter(kid => !kid.matches('.deck-caption'));
       const cols = c.el.classList.contains('stack') ? 1
-        : columnsFor(shape === 'pictures' ? WHOLE : HALF, c.count);
+        : columnsFor(shape === 'image' ? WHOLE : HALF, c.count);
       place(c.el, pictures, cols);
       c.el.dataset.count = String(c.count);
     });
@@ -357,7 +368,7 @@
 
     switch (layout) {
       case 'grid':
-        buildGrid(stage);
+        buildGrid(section, stage);
         break;
       case 'split':
         buildSplit(stage, eyebrow);

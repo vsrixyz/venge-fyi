@@ -146,17 +146,17 @@ Each slide has one type. A slide with no type is `grid`, and most slides need no
 
 ### Grid slides
 
-A grid slide is made of cells. Text that runs together is one cell. The pictures and charts beside it are another. Cells keep the order you wrote them in.
+A grid slide picks one of three layouts from what you write. Text that runs together is one cell; the pictures and charts beside it are another. Cells keep the order you wrote them in.
 
-| You write | You get |
-| --- | --- |
-| Only text | One centred cell. `#` is headline size, or title size with headings only. `##` is a subtitle, `###` a small line. A `>` quote gets a big quote mark. |
-| Text, then pictures | Text in one half, the pictures in the other |
-| Pictures, then text | The same, with the pictures on the left |
-| Only pictures | The pictures fill the slide |
-| Text, a picture, more text | Three cells in that order |
+| Layout | You write | You get |
+| --- | --- | --- |
+| headline | Only text | One centred cell. `#` is headline size, or title size with headings only. `##` is a subtitle, `###` a small line. A `>` quote gets a big quote mark. |
+| figure | Text, then pictures | Text in one half, the pictures in the other. Write the pictures first to put them on the left. |
+| image | Only pictures | The pictures fill the slide |
 
-Every cell is the same size, and text scales with its cell. Pictures go 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3, and past 9 four across. A short last row is centred. Inside a half they turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
+Text and pictures that take turns more than once (text, a picture, more text) make a `prose` slide instead: one column, top to bottom. For parts side by side, use `columns` or `cards`.
+
+Both cells of a figure are the same size, and text scales with its cell. Pictures go 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3, and past 9 four across. A short last row is centred. Inside a half they turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
 
 Pictures are shown whole, never cropped, unless you ask for `fill` or `bleed`.
 
@@ -366,14 +366,14 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-font-display` | `var(--deck-font-base)` | `#` and `##` headings, quotes |
 | `--deck-font-mono` | `ui-monospace, …, monospace` | Code, labels, numbered list markers |
 | `--deck-weight-display` | `700` | `#` and `##` headings, the big quote mark |
-| `--deck-text-title` | `200px` | `#` on a one-cell slide with headings only |
-| `--deck-text-headline` | `144px` | `#` on a one-cell slide with text |
-| `--deck-text-subheading` | `64px` | `##` on a one-cell slide |
-| `--deck-text-heading` | `56px` | `#`/`##` on prose, cards and columns; quotes on a one-cell slide |
-| `--deck-text-heading-small` | `48px` | `#`/`##` beside pictures, and on `split` |
+| `--deck-text-title` | `200px` | `#` on a headline slide with headings only |
+| `--deck-text-headline` | `144px` | `#` on a headline slide with text |
+| `--deck-text-subheading` | `64px` | `##` on a headline slide |
+| `--deck-text-heading` | `56px` | `#`/`##` on prose, cards and columns; quotes on a headline slide |
+| `--deck-text-heading-small` | `48px` | `#`/`##` on a figure, and on `split` |
 | `--deck-text-body` | `34px` | Paragraphs and lists. `###` and card labels are 5% larger. |
-| `--deck-text-small` | `22px` | Labels: `####`, `###` on a one-cell slide, table headers; the missing-image box |
-| `--deck-leading-title` | `0.82` | `#` on a one-cell slide with headings only |
+| `--deck-text-small` | `22px` | Labels: `####`, `###` on a headline slide, table headers; the missing-image box |
+| `--deck-leading-title` | `0.82` | `#` on a headline slide with headings only |
 | `--deck-leading-display` | `1.05` | Other `#` and `##` |
 | `--deck-leading-snug` | `1.25` | The default; `###`, card labels, labels, tables |
 | `--deck-leading-body` | `1.5` | Paragraphs, lists, code blocks |
@@ -387,12 +387,12 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-space-m` | `32px` | Between blocks; card and code padding, quote indent |
 | `--deck-space-xs` | `12px` | The missing-image box |
 | `--deck-space-s` | `20px` | Between list items; between the parts of a card or column |
-| `--deck-space-l` | `48px` | Between cells, and between blocks on a one-cell slide and `split` |
-| `--deck-space-xl` | `64px` | Between blocks on a one-cell slide with headings only; between columns |
+| `--deck-space-l` | `48px` | Between cells, and between blocks on a headline slide and `split` |
+| `--deck-space-xl` | `64px` | Between blocks on a headline slide with headings only; between columns |
 | `--deck-inset-x` | `128px` | Left and right space inside a slide |
 | `--deck-inset-y` | `64px` | Top and bottom space inside a slide |
 | `--deck-inset-tight` | `96px` | Space inside each `split` half |
-| `--deck-measure-prose` | `1040px` | Text width on `prose` and a one-cell slide. Quotes there are 25% wider. |
+| `--deck-measure-prose` | `1040px` | Text width on `prose` and a headline slide. Quotes there are 25% wider. |
 | `--deck-radius` | `8px` | Cards, code blocks. Inline code uses half. |
 
 ## Class names
@@ -407,7 +407,7 @@ These are public: themes and your own CSS can rely on them.
 | --- | --- | --- |
 | `deck-stage` | `div`, the only child of each slide besides notes | Holds the slide's content. Insets and gaps are set here. |
 | `deck-eyebrow` | `h4` | The `####` label |
-| `data-shape` | `grid` slide's `deck-stage` | `single` (one text cell), `half` (text and pictures), `pictures` (pictures only) or `cells` (anything else) |
+| `data-shape` | `grid` slide's `deck-stage` | The layout: `headline`, `figure` or `image` |
 | `deck-cell` | `grid` | Each cell. Also `deck-text` or `deck-pictures`, and any classes from a `.cell:` comment. |
 | `deck-text` | `grid` | A text cell. `data-headings` when it holds only headings. |
 | `deck-pictures` | `grid` | A cell of pictures. `data-count` is the number of pictures. |

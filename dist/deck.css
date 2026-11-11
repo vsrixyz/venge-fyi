@@ -83,13 +83,13 @@ footer, header, hgroup, main, menu, nav, section {
   --deck-weight-display: 700;
 
   /* Type sizes. Text in a cell scales down from these as the cell gets smaller. */
-  --deck-text-title: 200px;        /* # on a one-cell slide with headings only */
-  --deck-text-headline: 144px;     /* # on a one-cell slide with text */
-  --deck-text-subheading: 64px;    /* ## on a one-cell slide */
-  --deck-text-heading: 56px;       /* #/## on prose, cards, columns; quotes on a one-cell slide */
-  --deck-text-heading-small: 48px; /* #/## beside pictures, and on split */
+  --deck-text-title: 200px;        /* # on a headline slide with headings only */
+  --deck-text-headline: 144px;     /* # on a headline slide with text */
+  --deck-text-subheading: 64px;    /* ## on a headline slide */
+  --deck-text-heading: 56px;       /* #/## on prose, cards, columns; quotes on a headline slide */
+  --deck-text-heading-small: 48px; /* #/## on a figure, and on split */
   --deck-text-body: 34px;
-  --deck-text-small: 22px;         /* labels: ####, ### on a one-cell slide, table headers */
+  --deck-text-small: 22px;         /* labels: ####, ### on a headline slide, table headers */
 
   --deck-leading-title: 0.82;
   --deck-leading-display: 1.05;
@@ -177,8 +177,8 @@ footer, header, hgroup, main, menu, nav, section {
   flex-shrink: 0;
 }
 
-/* --- grid: deck-chrome.js finds the cells. Every cell is the same size;
-   each spans two half-tracks so a short last row can be centred. --- */
+/* --- grid: deck-chrome.js picks headline, figure or image. Cells span two
+   half-tracks so a short last row of pictures can be centred. --- */
 .reveal section.grid > .deck-stage {
   display: grid;
   grid-template-columns: repeat(calc(var(--_cols, 1) * 2), minmax(0, 1fr));
@@ -206,8 +206,8 @@ footer, header, hgroup, main, menu, nav, section {
   --_p-size: clamp(24px, 4.2cqi, var(--deck-text-body));
 }
 
-/* One text cell: centred and big. */
-.reveal [data-shape="single"] > .deck-text {
+/* headline: one text cell, centred and big. */
+.reveal [data-shape="headline"] > .deck-text {
   align-items: center;
   text-align: center;
   gap: var(--deck-space-l);
@@ -215,7 +215,7 @@ footer, header, hgroup, main, menu, nav, section {
 }
 
 /* Headings only (a title or a section break): # goes up to title size. */
-.reveal [data-shape="single"] > .deck-text[data-headings] {
+.reveal [data-shape="headline"] > .deck-text[data-headings] {
   --_h-size: clamp(80px, 12cqi, var(--deck-text-title));
   gap: var(--deck-space-xl);
 
@@ -225,17 +225,17 @@ footer, header, hgroup, main, menu, nav, section {
 }
 
 /* ## subhead. ### takes the label style. */
-.reveal [data-shape="single"] > .deck-text > h2 {
+.reveal [data-shape="headline"] > .deck-text > h2 {
   font-size: clamp(40px, 4cqi, var(--deck-text-subheading));
   font-weight: 400;
   color: var(--deck-ink-soft);
 }
 
-.reveal [data-shape="single"] > .deck-text > p {
+.reveal [data-shape="headline"] > .deck-text > p {
   max-width: var(--deck-measure-prose);
 }
 
-.reveal [data-shape="single"] > .deck-text > blockquote {
+.reveal [data-shape="headline"] > .deck-text > blockquote {
   width: 100%;
   max-width: calc(var(--deck-measure-prose) * 1.25);
   padding: 0;
@@ -244,7 +244,7 @@ footer, header, hgroup, main, menu, nav, section {
   text-align: center;
 }
 
-.reveal [data-shape="single"] > .deck-text > blockquote::before {
+.reveal [data-shape="headline"] > .deck-text > blockquote::before {
   content: "\201C";
   display: block;
   height: 0.6em;
@@ -286,15 +286,15 @@ footer, header, hgroup, main, menu, nav, section {
 }
 
 /* bleed runs off the slide's edge on the sides the cell touches. */
-.reveal [data-shape="pictures"] > .deck-pictures.bleed {
+.reveal [data-shape="image"] > .deck-pictures.bleed {
   margin: calc(-1 * var(--deck-inset-y)) calc(-1 * var(--deck-inset-x));
 }
 
-.reveal [data-shape="half"] > .deck-pictures.bleed:first-child {
+.reveal [data-shape="figure"] > .deck-pictures.bleed:first-child {
   margin: calc(-1 * var(--deck-inset-y)) 0 calc(-1 * var(--deck-inset-y)) calc(-1 * var(--deck-inset-x));
 }
 
-.reveal [data-shape="half"] > .deck-pictures.bleed:last-child {
+.reveal [data-shape="figure"] > .deck-pictures.bleed:last-child {
   margin: calc(-1 * var(--deck-inset-y)) calc(-1 * var(--deck-inset-x)) calc(-1 * var(--deck-inset-y)) 0;
 }
 
@@ -489,10 +489,10 @@ footer, header, hgroup, main, menu, nav, section {
   color: var(--_ink);
 }
 
-/* Labels: ####, ### on a one-cell slide, table headers. :where keeps it easy to override. */
+/* Labels: ####, ### on a headline slide, table headers. :where keeps it easy to override. */
 .reveal h4,
 .reveal th,
-.reveal :where([data-shape="single"]) > .deck-text > h3 {
+.reveal :where([data-shape="headline"]) > .deck-text > h3 {
   font-family: var(--deck-font-mono);
   font-size: var(--deck-text-small);
   font-weight: 400;

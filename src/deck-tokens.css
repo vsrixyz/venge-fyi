@@ -39,13 +39,13 @@
   --deck-weight-display: 700;
 
   /* Type sizes. Text in a cell scales down from these as the cell gets smaller. */
-  --deck-text-title: 200px;        /* # on a one-cell slide with headings only */
-  --deck-text-headline: 144px;     /* # on a one-cell slide with text */
-  --deck-text-subheading: 64px;    /* ## on a one-cell slide */
-  --deck-text-heading: 56px;       /* #/## on prose, cards, columns; quotes on a one-cell slide */
-  --deck-text-heading-small: 48px; /* #/## beside pictures, and on split */
+  --deck-text-title: 200px;        /* # on a headline slide with headings only */
+  --deck-text-headline: 144px;     /* # on a headline slide with text */
+  --deck-text-subheading: 64px;    /* ## on a headline slide */
+  --deck-text-heading: 56px;       /* #/## on prose, cards, columns; quotes on a headline slide */
+  --deck-text-heading-small: 48px; /* #/## on a figure, and on split */
   --deck-text-body: 34px;
-  --deck-text-small: 22px;         /* labels: ####, ### on a one-cell slide, table headers */
+  --deck-text-small: 22px;         /* labels: ####, ### on a headline slide, table headers */
 
   --deck-leading-title: 0.82;
   --deck-leading-display: 1.05;

@@ -32,8 +32,8 @@
   flex-shrink: 0;
 }
 
-/* --- grid: deck-chrome.js finds the cells. Every cell is the same size;
-   each spans two half-tracks so a short last row can be centred. --- */
+/* --- grid: deck-chrome.js picks headline, figure or image. Cells span two
+   half-tracks so a short last row of pictures can be centred. --- */
 .reveal section.grid > .deck-stage {
   display: grid;
   grid-template-columns: repeat(calc(var(--_cols, 1) * 2), minmax(0, 1fr));
@@ -61,8 +61,8 @@
   --_p-size: clamp(24px, 4.2cqi, var(--deck-text-body));
 }
 
-/* One text cell: centred and big. */
-.reveal [data-shape="single"] > .deck-text {
+/* headline: one text cell, centred and big. */
+.reveal [data-shape="headline"] > .deck-text {
   align-items: center;
   text-align: center;
   gap: var(--deck-space-l);
@@ -70,7 +70,7 @@
 }
 
 /* Headings only (a title or a section break): # goes up to title size. */
-.reveal [data-shape="single"] > .deck-text[data-headings] {
+.reveal [data-shape="headline"] > .deck-text[data-headings] {
   --_h-size: clamp(80px, 12cqi, var(--deck-text-title));
   gap: var(--deck-space-xl);
 
@@ -80,17 +80,17 @@
 }
 
 /* ## subhead. ### takes the label style. */
-.reveal [data-shape="single"] > .deck-text > h2 {
+.reveal [data-shape="headline"] > .deck-text > h2 {
   font-size: clamp(40px, 4cqi, var(--deck-text-subheading));
   font-weight: 400;
   color: var(--deck-ink-soft);
 }
 
-.reveal [data-shape="single"] > .deck-text > p {
+.reveal [data-shape="headline"] > .deck-text > p {
   max-width: var(--deck-measure-prose);
 }
 
-.reveal [data-shape="single"] > .deck-text > blockquote {
+.reveal [data-shape="headline"] > .deck-text > blockquote {
   width: 100%;
   max-width: calc(var(--deck-measure-prose) * 1.25);
   padding: 0;
@@ -99,7 +99,7 @@
   text-align: center;
 }
 
-.reveal [data-shape="single"] > .deck-text > blockquote::before {
+.reveal [data-shape="headline"] > .deck-text > blockquote::before {
   content: "\201C";
   display: block;
   height: 0.6em;
@@ -141,15 +141,15 @@
 }
 
 /* bleed runs off the slide's edge on the sides the cell touches. */
-.reveal [data-shape="pictures"] > .deck-pictures.bleed {
+.reveal [data-shape="image"] > .deck-pictures.bleed {
   margin: calc(-1 * var(--deck-inset-y)) calc(-1 * var(--deck-inset-x));
 }
 
-.reveal [data-shape="half"] > .deck-pictures.bleed:first-child {
+.reveal [data-shape="figure"] > .deck-pictures.bleed:first-child {
   margin: calc(-1 * var(--deck-inset-y)) 0 calc(-1 * var(--deck-inset-y)) calc(-1 * var(--deck-inset-x));
 }
 
-.reveal [data-shape="half"] > .deck-pictures.bleed:last-child {
+.reveal [data-shape="figure"] > .deck-pictures.bleed:last-child {
   margin: calc(-1 * var(--deck-inset-y)) calc(-1 * var(--deck-inset-x)) calc(-1 * var(--deck-inset-y)) 0;
 }
 

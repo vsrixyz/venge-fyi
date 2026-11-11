@@ -6,6 +6,10 @@ Status: V1 is built (see `docs/reference.md`, [Grid slides](reference.md#grid-sl
 
 A slide is a grid of cells. A cell holds one thing: text, a picture (or a group of pictures), or a chart. The grid has no look of its own; it only places cells. This could replace most of today's slide types (`big`, `figure`, `image`, `split`, `columns`, `cards`, `chart`). `prose` stays its own type because it scrolls.
 
+## Names
+
+The three layouts a grid slide picks are **headline** (text only), **figure** (text beside pictures) and **image** (pictures only). Text and pictures that take turns more than once fall back to **prose**. The other types keep their names: `prose`, `cards`, `columns`, `split`.
+
 ## V1
 
 Real decks are simple. In petrus, 20 of 22 slides were one block of text or text beside pictures. In a 63-slide agency deck ("The Art of Deck Making"), nearly every slide was big text alone, a photo behind text, or a photo with a caption. V1 builds only these.
@@ -43,7 +47,7 @@ Until then, today's `split`, `cards` and `columns` slide types keep working as t
 | Text, then pictures | Text in one half, the picture group in the other |
 | Pictures, then text | The same, with the pictures on the left |
 | Only pictures | The pictures fill the slide |
-| Text, picture, text | Three cells in that order |
+| Text, picture, text | A prose slide: one column, top to bottom |
 | A picture with a line directly under it (no blank line) | The line is the picture's caption, shown under it. Under a group, it captions the whole group. |
 
 **Shapes by count.** 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3. Inside a half, the shapes turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
