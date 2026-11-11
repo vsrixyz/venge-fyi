@@ -4,7 +4,7 @@ Show a markdown file as a slide deck on a static site, and style it with your ow
 
 It gives you slide types, layout, design tokens and a theme file format, all built on [Reveal.js](https://revealjs.com). It does not give you a website.
 
-- [Setup](#setup): drop-in files or the CLI
+- [Setup](#setup): drop-in files, the CLI, or from code
 - [Writing a deck](#writing-a-deck): front matter, slides, notes
 - [Slide types](#slide-types)
 - [Charts](#charts)
@@ -14,7 +14,7 @@ It gives you slide types, layout, design tokens and a theme file format, all bui
 
 ## Setup
 
-There are two ways to use it. Both need the files in `dist/`.
+There are three ways to use it. All need the files in `dist/`.
 
 ### 1. Drop-in files (no build step)
 
@@ -60,6 +60,29 @@ public/my-talk/
 `--out` defaults to `build/<deck file name>/`, so `talk.md` builds to `build/talk/`. The folder works on any static host, in any subfolder, and opened straight from disk.
 
 The CLI copies every local file the markdown links (images, video, CSV, a theme path). Those files must be inside the deck's folder. A linked file that doesn't exist is a warning, not an error.
+
+### 3. From code
+
+For a site builder that makes its own pages, such as Eleventy:
+
+```js
+import {prepare, renderDeck, distDir} from 'venge-fyi';
+
+const {deck, dir, assets, csv} = prepare('decks/talk.md');
+const html = renderDeck(deck, {
+  runtime: '/assets/venge/',
+  csv,
+  head: '<link rel="stylesheet" href="/assets/deck-fonts.css" />',
+  body: '<a class="back" href="/decks/">← Decks</a>'
+});
+```
+
+- `prepare(file, warn)` reads a deck. `assets` are the files it links, relative to `dir`. Copy them next to the page.
+- `renderDeck(deck, options)` returns the page's HTML. `runtime` is the URL of a copy of `distDir`. `csv` comes from `prepare()`.
+- `head` is added at the end of `<head>`, after `deck.css`, the theme and the accent, so its styles win. `body` is added at the start of `<body>`, before `.reveal`. Both are raw HTML and are not escaped, so they must come from your own code, never from a deck file.
+- `distDir` is the path of the `dist/` folder.
+
+Only these three are public. Files inside `lib/` can't be imported.
 
 ## Writing a deck
 
