@@ -2,7 +2,8 @@
 title: Health You Can Build
 description: Inter core messaging framework, v2.
 page-numbering: true
-accent: #15355f
+accent: '#15355f'
+theme: inter.css
 ---
 
 <!-- .slide: class="dark" data-background-color="theme-1" -->
@@ -105,44 +106,115 @@ shift: is defining the journey from a B
 
 ---
 
-<!-- .slide: class="cards dark" data-background-color="#2f5d46" -->
+<!-- .slide: class="dark" data-background-color="#2f5d46" -->
 
 # The Vision
+
 ## What you see coming
 
-### The annual physical is dead.
+---
+
+<!-- .slide: class="dark" data-background-image="assets/scan.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+
+#### The Vision <!-- .element: class="eyebrow" -->
+
+# The annual physical is dead.
+
 A continuous read of your body's resilience replaces the yearly check.
 
-### A scan is as ordinary as stepping on a scale.
+---
+
+<!-- .slide: class="dark" data-background-image="assets/bathroom%20scale.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+
+#### The Vision <!-- .element: class="eyebrow" -->
+
+# A scan is as ordinary as stepping on a scale.
+
 Every home has imaging equipment in the bathroom. Inspecting your own liver is no-big-deal.
 
-### Turning 44 is a known milestone.
+---
+
+<!-- .slide: class="dark" data-background-image="assets/44%20is%20the%20new.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+
+#### The Vision <!-- .element: class="eyebrow" -->
+
+# Turning 44 is a known milestone.
+
 You anticipate the change and prepare for it.
 
-### "Normal" is no longer the goal.
+---
+
+<!-- .slide: class="dark" data-background-image="assets/pexels-taiyesalawu-33491430.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+
+#### The Vision <!-- .element: class="eyebrow" -->
+
+# "Normal" is no longer the goal.
+
 Health is a set of personal, dynamic variables, not a snapshot in a range.
 
-### Resilience is a concept to help you act.
+---
+
+<!-- .slide: class="dark" data-background-image="assets/resilience.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+
+#### The Vision <!-- .element: class="eyebrow" -->
+
+# Resilience is a concept to help you act.
+
 You understand how Wednesday's dinner impacts Thursday's run.
 
-### Prevention is worth investing in.
+---
+
+<!-- .slide: class="dark" data-background-image="assets/preventiopn.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+
+#### The Vision <!-- .element: class="eyebrow" -->
+
+# Prevention is worth investing in.
+
 Employers and insurers pay to keep people resilient.
 
-### Pills are a bridge, not a permanent solution.
+---
+
+<!-- .slide: class="dark" data-background-image="assets/pills.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+
+#### The Vision <!-- .element: class="eyebrow" -->
+
+# Pills are a bridge, not a permanent solution.
+
 No one starts a GLP-1 or a statin without a behavior plan.
 
-### New era of citizen science.
+---
+
+<!-- .slide: class="dark" data-background-image="assets/citizen.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+
+#### The Vision <!-- .element: class="eyebrow" -->
+
+# New era of citizen science.
+
 Studies that took a decade can run across a population in a season.
 
-### Mindset is the unlock for massive change.
+---
+
+<!-- .slide: class="dark" data-background-image="assets/mindset.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+
+#### The Vision <!-- .element: class="eyebrow" -->
+
+# Mindset is the unlock for massive change.
+
 A loneliness score sits on your dashboard next to sleep and is treated like any other risk.
 
-### A population 1% more resilient changes the world.
+---
+
+<!-- .slide: class="dark" data-background-image="assets/population.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+
+#### The Vision <!-- .element: class="eyebrow" -->
+
+# A population 1% more resilient changes the world.
+
 It has the energy left over to take on everything else.
 
 ---
 
-<!-- .slide: class="split dark" data-background-color="#d9654b" -->
+<!-- .slide: class="split dark" -->
 
 # The Shift
 Who your audience becomes
@@ -155,7 +227,7 @@ Who your audience becomes
 
 ---
 
-<!-- .slide: class="dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" -->
 
 # The Audience <!-- .element: class="eyebrow" -->
 
@@ -192,7 +264,7 @@ They are in their 30s, and want to be the healthiest they can be for their kids.
 
 ---
 
-<!-- .slide: class="dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" -->
 
 #### The Shift <!-- .element: class="eyebrow" -->
 
@@ -204,7 +276,7 @@ Today, health is defined as the absence of disease. Healthcare is a break-fix sy
 
 ---
 
-<!-- .slide: class="cards dark" data-background-color="#d9654b" -->
+<!-- .slide: class="cards dark" -->
 
 #### Name the Enemy <!-- .element: class="eyebrow" -->
 
@@ -230,7 +302,7 @@ Ten-minute visits, paperwork and lawsuits push them toward quick fixes.
 
 ---
 
-<!-- .slide: class="dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" -->
 
 #### The Shift <!-- .element: class="eyebrow" -->
 
@@ -242,7 +314,7 @@ Midlife is when your body starts to shift: recovery slows, inflammation creeps u
 
 ---
 
-<!-- .slide: class="cards dark" data-background-color="#d9654b" -->
+<!-- .slide: class="cards dark" -->
 
 #### Answer: Why Now <!-- .element: class="eyebrow" -->
 
@@ -265,7 +337,7 @@ You don't need to wait until illness strikes, you can start building resilience 
 
 ---
 
-<!-- .slide: class="dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" -->
 
 #### The Shift <!-- .element: class="eyebrow" -->
 
@@ -277,7 +349,7 @@ Health setbacks are inevitable. What you can control is how you recover and how 
 
 ---
 
-<!-- .slide: class="cards dark" data-background-color="#d9654b" -->
+<!-- .slide: class="cards dark" -->
 
 #### Show the Promised Land <!-- .element: class="eyebrow" -->
 
@@ -297,7 +369,7 @@ A person who is 1% more resilient has more to give. A resilient population can t
 
 ---
 
-<!-- .slide: class="dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" -->
 
 #### The Shift <!-- .element: class="eyebrow" -->
 
@@ -307,7 +379,7 @@ A person who is 1% more resilient has more to give. A resilient population can t
 
 ---
 
-<!-- .slide: class="cards dark" data-background-color="#d9654b" -->
+<!-- .slide: class="cards dark" -->
 
 #### Identify Obstacles <!-- .element: class="eyebrow" -->
 
@@ -340,7 +412,7 @@ Eat, sleep, move, breathe, connect. Boring, ancient, and still the strongest med
 
 ---
 
-<!-- .slide: class="dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" -->
 
 #### The Shift <!-- .element: class="eyebrow" -->
 
@@ -352,7 +424,7 @@ We're redefining healthcare around resilience instead of disease. To do this, we
 
 ---
 
-<!-- .slide: class="cards dark" data-background-color="#d9654b" -->
+<!-- .slide: class="cards dark" -->
 
 #### Provide Evidence <!-- .element: class="eyebrow" -->
 

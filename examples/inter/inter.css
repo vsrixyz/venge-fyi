@@ -1,0 +1,5 @@
+/* Inter: background photos in black and white with a green cast.
+   Reveal puts the photo in .slide-background-content; a colour sits on its parent. */
+.reveal .slide-background-content {
+  filter: grayscale(1) sepia(0.6) hue-rotate(70deg) saturate(1.3);
+}
