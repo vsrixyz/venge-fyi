@@ -349,8 +349,83 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     return kinds.length > 2;
   }
 
+  // Sibling sections: the first heading size that appears two or more times,
+  // with only single headings above it, starts one cell each. Returns its tag.
+  const HEADINGS = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+
+  function sectionLevel(stage) {
+    const counts = {};
+    Array.from(stage.children).forEach(node => {
+      if (HEADINGS.includes(node.tagName)) counts[node.tagName] = (counts[node.tagName] || 0) + 1;
+    });
+    for (const tag of HEADINGS) {
+      if ((counts[tag] || 0) >= 2) return tag;
+    }
+    return null;
+  }
+
+  // Moves a fragment from a cell's heading to the cell, so the whole cell comes in.
+  function liftFragment(heading, cell) {
+    if (!heading.classList.contains('fragment')) return;
+    ['fragment', ...FRAGMENT_STYLES].forEach(name => {
+      if (heading.classList.contains(name)) {
+        heading.classList.remove(name);
+        cell.classList.add(name);
+      }
+    });
+    const index = heading.getAttribute('data-fragment-index');
+    if (index !== null) {
+      heading.removeAttribute('data-fragment-index');
+      cell.setAttribute('data-fragment-index', index);
+    }
+  }
+
+  function buildSections(section, stage, level) {
+    const head = el('div', 'deck-head');
+    const cells = [];
+    let cell = null;
+    let options = null;
+
+    Array.from(stage.childNodes).forEach(node => {
+      if (node.nodeType === Node.COMMENT_NODE) {
+        const found = cellOptions(node);
+        if (found) {
+          options = found;
+          node.remove();
+        }
+        return;
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        if (!node.textContent.trim()) node.remove();
+        return;
+      }
+      if (node.tagName === level) {
+        cell = el('div', 'deck-cell deck-section');
+        if (section.classList.contains('cards')) cell.classList.add('deck-card');
+        if (options) {
+          applyOptions(cell, options);
+          options = null;
+        }
+        liftFragment(node, cell);
+        cells.push(cell);
+      }
+      (cell || head).appendChild(node.matches(MEDIA) ? boxChart(node) : node);
+    });
+
+    stage.dataset.shape = 'sections';
+    if (cells.some(c => c.querySelector(MEDIA))) stage.dataset.pictures = '';
+    place(stage, cells, columnsFor(WHOLE, cells.length));
+    if (head.children.length) stage.appendChild(head);
+    stage.append(...cells);
+  }
+
   function buildGrid(section, stage) {
     if (stage.querySelector(':scope > .deck-cell')) return;
+    const level = sectionLevel(stage);
+    if (level) {
+      buildSections(section, stage, level);
+      return;
+    }
     if (takesTurns(stage)) {
       section.classList.replace('grid', 'prose');
       return;
@@ -449,8 +524,8 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     }
   }
 
-  // Split, cards and columns: the smallest heading on the slide (### if there
-  // is one, else ##) starts each part. Anything before the first stays on top.
+  // Columns: the smallest heading on the slide (### if there is one, else ##)
+  // starts each part. Anything before the first stays on top.
   function sections(stage, partClass) {
     const level = stage.querySelector(':scope > h3') ? 'H3' : 'H2';
     const parts = [];
@@ -462,26 +537,54 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     return parts;
   }
 
+  // split: the first part on one side, the rest on the other. With sibling
+  // sections, the rest starts at the second section's heading. Without, the
+  // first part is the opening: headings and the paragraphs right under them.
+  function splitAt(stage, kids, level) {
+    if (level) return kids.indexOf(kids.filter(kid => kid.tagName === level)[1]);
+
+    let seenText = false;
+    for (let i = 0; i < kids.length; i++) {
+      const kid = kids[i];
+      if (HEADINGS.includes(kid.tagName)) {
+        if (seenText) return i;
+        continue;
+      }
+      if (kid.tagName === 'P' && !kid.querySelector(MEDIA)) {
+        seenText = true;
+        continue;
+      }
+      return i;
+    }
+    return kids.length;
+  }
+
   function buildSplit(stage) {
     if (stage.querySelector(':scope > .deck-half')) return;
 
-    const halves = sections(stage, 'deck-half');
-    if (stage.children.length) {
-      const head = el('div', 'deck-head');
-      head.append(...stage.children);
-      stage.appendChild(head);
+    const kids = Array.from(stage.children);
+    const level = sectionLevel(stage);
+    const cut = splitAt(stage, kids, level);
+    const first = el('div', 'deck-half');
+    const rest = el('div', 'deck-half');
+
+    // Sections are siblings: a title goes in a row above them, and the two
+    // parts share a row so their headings line up.
+    if (level) {
+      stage.dataset.sections = '';
+      const start = kids.findIndex(kid => kid.tagName === level);
+      if (start > 0) {
+        const head = el('div', 'deck-head');
+        head.append(...kids.slice(0, start));
+        stage.appendChild(head);
+      }
+      first.append(...kids.slice(Math.max(start, 0), cut));
+    } else {
+      first.append(...kids.slice(0, cut));
     }
-    stage.append(...halves);
-  }
-
-  function buildCards(stage) {
-    if (stage.querySelector(':scope > .deck-cards')) return;
-
-    const cards = sections(stage, 'deck-card');
-    const grid = el('div', 'deck-cards');
-    grid.dataset.count = String(cards.length);
-    grid.append(...cards);
-    stage.appendChild(grid);
+    rest.append(...kids.slice(cut));
+    stage.appendChild(first);
+    if (rest.children.length) stage.appendChild(rest);
   }
 
   function buildColumns(stage) {
@@ -552,13 +655,45 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
         buildSplit(stage);
         break;
       case 'cards':
-        buildCards(stage);
+        buildGrid(section, stage);
         break;
       case 'columns':
         buildColumns(stage);
         break;
     }
 
+  }
+
+  // Sections: lower the text size in steps until the slide fits, down to
+  // about 22px body text. Past that, text runs off. Hidden slides can't be
+  // measured, so each is fitted the first time it shows.
+  const FIT_FLOOR = 0.65;
+
+  function fitSlide(section) {
+    const stage = section && section.querySelector(':scope > .deck-stage[data-shape="sections"]');
+    if (!stage || stage.dataset.fit || !stage.clientHeight) return;
+    let fit = 1;
+    while (stage.scrollHeight > stage.clientHeight + 1 && fit > FIT_FLOOR) {
+      fit = Math.max(FIT_FLOOR, fit - 0.05);
+      stage.style.setProperty('--_fit', fit.toFixed(2));
+    }
+    stage.dataset.fit = fit.toFixed(2);
+  }
+
+  function watchFit(reveal, root) {
+    const fitAll = () => leafSlides(root).forEach(fitSlide);
+    reveal.on('slidechanged', event => fitSlide(event.currentSlide));
+    fitAll();
+    if (document.fonts) document.fonts.ready.then(() => {
+      leafSlides(root).forEach(section => {
+        const stage = section.querySelector(':scope > .deck-stage[data-fit]');
+        if (stage) {
+          delete stage.dataset.fit;
+          stage.style.removeProperty('--_fit');
+        }
+      });
+      fitAll();
+    });
   }
 
   // Prose scrolls; a fade shows there is more.
@@ -611,6 +746,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 
     watchScroll(reveal);
     watchSlideNumber(reveal, root);
+    watchFit(reveal, root);
   }
 
   global.deckChrome = deckChrome;

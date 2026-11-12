@@ -8,7 +8,7 @@ title: How Decks Works
 # The page's meta description.
 description: Showing how every slide in the system works.
 
-# The colour for bullets, links, the quote mark and charts.
+# The colour for links, the quote mark and charts.
 # Blank uses the theme's --deck-theme-1. Quote colours: '#12467A'.
 accent:
 

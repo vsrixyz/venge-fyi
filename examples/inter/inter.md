@@ -108,7 +108,6 @@ shift: is defining the journey from a B
 <!-- .slide: class="cards dark" data-background-color="#2f5d46" -->
 
 # The Vision
-
 ## What you see coming
 
 ### The annual physical is dead.
@@ -145,9 +144,8 @@ It has the energy left over to take on everything else.
 
 <!-- .slide: class="split dark" data-background-color="#d9654b" -->
 
-## The Shift
-
-## Who your audience becomes
+# The Shift
+Who your audience becomes
 
 - Name the Enemy
 - Answer: Why Now?
@@ -159,15 +157,16 @@ It has the energy left over to take on everything else.
 
 <!-- .slide: class="dark" data-background-color="#d9654b" -->
 
-# The Audience
+# The Audience <!-- .element: class="eyebrow" -->
 
-**Inter supports anyone with a lifespan**. Our stories will start with the ones who already believe.
+## **Inter supports anyone with a lifespan**. Our stories will start with the ones who already believe.
 
 ---
 
-<!-- .slide: class="dark" data-background-color="#d9654b" -->
+<!-- .slide: class="split"-->
 
-## Audience 1: the data enthusiast
+# Audience 1 <!-- .element: class="eyebrow" -->
+## The data enthusiast
 
 They manage other people's health, and want more for their own. They are curious about what their body can tell them. They're open to trying new things.
 
@@ -179,11 +178,11 @@ They manage other people's health, and want more for their own. They are curious
 
 ---
 
-<!-- .slide: class="dark" data-background-color="#d9654b" -->
+<!-- .slide: class="split" -->
 
-# The Audience
+# Audience 2 <!-- .element: class="eyebrow" -->
 
-## Audience 2: the neonatal optimist
+## The neonatal optimist
 
 They are in their 30s, and want to be the healthiest they can be for their kids. They are curious about what their body can tell them, and are open to trying new things.
 
@@ -193,7 +192,7 @@ They are in their 30s, and want to be the healthiest they can be for their kids.
 
 ---
 
-<!-- .slide: class="columns dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" data-background-color="#d9654b" -->
 
 #### The Shift <!-- .element: class="eyebrow" -->
 
@@ -203,18 +202,35 @@ They are in their 30s, and want to be the healthiest they can be for their kids.
 
 Today, health is defined as the absence of disease. Healthcare is a break-fix system that only sees you once something goes wrong. It is optimized for emergencies (the most expensive possible care) and ignores chronic disease and aging.
 
-## Storylines
+---
 
-- **The system waits for you to break.** A yearly snapshot says "normal" until something finally shows up.
-- **We design for emergencies.** The system is optimized for acute cases, but fails to address chronic conditions.
-- **A pill, and a good goodbye.** The system is designed for quick fixes that address symptoms—no prevention, no root cause analysis.
-- **Paid for actions, not outcomes.** Since the 1980s, the system has paid for what doctors do, not for keeping you well.
-- **We already have universal healthcare.** We provide the most expensive care, at the last possible moment.
-- **Doctors don't have time for you.** Ten-minute visits, paperwork and lawsuits push them toward quick fixes.
+<!-- .slide: class="cards dark" data-background-color="#d9654b" -->
+
+#### Name the Enemy <!-- .element: class="eyebrow" -->
+
+# Storylines
+
+## The system waits for you to break.
+A yearly snapshot says "normal" until something finally shows up.
+
+## We design for emergencies.
+The system is optimized for acute cases, but fails to address chronic conditions.
+
+## A pill, and a good goodbye.
+The system is designed for quick fixes that address symptoms—no prevention, no root cause analysis.
+
+## Paid for actions, not outcomes.
+Since the 1980s, the system has paid for what doctors do, not for keeping you well.
+
+## We already have universal healthcare.
+We provide the most expensive care, at the last possible moment.
+
+## Doctors don't have time for you.
+Ten-minute visits, paperwork and lawsuits push them toward quick fixes.
 
 ---
 
-<!-- .slide: class="columns dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" data-background-color="#d9654b" -->
 
 #### The Shift <!-- .element: class="eyebrow" -->
 
@@ -224,17 +240,32 @@ Today, health is defined as the absence of disease. Healthcare is a break-fix sy
 
 Midlife is when your body starts to shift: recovery slows, inflammation creeps up, and the liver changes. It is also when you are still well enough to do something about it. You still have the reserve to train, adapt and rebuild. Either you make the first move, or disease does.
 
-## Storylines
+---
 
-- **Everyone has data. No one has a plan.** People collect more data than ever, but nobody tells them what to do with it.
-- **Midlife is the opportunity.** Now is when you have the greatest opportunity to manage that shift. You have the energy, resources, and data.
-- **Every body has an event horizon**. Past a certain point, it becomes less possible to benefit from health breakthroughs. Do you know your biological age?
-- **AI buys you time.** Guidance that once needed a specialist can now be tailored to you, at low cost.
-- **Health is a process that takes time.** You don't need to wait until illness strikes, you can start building resilience today.
+<!-- .slide: class="cards dark" data-background-color="#d9654b" -->
+
+#### Answer: Why Now <!-- .element: class="eyebrow" -->
+
+# Storylines
+
+## Everyone has data. No one has a plan.
+People collect more data than ever, but nobody tells them what to do with it.
+
+## Midlife is the opportunity.
+Now is when you have the greatest opportunity to manage that shift. You have the energy, resources, and data.
+
+## Every body has an event horizon.
+Past a certain point, it becomes less possible to benefit from health breakthroughs. Do you know your biological age?
+
+## AI buys you time.
+Guidance that once needed a specialist can now be tailored to you, at low cost.
+
+## Health is a process that takes time.
+You don't need to wait until illness strikes, you can start building resilience today.
 
 ---
 
-<!-- .slide: class="columns dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" data-background-color="#d9654b" -->
 
 #### The Shift <!-- .element: class="eyebrow" -->
 
@@ -244,22 +275,41 @@ Midlife is when your body starts to shift: recovery slows, inflammation creeps u
 
 Health setbacks are inevitable. What you can control is how you recover and how quickly. Shift your energy from tracking data to building your health. Something you build yourself is something you are likely to understand, track, and enjoy, with room to spare for the people who depend on you.
 
-## Storylines
+---
 
-- **Carry the people you love.** Secure your own mask first, so you have energy for your kids and your aging parents.
-- **Healthspan, not lifespan.** Sustain high performance for longer: coast through your next decade instead of struggling through it.
-- **Have a plan to follow.** You already have the data. Now you can know the one or two things worth doing this month.
-- **Unlock the power of health compounding.** A person who is 1% more resilient has more to give. A resilient population can take on its other problems.
+<!-- .slide: class="cards dark" data-background-color="#d9654b" -->
+
+#### Show the Promised Land <!-- .element: class="eyebrow" -->
+
+# Storylines
+
+## Carry the people you love.
+Secure your own mask first, so you have energy for your kids and your aging parents.
+
+## Healthspan, not lifespan.
+Sustain high performance for longer: coast through your next decade instead of struggling through it.
+
+## Have a plan to follow.
+You already have the data. Now you can know the one or two things worth doing this month.
+
+## Unlock the power of health compounding.
+A person who is 1% more resilient has more to give. A resilient population can take on its other problems.
 
 ---
 
-<!-- .slide: class="columns dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" data-background-color="#d9654b" -->
 
 #### The Shift <!-- .element: class="eyebrow" -->
 
 # Identify Obstacles, Then Explain How You'll Overcome Them
 
 **Your body is enough.** It already knows how to repair, recover and rebalance. What got in the way: a broken model of health. Here's what we need to get back on track.
+
+---
+
+<!-- .slide: class="cards dark" data-background-color="#d9654b" -->
+
+#### Identify Obstacles <!-- .element: class="eyebrow" -->
 
 ## 1. Mindset
 
@@ -290,7 +340,7 @@ Eat, sleep, move, breathe, connect. Boring, ancient, and still the strongest med
 
 ---
 
-<!-- .slide: class="columns dark" data-background-color="#d9654b" -->
+<!-- .slide: class="dark" data-background-color="#d9654b" -->
 
 #### The Shift <!-- .element: class="eyebrow" -->
 
@@ -300,14 +350,31 @@ Eat, sleep, move, breathe, connect. Boring, ancient, and still the strongest med
 
 We're redefining healthcare around resilience instead of disease. To do this, we're building the case in public, drawing on new studies from Stanford, the National Institute on Aging, Lancet and NEJM trials, and more. There are no quick fixes, and we're not looking for a magic bullet. Science, as usual, proceeds one study at a time.
 
-## Storylines
+---
 
-- **The midlife cliff is measurable.** Stanford tracked 135,000 molecules; 81% shift sharply around 44 and 60.
-- **Same labs, different health.** Identical bloodwork; one woman recovers in three days, the other in six weeks.
-- **Recovery predicts survival.** HRV predicts mortality across nearly 38,000 people.
-- **Boring works, big.** Sauna, steps, hard efforts, regular sleep and connection each line up with roughly 40% lower risk of death.
-- **"Permanent" isn't permanent.** 1 in 4 with type 2 diabetes were in remission five years after a structured program.
-- **Proof still to come.** A usage experiment, a first "Julie" story, and a home-vs-clinical ultrasound validation.
+<!-- .slide: class="cards dark" data-background-color="#d9654b" -->
+
+#### Provide Evidence <!-- .element: class="eyebrow" -->
+
+# Storylines
+
+## The midlife cliff is measurable.
+Stanford tracked 135,000 molecules; 81% shift sharply around 44 and 60.
+
+## Same labs, different health.
+Identical bloodwork; one woman recovers in three days, the other in six weeks.
+
+## Recovery predicts survival.
+HRV predicts mortality across nearly 38,000 people.
+
+## Boring works, big.
+Sauna, steps, hard efforts, regular sleep and connection each line up with roughly 40% lower risk of death.
+
+## "Permanent" isn't permanent.
+1 in 4 with type 2 diabetes were in remission five years after a structured program.
+
+## Proof still to come.
+A usage experiment, a first "Julie" story, and a home-vs-clinical ultrasound validation.
 
 ---
 

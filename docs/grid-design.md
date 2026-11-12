@@ -1,6 +1,6 @@
 # Grid layout: design notes
 
-Status: V1 is built (see `docs/reference.md`, [Grid slides](reference.md#grid-slides)). The "Later" parts below are designed, not built. The prototypes used to design it are on the `claude/grid-design-2afdd8` branch.
+Status: V1 is built (see `docs/reference.md`, [Grid slides](reference.md#grid-slides)). Sibling headings splitting a grid slide, `cards` drawn on those cells, and the `split` comment are built too ([Sections](reference.md#sections), [Split](reference.md#split)); `columns` is not yet. The "Later" parts below are designed, not built. The prototypes used to design it are on the `claude/grid-design-2afdd8` branch.
 
 ## The idea
 

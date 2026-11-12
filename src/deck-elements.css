@@ -114,7 +114,7 @@
   width: 0.4em;
   height: 0.4em;
   border-radius: 50%;
-  background: var(--_theme-1);
+  background: var(--deck-ink-faint);
 }
 
 .reveal ol {
@@ -131,7 +131,7 @@
   top: 0.12em;
   font-family: var(--deck-font-mono);
   font-size: 0.62em;
-  color: var(--_theme-1);
+  color: var(--deck-ink-faint);
 }
 
 /* --- Quote --- */

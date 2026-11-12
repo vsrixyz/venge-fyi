@@ -110,7 +110,7 @@ All options are optional.
 | `title` | `Deck` | The browser tab title. |
 | `description` | none | The page's `<meta name="description">`. |
 | `eyebrow` | none | A small label at the top centre of every slide except the first. A slide's own eyebrow replaces it. See [Slides](#slides). |
-| `accent` | the theme's | The colour for bullets, links, the quote mark and charts. Sets `--deck-theme-1`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
+| `accent` | the theme's | The colour for links, the quote mark and charts. Sets `--deck-theme-1`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
 | `theme` | none | A built-in theme name (`dark`, `signal`) or a path to your own CSS file, relative to the deck file. |
 | `charts` | `[]` | Chart libraries for charts written as JSON: `chartjs`, `echarts`. A deck that links a `.csv` file gets `chartjs` on its own. |
 | `source` | `false` | Shows each slide's markdown in a panel beside it. Press M to hide it. |
@@ -150,21 +150,22 @@ Each slide has one type. A slide with no type is `grid`, and most slides need no
 | --- | --- | --- |
 | `grid` | Almost everything | Text, pictures, or both. The slide finds its own [cells](#grid-slides). |
 | `prose` | Longer text | `##` title, then paragraphs, lists, tables and code. The only type that scrolls. |
-| `split` | Two sides | 2 [sections](#sections), one per half. Text only. |
-| `cards` | A few short points | 2 to 6 [sections](#sections), each in a box. 2 or 4 go two across; 3, 5 or 6 go three across. |
+| `split` | Two sides | The first part on the left, the rest on the right, the right half tinted. See [Split](#split). |
+| `cards` | Short points | A grid slide whose [sections](#sections) are drawn as boxes |
 | `columns` | Side-by-side text | 2 to 4 [sections](#sections) in one row. |
 
 ### Grid slides
 
-A grid slide picks one of three layouts from what you write. Text that runs together is one cell; the pictures and charts beside it are another. Cells keep the order you wrote them in.
+A grid slide picks one of four layouts from what you write. Text that runs together is one cell; the pictures and charts beside it are another. Cells keep the order you wrote them in.
 
 | Layout | You write | You get |
 | --- | --- | --- |
 | headline | Only text | One centred cell. `#` is headline size, or title size with headings only. `##` is a subtitle, `###` a small line. A `>` quote gets a big quote mark. |
 | figure | Text, then pictures | Text in a third, the pictures in the other two thirds. Write the pictures first to put them on the left. |
 | image | Only pictures | The pictures fill the slide |
+| sections | The same heading size two or more times | One cell per heading. See [Sections](#sections). |
 
-Text and pictures that take turns more than once (text, a picture, more text) make a `prose` slide instead: one column, top to bottom. For parts side by side, use `columns` or `cards`.
+Text and pictures that take turns more than once (text, a picture, more text) make a `prose` slide instead: one column, top to bottom. For parts side by side, give each part a heading: see [Sections](#sections).
 
 Text scales with its cell. Pictures go 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3, and past 9 four across. A short last row is centred. Beside text they turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
 
@@ -211,11 +212,39 @@ A slide's background uses Reveal's own attributes: `data-background-color`, `dat
 
 ### Sections
 
-On `split`, `cards` and `columns`, each heading starts a part: a half, a card or a column. Everything under it, until the next heading, goes in that part: text, lists, images.
+Sibling headings split a slide into parts, with no class needed. On a grid or `cards` slide, the first heading size that appears two or more times starts one cell each. Headings above it that appear once are the title and subtitle, and sit on top. Smaller headings stay inside their cell.
 
-- With only `##` headings, each `##` starts a part.
-- With `###` headings, each `###` starts a part, and a `##` above them is the slide's title.
-- Anything above the first part stays on top, in the order you wrote it.
+| You write | Title | Cells |
+| --- | --- | --- |
+| `#`, `##`, `##` | `#` | one per `##` |
+| `##`, `###`, `###`, `###` | `##` | one per `###` |
+| `#`, `##`, `###` × 10 | `#`, with `##` as its subtitle | one per `###` |
+| `#`, `##`, then text | none | none: one cell, a title and subtitle |
+
+Everything under a cell's heading, until the next one, goes in that cell in order: text, lists, smaller headings, pictures. Cells go in the same shapes as pictures: 2 across, 3 across, 4 as 2×2, and so on; past 9, four across. A short last row is centred. A fragment on a cell's heading brings in the whole cell.
+
+When the cells hold more text than fits, the text gets smaller in steps until it fits, down to about 22px body text. Past that, it runs off the bottom.
+
+`prose` stops the split: one column, in order. On `columns` (an older type that will move onto this), each heading starts a column: with `###` headings, each `###` starts a part and a `##` above them is the title.
+
+### Split
+
+`<!-- .slide: class="split" -->` puts the first part of the slide on the left and the rest on the right.
+
+- With [sections](#sections), the right half starts at the second section's heading. A title sits above the first part, on the left. The two parts start at the same line, and the group is centred top to bottom.
+- Without, the left half is the opening: the headings and the paragraphs right under them. The right half starts at the first list, picture, quote or other block, or at a heading after a paragraph. Each half is centred top to bottom.
+- Pictures in a half share its height.
+
+```markdown
+<!-- .slide: class="split" -->
+
+# The Shift
+
+## Who your audience becomes
+
+- Name the Enemy
+- Answer: Why Now?
+```
 
 ```markdown
 <!-- .slide: class="cards" -->
@@ -229,7 +258,7 @@ Each slide makes one point.
 Nothing runs off the edge.
 ```
 
-Part headings look the same whichever level you write: like `###` on cards and columns, like `##` on split.
+A cell's heading looks the same whichever level you write: like `###` on grid, cards and columns. On `split`, a `###` looks like `##`.
 
 Modifiers go in the same `class="…"`:
 
@@ -341,10 +370,10 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-card` | `#fffdfa` | Cards, the second half of `split` |
 | `--deck-ink` | `#1f1d1b` | Headings, bold text, `###` |
 | `--deck-ink-soft` | *mixed*: ink at 76% | Paragraphs, list items, table cells, subtitles |
-| `--deck-ink-faint` | *mixed*: ink at 52% | Labels, chart text |
+| `--deck-ink-faint` | *mixed*: ink at 52% | Labels, bullets and list numbers, chart text |
 | `--deck-line` | *mixed*: ink at 12% | Lines, borders, chart grid, scrollbar |
 | `--deck-code-inline` | *mixed*: ink at 9% | Inline code, the missing-image box |
-| `--deck-theme-1` | `#12467A` | Bullets, numbers, links, quote mark and border, first chart colour. Front matter `accent` sets it. |
+| `--deck-theme-1` | `#12467A` | Links, quote mark and border, first chart colour. Front matter `accent` sets it. |
 | `--deck-theme-2` | `#e1361f` | Second chart colour, overview background |
 | `--deck-theme-3` | `#fbbe25` | Third chart colour, overview background |
 | `--deck-theme-4` | `#2f7d5b` | Fourth chart colour |
@@ -420,16 +449,16 @@ These are public: themes and your own CSS can rely on them.
 | --- | --- | --- |
 | `deck-stage` | `div`, the only child of each slide besides notes and the eyebrow | Holds the slide's content. Insets and gaps are set here. |
 | `deck-eyebrow` | a child of the slide beside `deck-stage` | The eyebrow: the slide's first line marked `eyebrow`, or a `p` with the front matter's |
-| `data-shape` | `grid` slide's `deck-stage` | The layout: `headline`, `figure` or `image` |
+| `data-shape` | `grid` or `cards` slide's `deck-stage` | The layout: `headline`, `figure`, `image` or `sections`. `data-fit` is how far `sections` text was scaled down to fit. |
 | `deck-cell` | `grid` | Each cell. Also `deck-text` or `deck-pictures`, and any classes from a `.cell:` comment. |
 | `deck-text` | `grid` | A text cell. `data-headings` when it holds only headings. |
 | `deck-pictures` | `grid` | A cell of pictures. `data-count` is the number of pictures. |
 | `deck-caption` | `grid` | A caption: the last child of its `deck-pictures`, or of a `deck-captioned` |
 | `deck-captioned` | `grid` | A picture with its own caption, when a `deck-pictures` cell has several |
-| `deck-head` | `split` | Holds anything above the halves, such as the title |
+| `deck-head` | `sections`, `split` | Holds anything above the cells or parts, such as the title |
+| `deck-section` | `sections` | Each cell, from its heading to the next |
 | `deck-half` | `split` | Each half |
-| `deck-cards` | `cards` | The grid. `data-count` is the number of cards. |
-| `deck-card` | `cards` | Each card |
+| `deck-card` | `cards` | Each cell, drawn as a box |
 | `deck-columns` | `columns` | The row. `data-count` is the number of columns. |
 | `deck-column` | `columns` | Each column |
 | `deck-chart` | any | The box around a chart |

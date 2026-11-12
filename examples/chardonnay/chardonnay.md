@@ -12,7 +12,7 @@ description: Every example slide from the Venge FYI Figma file, in order.
 # A slide's own eyebrow replaces it; class="hide-eyebrow" hides it. Blank: none.
 eyebrow: Venge FYI
 
-# The colour for bullets, links, the quote mark and charts.
+# The colour for links, the quote mark and charts.
 # Quote it: '#12467A'. Blank: the theme's --deck-theme-1.
 accent:
 
