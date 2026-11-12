@@ -79,7 +79,8 @@
   color-scheme: light;
 }
 
-/* What the CSS uses: the pairs, resolved per slide, and greys mixed from them.
+/* What the CSS uses: the pairs, resolved per slide, and see-through greys of ink
+   that show the slide's own background, whatever its colour.
    Declared on every slide so a theme can set the pairs anywhere. Don't set these in a theme. */
 :root,
 .reveal .slides section {
@@ -92,8 +93,8 @@
   --_theme-4: light-dark(var(--deck-theme-4), var(--deck-dark-theme-4));
   --_theme-5: light-dark(var(--deck-theme-5), var(--deck-dark-theme-5));
 
-  --deck-ink-soft: color-mix(in oklab, var(--_ink) 76%, var(--_bg));
-  --deck-ink-faint: color-mix(in oklab, var(--_ink) 52%, var(--_bg));
-  --deck-line: color-mix(in oklab, var(--_ink) 12%, var(--_bg));
+  --deck-ink-soft: color-mix(in oklab, var(--_ink) 76%, transparent);
+  --deck-ink-faint: color-mix(in oklab, var(--_ink) 52%, transparent);
+  --deck-line: color-mix(in oklab, var(--_ink) 12%, transparent);
   --deck-code-inline: color-mix(in oklab, var(--_ink) 9%, transparent);
 }

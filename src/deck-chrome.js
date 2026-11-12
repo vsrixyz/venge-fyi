@@ -118,17 +118,18 @@
     });
   }
 
-  // The eyebrow sits top centre, outside the layout. A slide's first ####
-  // sets it, a blank #### clears it; otherwise it is the deck's, except on
-  // the first slide.
+  // The eyebrow sits top centre, outside the layout. The first element marked
+  // class="eyebrow" sets it; otherwise it is the deck's, except on the first
+  // slide and on slides marked hide-eyebrow.
   function placeEyebrow(section, stage, deckEyebrow, isFirst) {
-    const own = stage.querySelector(':scope > h4');
+    const own = stage.querySelector(':scope > .eyebrow');
     if (own) own.remove();
 
-    const text = own ? own.textContent.trim() : isFirst ? '' : deckEyebrow;
+    const hidden = isFirst || section.classList.contains('hide-eyebrow');
+    const text = own ? own.textContent.trim() : hidden ? '' : deckEyebrow;
     if (!text) return;
 
-    const eyebrow = own || el('h4', null, text);
+    const eyebrow = own || el('p', null, text);
     eyebrow.classList.add('deck-eyebrow');
     section.appendChild(eyebrow);
   }

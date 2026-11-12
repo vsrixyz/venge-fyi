@@ -2,7 +2,7 @@
 title: Grid cases
 ---
 
-#### One ## stays a heading
+#### One ## stays a heading <!-- .element: class="eyebrow" -->
 
 # Story Ads
 
@@ -75,7 +75,6 @@ The standards moved to display ads.
 
 Gallery Ads launched at Google Marketing Live in May 2019.
 
-##
 ![Gallery ads on a phone](../petrus/assets/gallery-ads-phone.png)
 
 ---

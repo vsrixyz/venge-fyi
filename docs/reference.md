@@ -109,7 +109,7 @@ All options are optional.
 | --- | --- | --- |
 | `title` | `Deck` | The browser tab title. |
 | `description` | none | The page's `<meta name="description">`. |
-| `eyebrow` | none | A small label at the top centre of every slide except the first. A slide's own `####` replaces it. See [Slides](#slides). |
+| `eyebrow` | none | A small label at the top centre of every slide except the first. A slide's own eyebrow replaces it. See [Slides](#slides). |
 | `accent` | the theme's | The colour for bullets, links, the quote mark and charts. Sets `--deck-theme-1`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
 | `theme` | none | A built-in theme name (`dark`, `signal`) or a path to your own CSS file, relative to the deck file. |
 | `charts` | `[]` | Chart libraries for charts written as JSON: `chartjs`, `echarts`. A deck that links a `.csv` file gets `chartjs` on its own. |
@@ -130,9 +130,15 @@ Other keys are ignored. Front matter is a small part of YAML: one `key: value` p
 
 Headings are sizes: `#` is the largest and `####` the smallest. The slide decides the actual size. Everything shows in the order you write it.
 
-A `####` line is the eyebrow, a small label in capitals. It always shows at the top centre of the slide, whatever the slide type and wherever you write it. Only the first `####` on a slide is the eyebrow; any others stay where you wrote them.
+The eyebrow is a small label in capitals at the top centre of the slide, whatever the slide type. Mark any line as the eyebrow with `<!-- .element: class="eyebrow" -->` at its end. It keeps its meaning (a `#` is still the slide's title) but shows as the label. Only the first marked line on a slide is the eyebrow.
 
-The front matter `eyebrow` shows on every slide except the first. A slide's own `####` replaces it, and a blank `####` hides it on that slide.
+```markdown
+# Mission <!-- .element: class="eyebrow" -->
+
+## Inter helps people measure and build resilience.
+```
+
+The front matter `eyebrow` shows on every slide except the first. A slide's own eyebrow replaces it, and `<!-- .slide: class="hide-eyebrow" -->` hides it on that slide.
 
 Reveal's own markdown features still work, such as `<!-- .element: class="fragment" -->`.
 
@@ -231,6 +237,7 @@ Modifiers go in the same `class="…"`:
 | --- | --- | --- |
 | `dark` | any type | Makes this slide dark. See [Light and dark](#light-and-dark). |
 | `light` | any type | Makes this slide light on a dark deck. |
+| `hide-eyebrow` | any type | Hides the front matter `eyebrow` on this slide. A line you mark `eyebrow` still shows. |
 
 ### When content doesn't fit the rules
 
@@ -300,7 +307,7 @@ Slides are light unless you say otherwise:
 - `<!-- .slide: class="dark" -->` makes one slide dark. On a dark deck it changes nothing.
 - `<!-- .slide: class="light" -->` makes one slide light. On a light deck it changes nothing.
 
-Every colour comes in a pair: `--deck-background` and `--deck-dark-background`, `--deck-ink` and `--deck-dark-ink`, and so on. Each slide shows one side of each pair, picked by its CSS `color-scheme`. The greys, lines and inline code are mixed from ink and background on every slide, so they follow. `--deck-dark-theme-1` to `-5` are the theme colours lightened 40% toward white so they stay readable. An `accent` from the front matter is lightened too.
+Every colour comes in a pair: `--deck-background` and `--deck-dark-background`, `--deck-ink` and `--deck-dark-ink`, and so on. Each slide shows one side of each pair, picked by its CSS `color-scheme`. The greys, lines and inline code are ink made see-through, so they follow, and they sit well on any `data-background-color` too. `--deck-dark-theme-1` to `-5` are the theme colours lightened 40% toward white so they stay readable. An `accent` from the front matter is lightened too.
 
 To change how dark looks, set the `--deck-dark-*` tokens in your theme. To make your own theme dark all over, add `:root { color-scheme: dark; }`, as `themes/dark.css` does. Don't set `--deck-background` to a dark colour for that: it is the light side, so `light` slides would turn dark too. Images are shown as they are: a diagram with dark lines on a clear background will be hard to see on a dark slide.
 
@@ -326,16 +333,16 @@ The CLI copies a theme given by path, but not the files its `url()`s point to. C
 
 All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults are in [`src/deck-tokens.css`](../src/deck-tokens.css).
 
-**Colours.** Set `--deck-background`, `--deck-card` and `--deck-ink`. The four marked *mixed* are worked out from ink and background on every slide, so they follow light and dark; don't set them.
+**Colours.** Set `--deck-background`, `--deck-card` and `--deck-ink`. The four marked *mixed* are ink made see-through, so they follow light and dark and any slide background; don't set them.
 
 | Token | Default | Used for |
 | --- | --- | --- |
 | `--deck-background` | `#f7f5f2` | Page and slide background |
 | `--deck-card` | `#fffdfa` | Cards, the second half of `split` |
 | `--deck-ink` | `#1f1d1b` | Headings, bold text, `###` |
-| `--deck-ink-soft` | *mixed*: 76% ink | Paragraphs, list items, table cells, subtitles |
-| `--deck-ink-faint` | *mixed*: 52% ink | Labels, chart text |
-| `--deck-line` | *mixed*: 12% ink | Lines, borders, chart grid, scrollbar |
+| `--deck-ink-soft` | *mixed*: ink at 76% | Paragraphs, list items, table cells, subtitles |
+| `--deck-ink-faint` | *mixed*: ink at 52% | Labels, chart text |
+| `--deck-line` | *mixed*: ink at 12% | Lines, borders, chart grid, scrollbar |
 | `--deck-code-inline` | *mixed*: ink at 9% | Inline code, the missing-image box |
 | `--deck-theme-1` | `#12467A` | Bullets, numbers, links, quote mark and border, first chart colour. Front matter `accent` sets it. |
 | `--deck-theme-2` | `#e1361f` | Second chart colour, overview background |
@@ -376,7 +383,7 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-text-heading` | `56px` | `#`/`##` on prose, cards and columns; quotes on a headline slide |
 | `--deck-text-heading-small` | `48px` | `#`/`##` on a figure, and on `split` |
 | `--deck-text-body` | `34px` | Paragraphs and lists. `###` and card labels are 5% larger. |
-| `--deck-text-small` | `22px` | Labels: `####`, `###` on a headline slide, table headers; the missing-image box |
+| `--deck-text-small` | `22px` | Labels: the eyebrow, `####`, `###` on a headline slide, table headers; the missing-image box |
 | `--deck-leading-title` | `0.82` | `#` on a headline slide with headings only |
 | `--deck-leading-display` | `1.05` | Other `#` and `##` |
 | `--deck-leading-snug` | `1.25` | The default; `###`, card labels, labels, tables |
@@ -405,12 +412,14 @@ These are public: themes and your own CSS can rely on them.
 
 **On the slide `<section>`**, from your markdown: the [slide types](#slide-types) and modifiers above.
 
+**On a line**, from your markdown: `eyebrow` shows that line as the [eyebrow](#slides).
+
 **Added by the runtime:**
 
 | Name | On | What it is |
 | --- | --- | --- |
 | `deck-stage` | `div`, the only child of each slide besides notes and the eyebrow | Holds the slide's content. Insets and gaps are set here. |
-| `deck-eyebrow` | `h4`, a child of the slide beside `deck-stage` | The eyebrow, from the slide's first `####` or the front matter |
+| `deck-eyebrow` | a child of the slide beside `deck-stage` | The eyebrow: the slide's first line marked `eyebrow`, or a `p` with the front matter's |
 | `data-shape` | `grid` slide's `deck-stage` | The layout: `headline`, `figure` or `image` |
 | `deck-cell` | `grid` | Each cell. Also `deck-text` or `deck-pictures`, and any classes from a `.cell:` comment. |
 | `deck-text` | `grid` | A text cell. `data-headings` when it holds only headings. |

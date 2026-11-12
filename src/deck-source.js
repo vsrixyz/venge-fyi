@@ -14,7 +14,7 @@
       .map(chunk => chunk.split(VERTICAL).map(part => part.trim()));
   }
 
-  const MODIFIERS = ['dark', 'light'];
+  const MODIFIERS = ['dark', 'light', 'hide-eyebrow'];
 
   function typeOf(section) {
     const types = ['grid', 'prose', 'split', 'cards', 'columns'];

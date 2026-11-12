@@ -23,7 +23,7 @@ charts: ["chartjs"]
 source: true
 ---
 
-#### Venge-FYI
+#### Venge-FYI <!-- .element: class="eyebrow" -->
 
 # Easy Markdown Decks
 
@@ -43,7 +43,7 @@ I want prose here
 
 <!-- .slide: class="dark" -->
 
-#### #### Use h4 for eyebrows
+#### The eyebrow is marked <!-- .element: class="eyebrow" -->
 
 # # Headings are big
 
@@ -59,7 +59,7 @@ I want prose here
 
 ---
 
-#### Text alone
+#### Text alone <!-- .element: class="eyebrow" -->
 
 # A short statement
 

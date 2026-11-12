@@ -27,7 +27,7 @@ Real decks are simple. In petrus, 20 of 22 slides were one block of text or text
 
 **Later** (designed below, not built):
 
-- Two or more `##` splitting a slide into cells, `cards`, `columns`.
+- Sibling headings splitting a slide into cells; `split`, `cards`, `columns` on top (see "Sections split" below).
 - Cell backgrounds.
 - `rows` and `columns` for arranging a picture group. Two tall pages beside text need one of these, or a half that chooses by the pictures' shape.
 
@@ -100,23 +100,45 @@ Until then, today's `split`, `cards` and `columns` slide types keep working as t
 - Auto-animate morphs cells, headings and pictures between two grid slides; new cells fade in.
 - Text sizes hold under Reveal's scaling and in `?print-pdf`.
 
-**Headings as cell markers.**
+**Sections split; layout lives in the comment.** Clean markdown, written for meaning, should make a good slide. Headings keep their meaning, and the content never holds layout syntax.
 
-- Two or more `##` on a slide make one cell per `##`. A single `##` is an ordinary heading, so a title with a subtitle stays whole. No class is needed.
-- `<!-- .slide: class="prose" -->` stops the split: one left-aligned column, in order, scrolling if it's long.
-- The `#` line and anything before the first `##` (an eyebrow, an intro line) sit above the cells, full width.
-- Everything after a `##`, up to the next one, belongs to that cell in order: text, lists, `###` subheadings, pictures, charts.
-- A picture in a `##` cell is content: the heading sits above it. Making it the cell's background is an option (syntax still open).
-- An empty `##` starts a cell with no title, such as a photo-only cell. The empty heading is removed from the slide.
-- A fragment on the `##` brings in the whole cell; a fragment on anything inside brings in just that thing.
+- Sibling sections become cells. On each slide, the biggest heading that appears once is the title. The next size down, when it appears two or more times, starts one cell each. If the biggest size appears two or more times, there is no title and those headings are the cells. A single lower heading is a subtitle, so the slide stays whole.
+- The title and anything before the first cell (an intro line) sit above the cells, full width.
+- Everything after a cell's heading, up to the next one, belongs to that cell in order: text, lists, smaller headings, pictures, charts.
+- No empty headings. Nobody writes a blank `#`, so a split that the content doesn't imply is asked for in the slide comment.
+- `<!-- .slide: class="split" -->` puts the opening (the headings and the lines right under them) on one side and everything else on the other. Both halves are centred as a group, not pushed to the top.
+- `<!-- .slide: class="prose" -->` stops all splitting: one left-aligned column, in order, scrolling if it's long.
 - `<!-- .slide: class="cards" -->` draws the cells as boxes.
+- A picture in a cell is content: the heading sits above it. Making it the cell's background is an option (syntax still open).
+- A fragment on a cell's heading brings in the whole cell; a fragment on anything inside brings in just that thing.
+
+Worked example: Inter's "The Shift" slide, a title and a line on the left and a list of five on the right:
+
+```markdown
+<!-- .slide: class="split" -->
+
+# The Shift
+
+Who your audience becomes
+
+- Name the Enemy
+- Answer: Why Now?
+- Show the Promised Land
+- Obstacles
+- Provide evidence
+```
+
+Without the comment it is one centred column, which is also a good slide.
+
+**The eyebrow is marked, not a heading level.** `<!-- .element: class="eyebrow" -->` on any line shows it as the eyebrow; the line keeps its meaning (`# Mission` is still the title). `####` is an ordinary small heading. The eyebrow is taken out before cells are found, so it never counts as a title or a cell.
 
 ## Open
 
 Taken one at a time, in roughly this order.
 
-1. A better way to make text light than `class="dark"`. On a cell, `dark` also flips the colour pairs, so the prototype resolves colour names on the slide to keep `theme-1` the same colour everywhere.
-2. Whether `columns` should split a picture group into separate cells (a blank line between pictures would do it).
+1. Headings are not sizes. `docs/reference.md` says they are, which pushes people to write headings only to make lines big. How short text in a cell gets big enough without that is the next question.
+2. A better way to make text light than `class="dark"`. On a cell, `dark` also flips the colour pairs, so the prototype resolves colour names on the slide to keep `theme-1` the same colour everywhere.
+3. Whether `columns` should split a picture group into separate cells (a blank line between pictures would do it).
 
 ## What the real deck showed
 

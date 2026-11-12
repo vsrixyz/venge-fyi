@@ -44,7 +44,8 @@
   color: var(--_ink);
 }
 
-/* Labels: ####, ### on a headline slide, table headers. :where keeps it easy to override. */
+/* Labels: the eyebrow, ####, ### on a headline slide, table headers. :where keeps it easy to override. */
+.reveal .deck-eyebrow,
 .reveal h4,
 .reveal th,
 .reveal :where([data-shape="headline"]) > .deck-text > h3 {

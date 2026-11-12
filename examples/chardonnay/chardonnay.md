@@ -9,7 +9,7 @@ title: Chardonnay
 description: Every example slide from the Venge FYI Figma file, in order.
 
 # A small label at the top centre of every slide except the first.
-# A slide's own #### replaces it; a blank #### hides it. Blank: none.
+# A slide's own eyebrow replaces it; class="hide-eyebrow" hides it. Blank: none.
 eyebrow: Venge FYI
 
 # The colour for bullets, links, the quote mark and charts.
@@ -42,7 +42,7 @@ page-numbering: true
 
 ---
 
-#### Venge FYI
+#### Venge FYI <!-- .element: class="eyebrow" -->
 
 # Every slide type
 
@@ -59,7 +59,7 @@ It can hold one or two short paragraphs.
 
 ---
 
-#### Eyebrow
+#### Eyebrow <!-- .element: class="eyebrow" -->
 
 # A short list
 
@@ -105,7 +105,7 @@ Write the picture first to put it on the left.
 
 ---
 
-####
+<!-- .slide: class="hide-eyebrow" -->
 
 ## A short list
 

@@ -2,9 +2,12 @@
 title: Health You Can Build
 description: Inter core messaging framework, v2.
 page-numbering: true
+accent: #15355f
 ---
 
-<!-- .slide: class="dark" data-background-color="#1f4e8c" -->
+<!-- .slide: class="dark" data-background-color="theme-1" -->
+
+#### Look and point <!-- .element: class="eyebrow" -->
 
 # Health You Can Build
 
@@ -22,9 +25,9 @@ page-numbering: true
 
 ---
 
-<!-- .slide: class="dark" -->
+<!-- .slide: class="" -->
 
-# We're here to change the world
+## We're here to change the world
 
 The purpose of all communication is to influence someone.
 
@@ -94,9 +97,9 @@ shift: is defining the journey from a B
 
 ---
 
-<!-- .slide: class="prose dark" data-background-color="#b7791f" -->
+<!-- .slide: class="big dark" data-background-color="#b7791f" -->
 
-# Mission
+# Mission <!-- .element: class="eyebrow" -->
 
 ## **Inter helps people measure and build resilience**, a body's ability to recover from the hard parts of life, so that health becomes something you build, not just the absence of disease.
 
@@ -192,7 +195,7 @@ They are in their 30s, and want to be the healthiest they can be for their kids.
 
 <!-- .slide: class="columns dark" data-background-color="#d9654b" -->
 
-#### The Shift
+#### The Shift <!-- .element: class="eyebrow" -->
 
 # Name the Enemy
 
@@ -213,7 +216,7 @@ Today, health is defined as the absence of disease. Healthcare is a break-fix sy
 
 <!-- .slide: class="columns dark" data-background-color="#d9654b" -->
 
-#### The Shift
+#### The Shift <!-- .element: class="eyebrow" -->
 
 # Answer: Why Now
 
@@ -233,7 +236,7 @@ Midlife is when your body starts to shift: recovery slows, inflammation creeps u
 
 <!-- .slide: class="columns dark" data-background-color="#d9654b" -->
 
-#### The Shift
+#### The Shift <!-- .element: class="eyebrow" -->
 
 # Show the Promised Land
 
@@ -252,7 +255,7 @@ Health setbacks are inevitable. What you can control is how you recover and how 
 
 <!-- .slide: class="columns dark" data-background-color="#d9654b" -->
 
-#### The Shift
+#### The Shift <!-- .element: class="eyebrow" -->
 
 # Identify Obstacles, Then Explain How You'll Overcome Them
 
@@ -289,7 +292,7 @@ Eat, sleep, move, breathe, connect. Boring, ancient, and still the strongest med
 
 <!-- .slide: class="columns dark" data-background-color="#d9654b" -->
 
-#### The Shift
+#### The Shift <!-- .element: class="eyebrow" -->
 
 # Provide Evidence
 

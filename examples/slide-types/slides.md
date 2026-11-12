@@ -5,7 +5,7 @@ order: 0
 accent: '#12467A'
 ---
 
-#### Look & Point
+#### Look & Point <!-- .element: class="eyebrow" -->
 
 # Slide types
 
@@ -19,7 +19,7 @@ accent: '#12467A'
 
 ---
 
-#### Part 1
+#### Part 1 <!-- .element: class="eyebrow" -->
 
 # Most slides need no type
 
