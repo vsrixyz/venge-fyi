@@ -108,17 +108,21 @@
       charts = [...charts, 'chartjs'];
     }
 
-    if (data.source !== undefined && data.source !== null && typeof data.source !== 'boolean') {
-      throw new Error('Front matter source: expected true or false');
-    }
+    ['source', 'page-numbering'].forEach(key => {
+      if (data[key] !== undefined && data[key] !== null && typeof data[key] !== 'boolean') {
+        throw new Error(`Front matter ${key}: expected true or false`);
+      }
+    });
 
     return {
       title: text(data, 'title'),
       description: text(data, 'description'),
+      eyebrow: text(data, 'eyebrow'),
       accent,
       theme: text(data, 'theme'),
       charts,
       source: data.source === true,
+      pageNumbering: data['page-numbering'] === true,
       markdown
     };
   }

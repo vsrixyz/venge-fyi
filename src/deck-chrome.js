@@ -118,17 +118,19 @@
     });
   }
 
-  // The eyebrow is a #### line. On grid it can be anywhere; elsewhere it must come first.
-  function resolveEyebrow(stage, layout) {
-    const h4 = layout === 'grid'
-      ? stage.querySelector(':scope > h4')
-      : stage.firstElementChild && stage.firstElementChild.tagName === 'H4'
-        ? stage.firstElementChild
-        : null;
+  // The eyebrow sits top centre, outside the layout. A slide's first ####
+  // sets it, a blank #### clears it; otherwise it is the deck's, except on
+  // the first slide.
+  function placeEyebrow(section, stage, deckEyebrow, isFirst) {
+    const own = stage.querySelector(':scope > h4');
+    if (own) own.remove();
 
-    if (!h4) return null;
-    h4.classList.add('deck-eyebrow');
-    return h4;
+    const text = own ? own.textContent.trim() : isFirst ? '' : deckEyebrow;
+    if (!text) return;
+
+    const eyebrow = own || el('h4', null, text);
+    eyebrow.classList.add('deck-eyebrow');
+    section.appendChild(eyebrow);
   }
 
   // --- grid: the slide finds its own cells. Text that runs together is one
@@ -223,18 +225,31 @@
         return;
       }
 
-      // Text in the same paragraph as a picture is its caption.
+      // Text in the same paragraph as pictures is their caption.
       if (isCaptioned(node)) {
+        const item = el('div', 'deck-captioned');
         Array.from(node.children)
           .filter(kid => kid.matches(MEDIA))
-          .forEach(pic => add(boxChart(pic), 'pictures'));
+          .forEach(pic => item.appendChild(boxChart(pic)));
         node.classList.add('deck-caption');
-        cell.el.appendChild(node);
+        item.appendChild(node);
+        add(item, 'pictures');
         return;
       }
 
       if (node.matches(MEDIA)) add(boxChart(node), 'pictures');
       else add(node, 'text');
+    });
+
+    // A caption under all of a cell's pictures captions the group; with
+    // several, each stays under its own pictures.
+    cells.filter(c => c.kind === 'pictures').forEach(c => {
+      const only = c.el.children.length === 1 && c.el.firstElementChild.matches('.deck-captioned');
+      if (only) {
+        const item = c.el.firstElementChild;
+        item.replaceWith(...item.childNodes);
+      }
+      c.count = c.el.querySelectorAll(':scope > :not(.deck-caption)').length;
     });
 
     // headline: text only. image: pictures only. figure: text beside pictures.
@@ -285,7 +300,7 @@
     return parts;
   }
 
-  function buildSplit(stage, eyebrow) {
+  function buildSplit(stage) {
     if (stage.querySelector(':scope > .deck-half')) return;
 
     const halves = sections(stage, 'deck-half');
@@ -297,7 +312,7 @@
     stage.append(...halves);
   }
 
-  function buildCards(stage, eyebrow) {
+  function buildCards(stage) {
     if (stage.querySelector(':scope > .deck-cards')) return;
 
     const cards = sections(stage, 'deck-card');
@@ -307,7 +322,7 @@
     stage.appendChild(grid);
   }
 
-  function buildColumns(stage, eyebrow) {
+  function buildColumns(stage) {
     if (stage.querySelector(':scope > .deck-columns')) return;
 
     const columns = sections(stage, 'deck-column');
@@ -357,27 +372,28 @@
     });
   }
 
-  function buildSlide(section) {
+  function buildSlide(section, isFirst, deckEyebrow) {
     const layout = normalizeLayout(section);
+    const isBuilt = !!section.querySelector(':scope > .deck-stage');
     const stage = wrapStage(section);
     unwrapMedia(stage);
     csvCharts(stage);
     normalizeFragments(stage);
 
-    const eyebrow = resolveEyebrow(stage, layout);
+    if (!isBuilt) placeEyebrow(section, stage, deckEyebrow, isFirst);
 
     switch (layout) {
       case 'grid':
         buildGrid(section, stage);
         break;
       case 'split':
-        buildSplit(stage, eyebrow);
+        buildSplit(stage);
         break;
       case 'cards':
-        buildCards(stage, eyebrow);
+        buildCards(stage);
         break;
       case 'columns':
-        buildColumns(stage, eyebrow);
+        buildColumns(stage);
         break;
     }
 
@@ -399,11 +415,27 @@
     update();
   }
 
+  // Reveal's slide number: hidden on the first slide, light or dark like the slide.
+  function watchSlideNumber(reveal, root) {
+    const number = root.querySelector(':scope > .slide-number');
+    if (!number) return;
+
+    const update = () => {
+      const section = reveal.getCurrentSlide();
+      number.classList.toggle('is-first', reveal.isFirstSlide());
+      if (section) number.style.colorScheme = getComputedStyle(section).colorScheme;
+    };
+
+    reveal.on('slidechanged', update);
+    update();
+  }
+
   function deckChrome(reveal) {
     const root = document.querySelector('.reveal');
     if (!root) return;
 
-    leafSlides(root).forEach(buildSlide);
+    const deckEyebrow = root.getAttribute('data-eyebrow') || '';
+    leafSlides(root).forEach((section, i) => buildSlide(section, i === 0, deckEyebrow));
     leafSlides(root).forEach(backgroundNames);
 
     watchImages(root);
@@ -416,6 +448,7 @@
     root.classList.add('deck-ready');
 
     watchScroll(reveal);
+    watchSlideNumber(reveal, root);
   }
 
   global.deckChrome = deckChrome;

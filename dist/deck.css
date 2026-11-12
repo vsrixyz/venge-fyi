@@ -171,6 +171,17 @@ footer, header, hgroup, main, menu, nav, section {
   --_p-size: var(--deck-text-body);
 }
 
+/* The eyebrow: top centre on every slide, outside the layout. */
+.reveal section > .deck-eyebrow {
+  position: absolute;
+  top: var(--deck-space-m);
+  left: var(--deck-inset-x);
+  right: var(--deck-inset-x);
+  z-index: 1;
+  margin: 0;
+  text-align: center;
+}
+
 /* Don't let flex squash blocks; overflow is flagged instead. */
 .reveal .deck-stage > * {
   max-width: 100%;
@@ -289,7 +300,8 @@ footer, header, hgroup, main, menu, nav, section {
   position: relative;
 }
 
-.reveal .deck-pictures:is(.fill, .bleed) > :is(img, video, picture) {
+.reveal .deck-pictures:is(.fill, .bleed) > :is(img, video, picture),
+.reveal .deck-pictures:is(.fill, .bleed) > .deck-captioned > :is(img, video, picture) {
   object-fit: cover;
 }
 
@@ -328,8 +340,30 @@ footer, header, hgroup, main, menu, nav, section {
 
 .reveal .deck-pictures > .deck-caption {
   grid-column: 1 / -1;
+}
+
+.reveal :is(.deck-pictures, .deck-captioned) > .deck-caption {
   font-size: clamp(22px, 3.4cqi, var(--deck-text-body));
   text-align: center;
+}
+
+/* Several captions: each picture with its own, right under it. */
+.reveal .deck-pictures > .deck-captioned {
+  display: flex;
+  flex-direction: column;
+  gap: var(--deck-space-xs);
+}
+
+.reveal .deck-captioned > :not(.deck-caption) {
+  flex: 1 1 0;
+  width: 100%;
+  min-height: 0;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.reveal .deck-captioned > .deck-caption {
+  margin: 0;
 }
 
 .reveal .deck-pictures.bleed > .deck-caption {
@@ -875,4 +909,24 @@ body.source-hidden .deck-source { display: none; }
   color: #fff;
   background: #c0392b;
   border-radius: 4px;
+}
+
+/* Reveal's slide number (page-numbering: true), styled like the eyebrow.
+   It sits in the window's corner, so its sizes are screen pixels. */
+.reveal .slide-number {
+  right: 16px;
+  bottom: 16px;
+  padding: 0;
+  background: none;
+  font-family: var(--deck-font-mono);
+  font-size: 14px;
+  color: var(--deck-ink-faint);
+}
+
+.reveal .slide-number a {
+  border-bottom: 0;
+}
+
+.reveal .slide-number.is-first {
+  visibility: hidden;
 }

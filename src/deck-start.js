@@ -44,6 +44,8 @@
       document.documentElement.style.setProperty('--deck-theme-1', deck.accent);
     }
     if (deck.source) root.setAttribute('data-source', '');
+    if (deck.eyebrow) root.setAttribute('data-eyebrow', deck.eyebrow);
+    if (deck.pageNumbering) root.setAttribute('data-page-numbering', '');
 
     const template = document.createElement('script');
     template.type = 'text/template';
@@ -108,7 +110,7 @@
         center: false,
         controls: false,
         progress: false,
-        slideNumber: false,
+        slideNumber: root.hasAttribute('data-page-numbering') ? 'c' : false,
 
         transition: 'fade',
         transitionSpeed: 'fast',

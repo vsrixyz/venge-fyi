@@ -136,17 +136,21 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       charts = [...charts, 'chartjs'];
     }
 
-    if (data.source !== undefined && data.source !== null && typeof data.source !== 'boolean') {
-      throw new Error('Front matter source: expected true or false');
-    }
+    ['source', 'page-numbering'].forEach(key => {
+      if (data[key] !== undefined && data[key] !== null && typeof data[key] !== 'boolean') {
+        throw new Error(`Front matter ${key}: expected true or false`);
+      }
+    });
 
     return {
       title: text(data, 'title'),
       description: text(data, 'description'),
+      eyebrow: text(data, 'eyebrow'),
       accent,
       theme: text(data, 'theme'),
       charts,
       source: data.source === true,
+      pageNumbering: data['page-numbering'] === true,
       markdown
     };
   }
@@ -275,17 +279,19 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     });
   }
 
-  // The eyebrow is a #### line. On grid it can be anywhere; elsewhere it must come first.
-  function resolveEyebrow(stage, layout) {
-    const h4 = layout === 'grid'
-      ? stage.querySelector(':scope > h4')
-      : stage.firstElementChild && stage.firstElementChild.tagName === 'H4'
-        ? stage.firstElementChild
-        : null;
+  // The eyebrow sits top centre, outside the layout. A slide's first ####
+  // sets it, a blank #### clears it; otherwise it is the deck's, except on
+  // the first slide.
+  function placeEyebrow(section, stage, deckEyebrow, isFirst) {
+    const own = stage.querySelector(':scope > h4');
+    if (own) own.remove();
 
-    if (!h4) return null;
-    h4.classList.add('deck-eyebrow');
-    return h4;
+    const text = own ? own.textContent.trim() : isFirst ? '' : deckEyebrow;
+    if (!text) return;
+
+    const eyebrow = own || el('h4', null, text);
+    eyebrow.classList.add('deck-eyebrow');
+    section.appendChild(eyebrow);
   }
 
   // --- grid: the slide finds its own cells. Text that runs together is one
@@ -380,18 +386,31 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
         return;
       }
 
-      // Text in the same paragraph as a picture is its caption.
+      // Text in the same paragraph as pictures is their caption.
       if (isCaptioned(node)) {
+        const item = el('div', 'deck-captioned');
         Array.from(node.children)
           .filter(kid => kid.matches(MEDIA))
-          .forEach(pic => add(boxChart(pic), 'pictures'));
+          .forEach(pic => item.appendChild(boxChart(pic)));
         node.classList.add('deck-caption');
-        cell.el.appendChild(node);
+        item.appendChild(node);
+        add(item, 'pictures');
         return;
       }
 
       if (node.matches(MEDIA)) add(boxChart(node), 'pictures');
       else add(node, 'text');
+    });
+
+    // A caption under all of a cell's pictures captions the group; with
+    // several, each stays under its own pictures.
+    cells.filter(c => c.kind === 'pictures').forEach(c => {
+      const only = c.el.children.length === 1 && c.el.firstElementChild.matches('.deck-captioned');
+      if (only) {
+        const item = c.el.firstElementChild;
+        item.replaceWith(...item.childNodes);
+      }
+      c.count = c.el.querySelectorAll(':scope > :not(.deck-caption)').length;
     });
 
     // headline: text only. image: pictures only. figure: text beside pictures.
@@ -442,7 +461,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     return parts;
   }
 
-  function buildSplit(stage, eyebrow) {
+  function buildSplit(stage) {
     if (stage.querySelector(':scope > .deck-half')) return;
 
     const halves = sections(stage, 'deck-half');
@@ -454,7 +473,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     stage.append(...halves);
   }
 
-  function buildCards(stage, eyebrow) {
+  function buildCards(stage) {
     if (stage.querySelector(':scope > .deck-cards')) return;
 
     const cards = sections(stage, 'deck-card');
@@ -464,7 +483,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     stage.appendChild(grid);
   }
 
-  function buildColumns(stage, eyebrow) {
+  function buildColumns(stage) {
     if (stage.querySelector(':scope > .deck-columns')) return;
 
     const columns = sections(stage, 'deck-column');
@@ -514,27 +533,28 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     });
   }
 
-  function buildSlide(section) {
+  function buildSlide(section, isFirst, deckEyebrow) {
     const layout = normalizeLayout(section);
+    const isBuilt = !!section.querySelector(':scope > .deck-stage');
     const stage = wrapStage(section);
     unwrapMedia(stage);
     csvCharts(stage);
     normalizeFragments(stage);
 
-    const eyebrow = resolveEyebrow(stage, layout);
+    if (!isBuilt) placeEyebrow(section, stage, deckEyebrow, isFirst);
 
     switch (layout) {
       case 'grid':
         buildGrid(section, stage);
         break;
       case 'split':
-        buildSplit(stage, eyebrow);
+        buildSplit(stage);
         break;
       case 'cards':
-        buildCards(stage, eyebrow);
+        buildCards(stage);
         break;
       case 'columns':
-        buildColumns(stage, eyebrow);
+        buildColumns(stage);
         break;
     }
 
@@ -556,11 +576,27 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     update();
   }
 
+  // Reveal's slide number: hidden on the first slide, light or dark like the slide.
+  function watchSlideNumber(reveal, root) {
+    const number = root.querySelector(':scope > .slide-number');
+    if (!number) return;
+
+    const update = () => {
+      const section = reveal.getCurrentSlide();
+      number.classList.toggle('is-first', reveal.isFirstSlide());
+      if (section) number.style.colorScheme = getComputedStyle(section).colorScheme;
+    };
+
+    reveal.on('slidechanged', update);
+    update();
+  }
+
   function deckChrome(reveal) {
     const root = document.querySelector('.reveal');
     if (!root) return;
 
-    leafSlides(root).forEach(buildSlide);
+    const deckEyebrow = root.getAttribute('data-eyebrow') || '';
+    leafSlides(root).forEach((section, i) => buildSlide(section, i === 0, deckEyebrow));
     leafSlides(root).forEach(backgroundNames);
 
     watchImages(root);
@@ -573,6 +609,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     root.classList.add('deck-ready');
 
     watchScroll(reveal);
+    watchSlideNumber(reveal, root);
   }
 
   global.deckChrome = deckChrome;
@@ -977,6 +1014,8 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       document.documentElement.style.setProperty('--deck-theme-1', deck.accent);
     }
     if (deck.source) root.setAttribute('data-source', '');
+    if (deck.eyebrow) root.setAttribute('data-eyebrow', deck.eyebrow);
+    if (deck.pageNumbering) root.setAttribute('data-page-numbering', '');
 
     const template = document.createElement('script');
     template.type = 'text/template';
@@ -1041,7 +1080,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
         center: false,
         controls: false,
         progress: false,
-        slideNumber: false,
+        slideNumber: root.hasAttribute('data-page-numbering') ? 'c' : false,
 
         transition: 'fade',
         transitionSpeed: 'fast',

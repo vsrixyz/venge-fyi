@@ -141,3 +141,23 @@ body.source-hidden .deck-source { display: none; }
   background: #c0392b;
   border-radius: 4px;
 }
+
+/* Reveal's slide number (page-numbering: true), styled like the eyebrow.
+   It sits in the window's corner, so its sizes are screen pixels. */
+.reveal .slide-number {
+  right: 16px;
+  bottom: 16px;
+  padding: 0;
+  background: none;
+  font-family: var(--deck-font-mono);
+  font-size: 14px;
+  color: var(--deck-ink-faint);
+}
+
+.reveal .slide-number a {
+  border-bottom: 0;
+}
+
+.reveal .slide-number.is-first {
+  visibility: hidden;
+}

@@ -109,10 +109,12 @@ All options are optional.
 | --- | --- | --- |
 | `title` | `Deck` | The browser tab title. |
 | `description` | none | The page's `<meta name="description">`. |
+| `eyebrow` | none | A small label at the top centre of every slide except the first. A slide's own `####` replaces it. See [Slides](#slides). |
 | `accent` | the theme's | The colour for bullets, links, the quote mark and charts. Sets `--deck-theme-1`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
 | `theme` | none | A built-in theme name (`dark`, `signal`) or a path to your own CSS file, relative to the deck file. |
 | `charts` | `[]` | Chart libraries for charts written as JSON: `chartjs`, `echarts`. A deck that links a `.csv` file gets `chartjs` on its own. |
 | `source` | `false` | Shows each slide's markdown in a panel beside it. Press M to hide it. |
+| `page-numbering` | `false` | Shows Reveal's slide number in the bottom right corner of the window. The first slide has none. |
 
 Other keys are ignored. Front matter is a small part of YAML: one `key: value` per line, with text, numbers, `true`/`false` and `[lists]`. Anything else (nesting, multi-line values) stops with an error that names the line.
 
@@ -128,7 +130,9 @@ Other keys are ignored. Front matter is a small part of YAML: one `key: value` p
 
 Headings are sizes: `#` is the largest and `####` the smallest. The slide decides the actual size. Everything shows in the order you write it.
 
-A `####` line is the eyebrow, a small label in capitals. On `grid` slides it can go anywhere. On other types it must be the first line.
+A `####` line is the eyebrow, a small label in capitals. It always shows at the top centre of the slide, whatever the slide type and wherever you write it. Only the first `####` on a slide is the eyebrow; any others stay where you wrote them.
+
+The front matter `eyebrow` shows on every slide except the first. A slide's own `####` replaces it, and a blank `####` hides it on that slide.
 
 Reveal's own markdown features still work, such as `<!-- .element: class="fragment" -->`.
 
@@ -160,7 +164,7 @@ Text scales with its cell. Pictures go 1 full, 2 across, 3 across, 4 as 2×2, 5 
 
 Pictures are shown whole, never cropped, unless you ask for `fill` or `bleed`.
 
-**Captions.** Text directly under a picture, with no blank line between, is its caption. Under several pictures, it captions them all.
+**Captions.** Text directly under a picture, with no blank line between, is its caption. Under several pictures written on lines one after another, it captions them all. When pictures are separated by blank lines and more than one has text under it, each keeps its own caption, right under it.
 
 ```markdown
 ![The bar at night](assets/bar.jpg)
@@ -405,14 +409,15 @@ These are public: themes and your own CSS can rely on them.
 
 | Name | On | What it is |
 | --- | --- | --- |
-| `deck-stage` | `div`, the only child of each slide besides notes | Holds the slide's content. Insets and gaps are set here. |
-| `deck-eyebrow` | `h4` | The `####` label |
+| `deck-stage` | `div`, the only child of each slide besides notes and the eyebrow | Holds the slide's content. Insets and gaps are set here. |
+| `deck-eyebrow` | `h4`, a child of the slide beside `deck-stage` | The eyebrow, from the slide's first `####` or the front matter |
 | `data-shape` | `grid` slide's `deck-stage` | The layout: `headline`, `figure` or `image` |
 | `deck-cell` | `grid` | Each cell. Also `deck-text` or `deck-pictures`, and any classes from a `.cell:` comment. |
 | `deck-text` | `grid` | A text cell. `data-headings` when it holds only headings. |
 | `deck-pictures` | `grid` | A cell of pictures. `data-count` is the number of pictures. |
-| `deck-caption` | `grid` | A caption, the last child of its `deck-pictures` |
-| `deck-head` | `split` | Holds anything above the halves, such as the eyebrow and title |
+| `deck-caption` | `grid` | A caption: the last child of its `deck-pictures`, or of a `deck-captioned` |
+| `deck-captioned` | `grid` | A picture with its own caption, when a `deck-pictures` cell has several |
+| `deck-head` | `split` | Holds anything above the halves, such as the title |
 | `deck-half` | `split` | Each half |
 | `deck-cards` | `cards` | The grid. `data-count` is the number of cards. |
 | `deck-card` | `cards` | Each card |
@@ -427,6 +432,7 @@ These are public: themes and your own CSS can rely on them.
 | Name | On | What it is |
 | --- | --- | --- |
 | `deck-ready` | `.reveal` | Slides are built. Slides are hidden until then. |
+| `is-first` | Reveal's `.slide-number` | Hides the number on the first slide |
 | `has-source`, `source-hidden` | `body` | The markdown panel is on, or hidden with M |
 | `deck-source` | `aside` | The markdown panel. Children: `deck-source__head`, `deck-source__count`, `deck-source__type`, `deck-source__code`. |
 | `deck-error` | `pre` | The deck failed to load |

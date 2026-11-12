@@ -10,6 +10,8 @@ accent: '#12467A'
 theme: dark # trailing comment
 charts: ["echarts"]
 source: true
+eyebrow: Part 1
+page-numbering: true
 order: 3
 ---
 
@@ -20,6 +22,8 @@ order: 3
   assert.equal(deck.theme, 'dark');
   assert.deepEqual([...deck.charts], ['echarts']);
   assert.equal(deck.source, true);
+  assert.equal(deck.eyebrow, 'Part 1');
+  assert.equal(deck.pageNumbering, true);
   assert.equal(deck.markdown, '# Hello');
 });
 
@@ -45,5 +49,6 @@ test('unsupported YAML is an error, not a guess', () => {
   assert.throws(() => deckConfig('---\ntitle:\n  nested: 1\n---\n'), /line 3/);
   assert.throws(() => deckConfig('---\ncharts: [d3]\n---\n'), /unknown library/);
   assert.throws(() => deckConfig('---\nsource: yes\n---\n'), /true or false/);
+  assert.throws(() => deckConfig('---\npage-numbering: yes\n---\n'), /page-numbering: expected true or false/);
   assert.throws(() => deckConfig('---\naccent: "red;}"\n---\n'), /not a colour/);
 });
