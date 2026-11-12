@@ -32,6 +32,7 @@ Found while checking `examples/chardonnay/`. Notes only; nothing built yet.
 ## Later
 
 - [ ] **Go through `slide-layout-lessons.md`.** Check which "Copy" lessons the CSS already follows, then pick which of the rest to do.
+- [ ] **Audit the base CSS and tokens for excess.** Do this before writing more themes.
 - [ ] **Detailed theming.** Two themes so far: `dark` and `signal`.
 - [ ] **Some WYSIWYG editing.**
 - [ ] **Replay chart animations.** Charts animate once, the first time their slide comes into view (`src/deck-charts.js`). Replay it each time the slide is shown.
