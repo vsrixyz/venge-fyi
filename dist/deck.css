@@ -590,9 +590,9 @@ footer, header, hgroup, main, menu, nav, section {
   text-rendering: optimizeLegibility;
 }
 
-/* A dark or light slide paints its own background, unless Reveal draws one. */
-.reveal section:is(.dark, .light):not([data-background-color], [data-background-image], [data-background-video], [data-background-gradient], [data-background-iframe]) > .deck-stage {
-  background-color: var(--_bg);
+/* tint: the background photo in the slide's background colour. Reveal copies slide classes onto the background. */
+.reveal .slide-background.tint .slide-background-content {
+  mix-blend-mode: luminosity;
 }
 
 /* --- Headings. Size comes from the slide type (--_h-size).

@@ -167,7 +167,7 @@ A grid slide picks one of four layouts from what you write. Text that runs toget
 
 Text and pictures that take turns more than once (text, a picture, more text) make a `prose` slide instead: one column, top to bottom. For parts side by side, give each part a heading: see [Sections](#sections).
 
-Text scales with its cell. Pictures go 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3, and past 9 four across. A short last row is centred. Beside text they turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
+Text scales with its cell. Pictures go 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3, 10 as 5×2, and past 10 four across. A short last row is centred. Beside text they turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
 
 Pictures are shown whole, never cropped, unless you ask for `fill` or `bleed`.
 
@@ -267,6 +267,7 @@ Modifiers go in the same `class="…"`:
 | `dark` | any type | Makes this slide dark. See [Light and dark](#light-and-dark). |
 | `light` | any type | Makes this slide light on a dark deck. |
 | `hide-eyebrow` | any type | Hides the front matter `eyebrow` on this slide. A line you mark `eyebrow` still shows. |
+| `tint` | any type | Shows the slide's background photo in its `data-background-color`: the photo's light and dark, in that colour. `data-background-opacity` sets how strong the photo is. |
 
 ### When content doesn't fit the rules
 
@@ -335,6 +336,8 @@ Slides are light unless you say otherwise:
 - `theme: dark` makes every slide dark.
 - `<!-- .slide: class="dark" -->` makes one slide dark. On a dark deck it changes nothing.
 - `<!-- .slide: class="light" -->` makes one slide light. On a light deck it changes nothing.
+
+A `dark` or `light` slide with no background of its own gets one from Reveal, in `--deck-dark-background` or `--deck-background`, filling the whole window.
 
 Every colour comes in a pair: `--deck-background` and `--deck-dark-background`, `--deck-ink` and `--deck-dark-ink`, and so on. Each slide shows one side of each pair, picked by its CSS `color-scheme`. The greys, lines and inline code are ink made see-through, so they follow, and they sit well on any `data-background-color` too. `--deck-dark-theme-1` to `-5` are the theme colours lightened 40% toward white so they stay readable. An `accent` from the front matter is lightened too.
 

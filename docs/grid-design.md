@@ -50,11 +50,11 @@ Until then, today's `split`, `cards` and `columns` slide types keep working as t
 | Text, picture, text | A prose slide: one column, top to bottom |
 | A picture with a line directly under it (no blank line) | The line is the picture's caption, shown under it. Under a group, it captions the whole group. |
 
-**Shapes by count.** 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3. Inside a half, the shapes turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
+**Shapes by count.** 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3, 10 as 5×2. Inside a half, the shapes turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
 
 - Every cell is the same size, so text scales the same in each.
 - A short last row is centred.
-- Past 9: four across, adding rows (10–12 make 4×3). Nothing is hidden. Cells just get smaller, and text that hits its smallest size runs off its cell.
+- Past 10: four across, adding rows (11 and 12 make 4×3). Nothing is hidden. Cells just get smaller, and text that hits its smallest size runs off its cell.
 
 **Options.**
 
@@ -150,4 +150,4 @@ Taken one at a time, in roughly this order.
 - **Two tall pages beside text** (slide 19): stacking makes them tiny. `<!-- .cell: class="columns" -->` fixes it, but that option isn't agreed yet.
 - **Labels placed on a photo** (the 2×2 wall): can't be written. That belongs in the image itself.
 - **Pictures are fitted whole, not cropped**, in the prototype. That suits screenshots, which most of this deck is.
-- **Slide backgrounds:** `dark` slides paint their own background over Reveal's `data-background-color`. The prototype turns that off when a slide has one.
+- **Slide backgrounds:** `dark` slides painted their own background over Reveal's `data-background-color`. Now a `dark` or `light` slide with no background of its own hands Reveal the colour, and Reveal draws it full bleed.

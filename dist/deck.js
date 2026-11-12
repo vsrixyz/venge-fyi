@@ -299,7 +299,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
   // cell; the pictures beside it are another. ---
 
   // Columns per number of cells or pictures: on the whole slide, and in a half.
-  const WHOLE = {1: 1, 2: 2, 3: 3, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 3};
+  const WHOLE = {1: 1, 2: 2, 3: 3, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 3, 10: 5};
   const HALF = {1: 1, 2: 1, 3: 2, 4: 2, 5: 2, 6: 2, 7: 3, 8: 3, 9: 3};
   const columnsFor = (table, count) => table[count] || (table === WHOLE ? 4 : 3);
 
@@ -517,10 +517,20 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     background: '--_bg', card: '--_card', ink: '--_ink', line: '--deck-line'
   };
 
+  const OWN_BACKGROUND = ['color', 'image', 'video', 'gradient', 'iframe']
+    .map(kind => `data-background-${kind}`);
+
   function backgroundNames(section) {
     const name = section.getAttribute('data-background-color');
     if (COLOUR_NAMES[name]) {
       section.setAttribute('data-background-color', `var(${COLOUR_NAMES[name]})`);
+    }
+    // A dark or light slide with no background of its own: Reveal draws it, full bleed.
+    if (OWN_BACKGROUND.some(attr => section.hasAttribute(attr))) return;
+    if (section.classList.contains('dark')) {
+      section.setAttribute('data-background-color', 'var(--deck-dark-background)');
+    } else if (section.classList.contains('light')) {
+      section.setAttribute('data-background-color', 'var(--deck-background)');
     }
   }
 
@@ -1037,7 +1047,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       .map(chunk => chunk.split(VERTICAL).map(part => part.trim()));
   }
 
-  const MODIFIERS = ['dark', 'light', 'hide-eyebrow'];
+  const MODIFIERS = ['dark', 'light', 'hide-eyebrow', 'tint'];
 
   function typeOf(section) {
     const types = ['grid', 'prose', 'split', 'cards', 'columns'];

@@ -3,7 +3,6 @@ title: Health You Can Build
 description: Inter core messaging framework, v2.
 page-numbering: true
 accent: '#15355f'
-theme: inter.css
 ---
 
 <!-- .slide: class="dark" data-background-color="theme-1" -->
@@ -80,15 +79,17 @@ The purpose of all communication is to influence someone.
 
 <!-- .slide: class="cards dark" -->
 
-## Core stories
 
-### Mission
+## Mission
 Why you show up. Your marching orders.
 
-### Vision
+## Vision
 What you see coming. The mountain on the horizon.
 
-### The shift
+## The audience
+Who we are talking to and what they believe.
+
+## The shift
 Who your audience becomes. The new world.
 
 Note:
@@ -106,15 +107,44 @@ shift: is defining the journey from a B
 
 ---
 
-<!-- .slide: class="dark" data-background-color="#2f5d46" -->
+<!-- .slide: class="cards dark" data-background-color="#2f5d46" -->
 
 # The Vision
-
 ## What you see coming
+
+### The annual physical is dead.
+A continuous read of your body's resilience replaces the yearly check.
+
+### A scan is as ordinary as stepping on a scale.
+Every home has imaging equipment in the bathroom. Inspecting your own liver is no-big-deal.
+
+### Turning 44 is a known milestone.
+You anticipate the change and prepare for it.
+
+### "Normal" is no longer the goal.
+Health is a set of personal, dynamic variables, not a snapshot in a range.
+
+### Resilience is a concept to help you act.
+You understand how Wednesday's dinner impacts Thursday's run.
+
+### Prevention is worth investing in.
+Employers and insurers pay to keep people resilient.
+
+### Pills are a bridge, not a permanent solution.
+No one starts a GLP-1 or a statin without a behavior plan.
+
+### New era of citizen science.
+Studies that took a decade can run across a population in a season.
+
+### Mindset is the unlock for massive change.
+A loneliness score sits on your dashboard next to sleep and is treated like any other risk.
+
+### A population 1% more resilient changes the world.
+It has the energy left over to take on everything else.
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/scan.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+<!-- .slide: class="dark tint" data-background-image="assets/scan.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -124,7 +154,7 @@ A continuous read of your body's resilience replaces the yearly check.
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/bathroom%20scale.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+<!-- .slide: class="dark tint" data-background-image="assets/bathroom%20scale.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -134,7 +164,7 @@ Every home has imaging equipment in the bathroom. Inspecting your own liver is n
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/44%20is%20the%20new.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+<!-- .slide: class="dark tint" data-background-image="assets/44%20is%20the%20new.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -144,7 +174,7 @@ You anticipate the change and prepare for it.
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/pexels-taiyesalawu-33491430.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+<!-- .slide: class="dark tint" data-background-image="assets/pexels-taiyesalawu-33491430.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -154,7 +184,7 @@ Health is a set of personal, dynamic variables, not a snapshot in a range.
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/resilience.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+<!-- .slide: class="dark tint" data-background-image="assets/resilience.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -164,7 +194,7 @@ You understand how Wednesday's dinner impacts Thursday's run.
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/preventiopn.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+<!-- .slide: class="dark tint" data-background-image="assets/preventiopn.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -174,7 +204,7 @@ Employers and insurers pay to keep people resilient.
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/pills.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+<!-- .slide: class="dark tint" data-background-image="assets/pills.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -184,7 +214,7 @@ No one starts a GLP-1 or a statin without a behavior plan.
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/citizen.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+<!-- .slide: class="dark tint" data-background-image="assets/citizen.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -194,7 +224,7 @@ Studies that took a decade can run across a population in a season.
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/mindset.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+<!-- .slide: class="dark tint" data-background-image="assets/mindset.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -204,7 +234,7 @@ A loneliness score sits on your dashboard next to sleep and is treated like any 
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/population.jpg" data-background-color="#000" data-background-opacity="0.45" -->
+<!-- .slide: class="dark tint" data-background-image="assets/population.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -214,20 +244,7 @@ It has the energy left over to take on everything else.
 
 ---
 
-<!-- .slide: class="split dark" -->
-
-# The Shift
-Who your audience becomes
-
-- Name the Enemy
-- Answer: Why Now?
-- Show the Promised Land
-- Obstacles
-- Provide evidence
-
----
-
-<!-- .slide: class="dark" -->
+<!-- .slide: class="dark" data-background-color="#7a1f1f" -->
 
 # The Audience <!-- .element: class="eyebrow" -->
 
@@ -235,7 +252,7 @@ Who your audience becomes
 
 ---
 
-<!-- .slide: class="split"-->
+<!-- .slide: class="dark split tint" data-background-image="assets/data.jpg" data-background-color="#7a1f1f" data-background-opacity="0.45" -->
 
 # Audience 1 <!-- .element: class="eyebrow" -->
 ## The data enthusiast
@@ -250,7 +267,8 @@ They manage other people's health, and want more for their own. They are curious
 
 ---
 
-<!-- .slide: class="split" -->
+<!-- .slide: class="dark split tint" data-background-image="assets/pregnant.jpg" data-background-color="#7a1f1f" data-background-opacity="0.45" -->
+
 
 # Audience 2 <!-- .element: class="eyebrow" -->
 
@@ -264,13 +282,25 @@ They are in their 30s, and want to be the healthiest they can be for their kids.
 
 ---
 
+<!-- .slide: class="split dark" -->
+
+# The Shift
+Who your audience becomes
+
+- Name the Enemy
+- Answer: Why Now?
+- Show the Promised Land
+- Obstacles
+- Provide evidence
+
+
+---
+
 <!-- .slide: class="dark" -->
 
-#### The Shift <!-- .element: class="eyebrow" -->
+# Name the Enemy  <!-- .element: class="eyebrow" -->
 
-# Name the Enemy
-
-## "Normal" isn't the same as healthy.
+# "Normal" isn't the same as healthy.
 
 Today, health is defined as the absence of disease. Healthcare is a break-fix system that only sees you once something goes wrong. It is optimized for emergencies (the most expensive possible care) and ignores chronic disease and aging.
 
@@ -304,11 +334,9 @@ Ten-minute visits, paperwork and lawsuits push them toward quick fixes.
 
 <!-- .slide: class="dark" -->
 
-#### The Shift <!-- .element: class="eyebrow" -->
+# Answer: Why Now  <!-- .element: class="eyebrow" -->
 
-# Answer: Why Now
-
-## Midlife is the opportunity.
+# Midlife is the opportunity.
 
 Midlife is when your body starts to shift: recovery slows, inflammation creeps up, and the liver changes. It is also when you are still well enough to do something about it. You still have the reserve to train, adapt and rebuild. Either you make the first move, or disease does.
 
@@ -339,11 +367,10 @@ You don't need to wait until illness strikes, you can start building resilience 
 
 <!-- .slide: class="dark" -->
 
-#### The Shift <!-- .element: class="eyebrow" -->
 
-# Show the Promised Land
+# Show the Promised Land  <!-- .element: class="eyebrow" -->
 
-## Energy for everything you care about.
+# Energy for everything you care about.
 
 Health setbacks are inevitable. What you can control is how you recover and how quickly. Shift your energy from tracking data to building your health. Something you build yourself is something you are likely to understand, track, and enjoy, with room to spare for the people who depend on you.
 
@@ -371,11 +398,11 @@ A person who is 1% more resilient has more to give. A resilient population can t
 
 <!-- .slide: class="dark" -->
 
-#### The Shift <!-- .element: class="eyebrow" -->
 
-# Identify Obstacles, Then Explain How You'll Overcome Them
+# Identify Obstacles  <!-- .element: class="eyebrow" -->
 
-**Your body is enough.** It already knows how to repair, recover and rebalance. What got in the way: a broken model of health. Here's what we need to get back on track.
+# **Your body is enough.**
+It already knows how to repair, recover and rebalance. What got in the way: a broken model of health. Here's what we need to get back on track.
 
 ---
 
@@ -414,11 +441,9 @@ Eat, sleep, move, breathe, connect. Boring, ancient, and still the strongest med
 
 <!-- .slide: class="dark" -->
 
-#### The Shift <!-- .element: class="eyebrow" -->
+# Provide Evidence <!-- .element: class="eyebrow" -->
 
-# Provide Evidence
-
-## Science over soundbites.
+# Science over soundbites.
 
 We're redefining healthcare around resilience instead of disease. To do this, we're building the case in public, drawing on new studies from Stanford, the National Institute on Aging, Lancet and NEJM trials, and more. There are no quick fixes, and we're not looking for a magic bullet. Science, as usual, proceeds one study at a time.
 
@@ -452,7 +477,9 @@ A usage experiment, a first "Julie" story, and a home-vs-clinical ultrasound val
 
 <!-- .slide: class="prose dark" data-background-color="#14213d" -->
 
-## The journey from A to B
+# The shift <!-- .element: class="eyebrow" -->
+
+# The journey from A to B
 
 |                            | The patient in waiting                  | Steward of their own resilience                         |
 | :------------------------- | :-------------------------------------- | :------------------------------------------------------ |
@@ -465,8 +492,7 @@ A usage experiment, a first "Julie" story, and a home-vs-clinical ultrasound val
 
 ---
 
-<!-- .slide: class="dark" -->
+<!-- .slide: class="dark" data-background-color="#14213d"-->
 
 # Thank you
-
-![](https://img.vsri.xyz/2026/ampersand-logo-blue-bwhxcqjw.png)
+### lookandpoint.com
