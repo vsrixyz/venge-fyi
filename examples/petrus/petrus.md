@@ -58,17 +58,17 @@ Advertisers struggled to meet our aesthetic standards.
 
 ---
 
-![Ad 1](assets/ad-1.gif)
-![Ad 2](assets/ad-2.gif)
-![Ad 3](assets/ad-3.gif)
-![Ad 4](assets/ad-4.gif)
-![Ad 5](assets/ad-5.gif)
-![Ad 6](assets/ad-6.gif)
+![Ad 1 alt: text](assets/ad-1.gif)
+![Ad 2 alt: text](assets/ad-2.gif)
+![Ad 3 alt: text](assets/ad-3.gif)
+![Ad 4 alt: text](assets/ad-4.gif)
+![Ad 5 alt: text](assets/ad-5.gif)
+![Ad 6 alt: text](assets/ad-6.gif)
 
 ---
 
 <!-- .slide: class="dark" data-background-image="assets/rejected-ad.gif" data-background-color="#000" data-background-opacity="0.45" -->
-
+__
 # Our standard wasn't clear because there wasn't a clear standard
 
 ---

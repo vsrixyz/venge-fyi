@@ -3,6 +3,7 @@ title: Health You Can Build
 description: Inter core messaging framework, v2.
 page-numbering: true
 accent: '#15355f'
+theme: 
 ---
 
 <!-- .slide: class="dark" data-background-color="theme-1" -->
@@ -25,7 +26,7 @@ accent: '#15355f'
 
 ---
 
-<!-- .slide: class="" -->
+<!-- .slide: class="dark" -->
 
 ## We're here to change the world
 
@@ -99,7 +100,7 @@ shift: is defining the journey from a B
 
 ---
 
-<!-- .slide: class="big dark" data-background-color="#b7791f" -->
+<!-- .slide: class="big dark" data-background-color="#b9822e" -->
 
 # Mission <!-- .element: class="eyebrow" -->
 
@@ -318,7 +319,7 @@ A yearly snapshot says "normal" until something finally shows up.
 ## We design for emergencies.
 The system is optimized for acute cases, but fails to address chronic conditions.
 
-## A pill, and a good goodbye.
+## A pill, and a goodbye.
 The system is designed for quick fixes that address symptoms—no prevention, no root cause analysis.
 
 ## Paid for actions, not outcomes.
