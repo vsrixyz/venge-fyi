@@ -38,3 +38,18 @@ Found while checking the example decks. Notes only; nothing built yet.
 - [ ] **Some WYSIWYG editing.**
 - [ ] **Replay chart animations.** Charts animate once, the first time their slide comes into view (`src/deck-charts.js`). Replay it each time the slide is shown.
 - [ ] **Step through chart data.** Reveal a chart one series or one bar per click, like fragments.
+
+## Log
+
+Newest first. What changed and why, one entry per working session.
+
+### 2026-11-16: editor, first version (`editor` branch)
+
+Built in its own folder, `~/dev/venge-fyi-editor`, on the `editor` branch, so the work on `main` could go on alongside. Not merged yet.
+
+- **Start it:** `npm run edit examples/glou-glou/glou-glou.md`, then open http://localhost:8090.
+- **Text and preview:** markdown on the left, the deck on the right. The preview is drawn in the browser from the text, not by the server. That's the first step towards a version with no install. A redraw takes about 55 ms on a 22-slide deck.
+- **Current slide in a box:** the slide you're on is framed at the top of the markdown with a "Slide n of N · type" header. The rest is dimmed. Clicking, scrolling or changing slide in the preview glides the right slide into the box.
+- **Saving:** typing is saved to the file about 300 ms after you stop. If the file changed on disk, the editor won't overwrite it and says so.
+- **Under the hood:** `renderDeck()` moved to `lib/page.js` so the browser can run it. Slide splitting is shared (`deckSlides()`), so the editor and the M panel agree.
+- **Open questions:** whether the preview changing as you scroll is distracting, since you might want to scroll without changing slide. The mock-up's slide strip, deck panel and slide-type buttons are not built.
