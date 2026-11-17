@@ -1110,6 +1110,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
   }
 
   global.deckSource = deckSource;
+  global.deckSlideType = typeOf;
 })(window);
 
 /* ---- src/deck-start.js ---- */

@@ -4,15 +4,24 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Editor</title>
+<link rel="stylesheet" href="../deck-tokens.css" />
 <link rel="stylesheet" href="editor.css" />
 </head>
 <body>
-<textarea class="text" spellcheck="false" aria-label="Markdown"></textarea>
+<section class="source">
+  <header class="source-head">
+    <span class="count"></span>
+    <span class="type"></span>
+  </header>
+  <div class="field">
+    <div class="backdrop" aria-hidden="true"></div>
+    <textarea class="text" spellcheck="false" aria-label="Markdown"></textarea>
+  </div>
+</section>
 <main class="view">
   <header class="bar">
     <span class="path"></span>
     <span class="note" role="status"></span>
-    <span class="count"></span>
   </header>
   <div class="stage"></div>
 </main>

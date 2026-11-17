@@ -69,4 +69,5 @@
   }
 
   global.deckSource = deckSource;
+  global.deckSlideType = typeOf;
 })(window);
