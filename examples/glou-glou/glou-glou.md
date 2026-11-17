@@ -564,7 +564,22 @@ Nothing runs off the edge.
 
 ---
 
-<!-- .slide: class="cards" -->
+<!-- .slide: class="colors" -->
+
+## Dashboard
+
+### Slides made
+128
+
+### Text alone
+42%
+
+### Decks shared
+9
+
+---
+
+<!-- .slide: class="cards colors" -->
 
 ## Five cards
 
