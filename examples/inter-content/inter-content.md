@@ -42,9 +42,11 @@ Each weekly longform post gets a 300–500 word hook and pull-quote snippets, re
 
 ---
 
-## Posting before the announcement
 
-> If people ask "what's Inter?", that's a good problem.
+
+> what's Inter?
+
+that's a good problem.
 
 Posting early doesn't steal the moment; we get to double dip. The first posts say who we are and what the blog covers, so readers arriving after the announcements find something already there.
 

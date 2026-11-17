@@ -50,6 +50,31 @@ Found while checking the example decks. Notes only; nothing built yet.
 
 Newest first. What changed and why, one entry per working session.
 
+### 2026-11-17: content framework example (`main`, uncommitted)
+
+- **New deck:** `examples/content-framework/content-framework.md`, the Inter core messaging framework (v2), copied unchanged from `inter.md`.
+- **Images:** the original image names weren't available, so each image slide got a random photo from the ones added to `inter-content/assets` (copied over; the originals stay). There were 10 photos for 11 slides, so `pexels-ktccphotography` is used twice. The deck builds with no missing-file warnings. Not looked at in the editor.
+
+### 2026-11-17: naming the concepts (`main`, `8a3e5d6`)
+
+Went through every concept in the docs and the code looking for collisions and fuzzy names, then settled a vocabulary and built the parts that needed code.
+
+- **Vocabulary:** slide, **cluster**, element are the three sizes a class can target. A cluster is a heading and what's under it, or images written together; the code keeps "cell" internally. An element is one paragraph, heading, image or list item ("block" is dropped). **Image** means anything not text. **Title** is only the deck's title. Slide types are **layouts**; "grid" is the logic that picks one and writers never see it. "Box", "column" and "picture" are gone.
+- **`.cluster`:** the `.cell` comment is renamed, in the code and the example decks.
+- **Fragments:** on a heading, `fragment` brings in only the heading. On a `.cluster` comment it brings in the whole cluster.
+- **Label:** new `label` element class. `####` still makes a label too.
+- **Eyebrow:** only a line you mark `eyebrow`. The front matter `eyebrow` and `hide-eyebrow` are removed.
+- **Card and fill:** separate. A card is an outline with padding and rounded corners (`card`, or `cards` on a slide for every cluster). A fill is `data-background-color`, always with padding (`colors` on a slide fills every cluster). Both work on a cluster or one element. `cards` no longer fills, so those decks look lighter.
+- **Docs:** `docs/slide-types.md` is now `docs/concepts.md`, a glossary for writers. `docs/reference.md` matches.
+- **Decided, not built:** the four new items under Later (light/dark, prose that grows, the M panel matching the editor, layout name clashes). Modifiers and accent keep their names for now.
+
+### 2026-11-17: renamed to vengeslides (`main`, `8d0fde1`)
+
+- **Why:** the docs mixed `npx venge-fyi` and `npm run venge`. `venge` is taken on npm by someone else's package, so `npx venge` would run their code. `vengeslides` was free (checked, not reserved; `venge-fyi` was never published).
+- **Package and command:** both are `vengeslides`, so `npx vengeslides`, `npx vengeslides edit talk.md`, `npx vengeslides build talk.md`. The CLI is `bin/vengeslides.js`. The `npm run venge`, `edit` and `build` scripts in this repo keep their names.
+- **Repo:** GitHub is `vsrixyz/vengeslides` (the old address forwards), the folder is `~/dev/vengeslides`. `~/dev/venge-fyi-editor` and the `grid-design` worktree were left with the old name.
+- **Docs:** `docs/reference.md`, `notes/editor-design.md`, tests and code comments use the new name.
+
 ### 2026-11-17: editor library (`editor` branch)
 
 - **Start it:** `npm run venge` in this repo, or `npx vengeslides` with no file in any folder. Opens a library at http://localhost:8090.
