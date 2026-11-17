@@ -1,5 +1,5 @@
 {
-  "name": "venge-fyi",
+  "name": "vengeslides",
   "version": "0.2.0",
   "description": "Show a markdown file as a slide deck on a static site, styled with your own theme.",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "venge-fyi": "bin/venge-fyi.js"
+    "vengeslides": "bin/vengeslides.js"
   },
   "files": [
     "bin",
@@ -24,9 +24,9 @@
   },
   "scripts": {
     "dev": "node scripts/dev.js",
-    "venge": "node bin/venge-fyi.js",
-    "edit": "node bin/venge-fyi.js edit",
-    "build": "node bin/venge-fyi.js build",
+    "venge": "node bin/vengeslides.js",
+    "edit": "node bin/vengeslides.js edit",
+    "build": "node bin/vengeslides.js build",
     "dist": "node -e \"import('./lib/dist.js').then(m => m.writeDist())\"",
     "test": "node --test"
   }

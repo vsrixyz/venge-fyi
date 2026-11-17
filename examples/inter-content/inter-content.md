@@ -51,7 +51,6 @@ Posting early doesn't steal the moment; we get to double dip. The first posts sa
 
 ---
 
-<!-- .slide: class="columns" -->
 
 ## Timeline
 

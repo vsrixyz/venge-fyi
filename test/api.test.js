@@ -2,14 +2,14 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import test from 'node:test';
-import {distDir, prepare, renderDeck} from 'venge-fyi';
+import {distDir, prepare, renderDeck} from 'vengeslides';
 import {root} from '../lib/dist.js';
 
 const {deck} = prepare(path.join(root, 'examples/glou-glou/glou-glou.md'));
 
 test('exports the public API only', async () => {
   assert.equal(distDir, path.join(root, 'dist'));
-  await assert.rejects(import('venge-fyi/lib/build.js'), {code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'});
+  await assert.rejects(import('vengeslides/lib/build.js'), {code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'});
 });
 
 test('head goes last in <head>, body first in <body>', () => {

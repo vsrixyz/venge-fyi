@@ -1,137 +1,185 @@
-# Slide types on one page
+# How slides work
 
-The full rules are in the [reference](reference.md#slide-types).
+You don't pick a layout. You write markdown, and each slide arranges itself from what's on it. Three rules explain all of it. The full details are in the [reference](reference.md#slide-types).
 
-## One idea
+## The three rules
 
-You write; the slide reads its shape from what you wrote. Most slides need no class. Two you ask for: `split` and `prose`.
+### 1. Text, pictures, or both
 
-| You write | You get |
-| --- | --- |
-| Only text | [Headline](#headline) |
-| Only pictures | [Image](#image) |
-| Text, then pictures | [Figure](#figure) |
-| The same heading size two or more times | [Sections](#sections) |
-| `<!-- .slide: class="split" -->` | [Split](#split) |
-| `<!-- .slide: class="prose" -->` | [Prose](#prose) |
+What a slide holds decides its shape.
 
-## Headings
+- **Only text:** centred and big. For a title, a statement or a quote.
+- **Only pictures:** the pictures fill the slide.
+- **Text, then pictures:** the text takes a third of the slide and the pictures take two thirds. Write the pictures first to put them on the left.
 
-Start with `#` and work down. Every heading has the same style; the size follows the level.
+If text and pictures take turns more than once (text, a picture, more text), the slide reads top to bottom, like a page.
 
-| Write | Shows as |
-| --- | --- |
-| `#` | The biggest heading |
-| `##` | Smaller |
-| `###` | A little bigger than body text |
-| `####` | A small label in capitals |
-| `# Mission <!-- .element: class="eyebrow" -->` | The eyebrow: a small label at the top centre |
+### 2. Repeat a heading size to make sections
 
----
+When the same heading size appears two or more times, each of those headings starts a section. The sections sit side by side, each with a line above it. A single heading above them is the slide's title.
 
-## Headline
+Heading size follows the number of `#`: `#` is the biggest, then `##`, then `###`. `####` is a small label.
 
-Only text, centred and as big as the slide allows. For a title, a big statement or a quote.
+### 3. Pictures written together are one group
+
+Pictures written one after another, with no text between, are a group. They're shown whole and as big as they fit: tall pictures sit side by side, wide ones stack. A line right under a picture, with no blank line between, is its caption.
+
+### Two layouts you ask for
+
+The rules cover most slides. For the rest, add a class at the top of the slide:
+
+- `split`: two halves, the right one tinted.
+- `prose`: one column of text that scrolls, for paragraphs, tables and code.
+
+## Examples
+
+### A title
+
+```markdown
+# Story Ads
+
+## A new chapter in search advertising
+```
 
 ```text
 ┌──────────────────────────────────────┐
 │                                      │
-│          # Big headline              │
-│          ## Subheading               │
-│          A short paragraph.          │
+│             Story Ads                │
+│   A new chapter in search advertising│
 │                                      │
 └──────────────────────────────────────┘
 ```
 
-## Image
+### Text beside a picture
 
-Only pictures. 1 fills the slide, 2 sit side by side, 3 in a row.
+```markdown
+## Launch
 
-```text
-┌──────────────┐  ┌──────┬──────┐  ┌────┬────┬────┐
-│              │  │      │      │  │    │    │    │
-│   picture    │  │      │      │  │    │    │    │
-│              │  │      │      │  │    │    │    │
-└──────────────┘  └──────┴──────┘  └────┴────┴────┘
+The product launched as Gallery Ads in May 2019.
+
+![Gallery ads on a phone](assets/gallery-ads-phone.png)
 ```
 
-## Figure
-
-Text, then pictures: text in a third, pictures in two thirds. Write the pictures first to put them on the left.
-
 ```text
-┌────────────┬─────────────────┐
-│ ## Title   │                 │
-│ Paragraph. │    picture(s)   │
-│ - list     │                 │
-└────────────┴─────────────────┘
+┌────────────┬─────────────────────────┐
+│ Launch     │                         │
+│            │         picture         │
+│ The product│                         │
+│ launched…  │                         │
+└────────────┴─────────────────────────┘
 ```
 
-## Sections
+### Two tall pictures
 
-The same heading size used two or more times splits the slide: each of those headings starts a section, side by side, with a line above each. A heading above them is the title.
+```markdown
+![Specification, page 1](assets/spec-page-1.png)
+![Specification, page 2](assets/spec-page-2.png)
+```
 
 ```text
 ┌──────────────────────────────────────┐
-│               # Title                │
+│        ┌────────┐  ┌────────┐        │
+│        │ page 1 │  │ page 2 │        │
+│        │        │  │        │        │
+│        └────────┘  └────────┘        │
+└──────────────────────────────────────┘
+```
+
+Two wide pictures would stack instead, one above the other.
+
+### Three points
+
+```markdown
+# Let's think about the audience
+
+## Marketers
+Not creative directors.
+
+## Technical
+More analytical than artistic.
+
+## Busy
+They need clear rules.
+```
+
+```text
+┌──────────────────────────────────────┐
+│     Let's think about the audience   │
 │ ──────────   ──────────   ────────── │
-│ ## One       ## Two       ## Three   │
-│ text         picture      - list     │
+│ Marketers    Technical    Busy       │
+│ Not creative More         They need  │
+│ directors.   analytical…  clear rules│
 └──────────────────────────────────────┘
 ```
 
-Put the sections in boxes:
+### The same points in boxes
 
-| Write | Boxes |
-| --- | --- |
-| `<!-- .slide: class="cards" -->` | Every section, in the card colour |
-| `<!-- .slide: class="colors" -->` | Every section, each in the next theme colour |
-| `<!-- .cell: data-background-color="theme-2" -->` above one heading | That section only |
+Add `cards` to put each section in a box, or `colors` for a different theme colour in each.
 
-Up to 10 sections show. For a big number on a dashboard, mark it with Reveal's `r-fit-text`: it grows to fill its section.
+```markdown
+<!-- .slide: class="cards" -->
 
-## Split
+# Let's think about the audience
 
-Two halves; the right one tinted. The left half is the opening (or the first section); the right half is the rest. Each half reads its own shape: text alone is a headline, pictures alone an image.
+## Marketers
+…
+```
+
+```text
+┌──────────────────────────────────────┐
+│     Let's think about the audience   │
+│ ┌──────────┐ ┌──────────┐ ┌────────┐ │
+│ │Marketers │ │Technical │ │Busy    │ │
+│ │…         │ │…         │ │…       │ │
+│ └──────────┘ └──────────┘ └────────┘ │
+└──────────────────────────────────────┘
+```
+
+### Before and after
+
+```markdown
+<!-- .slide: class="split" -->
+
+## Before
+
+Every ad was judged by taste.
+
+## After
+
+- A clear standard
+- 36% fewer rejections
+```
 
 ```text
 ┌──────────────────┬───────────────────┐
 │                  │░░░░░░░░░░░░░░░░░░░│
-│ # The Shift      │░ - Name the Enemy │
-│ ## Who your      │░ - Why now?       │
-│    audience      │░░░░░░░░░░░░░░░░░░░│
+│ Before           │░ After            │
+│ Every ad was     │░ - A clear        │
+│ judged by taste. │░   standard       │
+│                  │░ - 36% fewer…     │
 └──────────────────┴───────────────────┘
 ```
 
-## Prose
+### One picture after another
 
-Everything in one column, in order, like a page. For paragraphs, tables and code. It scrolls.
-
----
-
-## Pictures
-
-Pictures written together are one group, on any slide type. They're shown whole. Put a `.cell` comment right above them to change that:
+A `.cell` comment right above a group of pictures changes how they show. `stack` puts them on top of each other; a fragment fades the next one in.
 
 ```markdown
-<!-- .cell: class="fill" -->
-![The bar](assets/bar.jpg)
+## My initial approach
+
+<!-- .cell: class="stack" -->
+![The first guidelines](assets/first-guidelines.png)
+![The guidelines in use](assets/initial-approach.gif) <!-- .element: class="fragment" -->
 ```
 
-| Option | What it does |
-| --- | --- |
-| *(none)* | The whole picture, as big as fits |
-| `fill` | Cropped to fill its space |
-| `bleed` | Cropped, and runs to the edge |
-| `stack` | On top of each other; a fragment fades the next one in |
+The other options are `fill`, which crops the pictures to fill their space, and `bleed`, which crops them and runs them off the edge.
 
-Text right under a picture, with no blank line, is its caption. A `.csv` file linked like a picture is a chart.
+### Text on a photo
 
-## Colour
+```markdown
+<!-- .slide: class="dark" data-background-image="assets/rejected-ad.gif" data-background-color="#000" data-background-opacity="0.45" -->
 
-| Write | What it does |
-| --- | --- |
-| `class="dark"` / `class="light"` | A dark or light slide |
-| `data-background-color="theme-1"` | A background colour: `theme-1` to `theme-5`, `background`, `card`, `ink`, `line`, or any CSS colour |
-| `data-background-image="assets/street.jpg"` | A photo behind the slide |
-| `class="tint"` | The background photo in the background colour |
+# Our standard wasn't clear
+```
+
+`dark` makes the text light. Any slide can have a background colour or photo.

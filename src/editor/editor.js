@@ -8,7 +8,7 @@ const note = document.querySelector('.note');
 const count = document.querySelector('.count');
 const type = document.querySelector('.type');
 
-// Served by `venge-fyi`: the library folder at /, our files under /_/, the deck named in ?deck=.
+// Served by `vengeslides`: the library folder at /, our files under /_/, the deck named in ?deck=.
 const deckPath = new URLSearchParams(location.search).get('deck') || '';
 const SOURCE = `/_/source?deck=${encodeURIComponent(deckPath)}`;
 const runtime = new URL('/_/dist/', location.origin).href;

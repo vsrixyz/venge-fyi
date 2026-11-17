@@ -90,9 +90,10 @@ I had the Ads Quality UX team rate sample ads by asking them two questions:
 
 ---
 
+## How might we translate this to standards?
+
 ![The 2×2: spammy, premium, the dregs, snoozy](assets/ratings-wall.png)
 
-## How might we translate this to standards?
 
 ---
 
@@ -104,7 +105,7 @@ I had the Ads Quality UX team rate sample ads by asking them two questions:
 
 ---
 
-<!-- .slide: class="dark columns" -->
+<!-- .slide: class="dark" -->
 
 # Let's think about the audience
 
@@ -145,13 +146,16 @@ I also developed a framework for advertisers to craft copy that worked with our 
 
 ---
 
-<!-- .cell: class="columns" -->
-![Specification, page 1](assets/spec-page-1.png)
-![Specification, page 2](assets/spec-page-2.png)
+
+
+<!--.slide: class="dark"-->
 
 ## Where we ended up
 
 These specifications reduced ad rejections by 36%.
+
+![Specification, page 1](assets/spec-page-1.png)
+![Specification, page 2](assets/spec-page-2.png)
 
 ---
 

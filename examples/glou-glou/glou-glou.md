@@ -56,6 +56,12 @@ I want prose here
 <!-- .slide: class="dark" -->
 
 # Part 1: Text
+This is some text other the slide
+
+
+
+
+
 
 ---
 
@@ -77,10 +83,9 @@ A slide with only text is one centred cell. It can hold one or two short paragra
 
 # Two paragraphs
 
-Keep each paragraph short. Together they should be about 40 words.
+Keep each paragraph short.
 
-# If you need more than that, use a prose slide instead.
-A slide with only text is one centred cell. It can hold one or two short paragraphs.
+If you need more than that, use a prose slide instead. A slide with only text is one centred cell. It can hold one or two short paragraphs.
 
 
 ---
@@ -95,7 +100,7 @@ A slide with only text is one centred cell. It can hold one or two short paragra
 
 > Write the words first. Then add the pictures they need.
 
-### Sample quote
+Sample quote
 
 ---
 
@@ -396,7 +401,7 @@ So this slide is a prose slide.
 
 ---
 
-<!-- .slide: class="dark" data-background-image="assets/wide-2.jpg" data-background-color="#000" data-background-opacity="0.5" -->
+<!-- .slide: class="dark" data-background-image="assets/wide-2.jpg" data-background-color="#000" data-background-opacity="0.2" -->
 
 # Text on a photo
 

@@ -86,7 +86,7 @@ test('paths outside the library folder are refused', () => withServer('# One\n',
 
 test('a missing deck or folder fails with a clear message', () => {
   assert.throws(() => editServer('nope'), {message: 'folder not found: nope'});
-  const cli = args => execFileSync(process.execPath, [path.join(root, 'bin/venge-fyi.js'), ...args], {stdio: 'pipe', cwd: root});
+  const cli = args => execFileSync(process.execPath, [path.join(root, 'bin/vengeslides.js'), ...args], {stdio: 'pipe', cwd: root});
   assert.throws(() => cli(['edit', 'nope.md']), error => error.stderr.toString().includes('error: deck file not found: nope.md'));
   const outside = path.join(os.tmpdir(), `venge-outside-${process.pid}.md`);
   fs.writeFileSync(outside, '# One\n');

@@ -339,6 +339,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
   function place(container, items, cols) {
     container.style.setProperty('--_cols', cols);
     container.style.setProperty('--_rows', Math.ceil(items.length / cols));
+    items.forEach(item => item.style.removeProperty('grid-column-start'));
     const rest = items.length % cols;
     if (cols > 1 && rest) {
       items[items.length - rest].style.gridColumnStart = String(cols - rest + 1);
@@ -808,7 +809,47 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     }
   }
 
+  // Whole pictures in a cell: the column count that shows them biggest, from
+  // their shapes. Until every picture has loaded, the count table stands.
+  function ratioOf(item) {
+    const media = item.matches('img, video') ? item : item.querySelector('img, video');
+    if (!media) return 0;
+    const w = media.naturalWidth || media.videoWidth;
+    const h = media.naturalHeight || media.videoHeight;
+    return w && h ? w / h : 0;
+  }
+
+  function arrangePictures(section) {
+    if (!section) return;
+    section.querySelectorAll('.deck-cell.deck-pictures:not(.fill, .bleed, .stack)').forEach(group => {
+      const width = group.clientWidth;
+      const height = group.clientHeight;
+      if (!width || !height) return;
+      const items = Array.from(group.children).filter(kid => !kid.matches('.deck-caption'));
+      const ratios = items.map(ratioOf);
+      if (items.length < 2 || ratios.some(r => !r)) return;
+      const gap = parseFloat(getComputedStyle(group).rowGap) || 0;
+      let best = 0;
+      let bestCols = 1;
+      for (let cols = 1; cols <= items.length; cols++) {
+        const rows = Math.ceil(items.length / cols);
+        const cellW = (width - (cols - 1) * gap) / cols;
+        const cellH = (height - (rows - 1) * gap) / rows;
+        const area = ratios.reduce((sum, r) => {
+          const w = Math.min(cellW, cellH * r);
+          return sum + w * w / r;
+        }, 0);
+        if (area > best * 1.01) {
+          best = area;
+          bestCols = cols;
+        }
+      }
+      place(group, items, bestCols);
+    });
+  }
+
   function fitSlide(section) {
+    arrangePictures(section);
     fitBoxes(section);
     const stage = section && section.querySelector(':scope > .deck-stage[data-shape="sections"]');
     if (!stage || stage.dataset.fit || !stage.clientHeight) return;
@@ -829,6 +870,11 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       afterReveal(() => fitBoxes(event.currentSlide));
     });
     reveal.on('overviewshown', () => afterReveal(() => leafSlides(root).forEach(fitBoxes)));
+    // A picture that loads later has a shape: arrange its group again.
+    root.querySelectorAll('.deck-cell.deck-pictures img').forEach(img => {
+      if (img.complete) return;
+      img.addEventListener('load', () => arrangePictures(img.closest('section')), {once: true});
+    });
     // A picture that loads later changes the height: fit its slide again.
     root.querySelectorAll('.deck-stage[data-shape="sections"] img').forEach(img => {
       if (img.complete) return;

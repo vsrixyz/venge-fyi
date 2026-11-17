@@ -6,7 +6,7 @@ A local command that opens a deck in the browser: you type markdown on the left 
 npm run edit examples/glou-glou/glou-glou.md
 ```
 
-For people using the package: `npx venge-fyi edit talk.md`. Both print the address to open, e.g. `http://localhost:8090/`.
+For people using the package: `npx vengeslides edit talk.md`. Both print the address to open, e.g. `http://localhost:8090/`.
 
 ## Decided
 
@@ -36,7 +36,7 @@ The deck settings panel, the "Add slide" picker, slide-type buttons (dark, prose
 
 ## How it works
 
-**Server** (`lib/edit.js`, started by `venge-fyi edit`):
+**Server** (`lib/edit.js`, started by `vengeslides edit`):
 
 | Address | What it does |
 |---|---|

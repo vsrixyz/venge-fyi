@@ -39,6 +39,7 @@ Found while checking the example decks. Notes only; nothing built yet.
 - [ ] **Audit the base CSS and tokens for excess.** Do this before writing more themes.
 - [ ] **Detailed theming.** Two themes so far: `dark` and `signal`.
 - [ ] **Some WYSIWYG editing.**
+- [ ] **Make adding elements to slides easier in the editor.** Slide and picture options are HTML comments (`<!-- .slide: class="dark" -->`, `<!-- .cell: class="stack" -->`), and one slip, such as a missing colon, quietly does nothing. How to make this easier is not decided.
 - [ ] **Replay chart animations.** Charts animate once, the first time their slide comes into view (`src/deck-charts.js`). Replay it each time the slide is shown.
 - [ ] **Step through chart data.** Reveal a chart one series or one bar per click, like fragments.
 
@@ -48,9 +49,9 @@ Newest first. What changed and why, one entry per working session.
 
 ### 2026-11-17: editor library (`editor` branch)
 
-- **Start it:** `npm run venge` in this repo, or `npx venge-fyi` with no file in any folder. Opens a library at http://localhost:8090.
+- **Start it:** `npm run venge` in this repo, or `npx vengeslides` with no file in any folder. Opens a library at http://localhost:8090.
 - **Library:** a card for every `.md` that starts with front matter under the folder it runs in (skipping `node_modules`, `build`, dot-folders). Same cards as the `npm run dev` gallery, now shared in `lib/library.js`.
-- **Editor:** the deck is chosen by the address (`?deck=examples/glou-glou/glou-glou.md`). A left rail with `<` goes back to the library, saving first. `venge-fyi edit <file>` still opens one deck straight away; the file must be under the folder you run it in.
+- **Editor:** the deck is chosen by the address (`?deck=examples/glou-glou/glou-glou.md`). A left rail with `<` goes back to the library, saving first. `vengeslides edit <file>` still opens one deck straight away; the file must be under the folder you run it in.
 - **Server:** serves the whole library folder, refuses anything outside it, and only reads or saves `.md` files.
 - **Decided:** `npm run dev` stays separate (working on the package itself). The mock-up's `slide` and `theme` rail buttons are not built.
 

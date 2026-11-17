@@ -1,4 +1,4 @@
-# venge-fyi reference
+# vengeslides reference
 
 Show a markdown file as a slide deck on a static site, and style it with your own theme.
 
@@ -43,7 +43,7 @@ The page must be served over http(s). Browsers block `fetch()` for pages opened 
 ### 2. The CLI
 
 ```bash
-npx venge-fyi build deck.md --out public/my-talk
+npx vengeslides build deck.md --out public/my-talk
 ```
 
 This writes:
@@ -60,13 +60,13 @@ public/my-talk/
 The CLI copies every local file the markdown links (images, video, CSV, a theme path). Those files must be inside the deck's folder. A linked file that doesn't exist is a warning, not an error.
 
 ```bash
-npx venge-fyi
+npx vengeslides
 ```
 
 Opens a library at http://localhost:8090: a card for every deck in the folder you ran it in and the folders beneath it. A deck here is a `.md` file that starts with front matter (a line of `---`); `node_modules`, `build` and folders starting with `.` are skipped. Each card shows the file's path, the front matter's `title` and `description`, and a strip in its `accent`. Click a card to open the deck in the editor. The editor only reads and saves files inside that folder.
 
 ```bash
-npx venge-fyi edit deck.md
+npx vengeslides edit deck.md
 ```
 
 Opens `deck.md` straight in the editor; the address to open is printed. The deck must be in the folder you run it in, or beneath it.
@@ -78,7 +78,7 @@ The editor has the markdown on the left and the deck on the right, with a rail o
 For a site builder that makes its own pages, such as Eleventy:
 
 ```js
-import {prepare, renderDeck, distDir} from 'venge-fyi';
+import {prepare, renderDeck, distDir} from 'vengeslides';
 
 const {deck, dir, assets, csv} = prepare('decks/talk.md');
 const html = renderDeck(deck, {
@@ -185,11 +185,11 @@ Only text. It sits in the middle, as big as the slide allows. `#` is headline si
 
 ### Image
 
-Only pictures. 1 fills the slide, 2 sit side by side, 3 in a row. More keep going: 4 as 2×2, 5 as 3 + 2, 6 as 3×2, up to 10 as 5×2, then four across. A short last row is centred. Rows are as tall as their pictures, and the group sits in the middle.
+Only pictures. Whole pictures take the number of columns that shows them biggest, from their shapes: tall pictures sit side by side, wide ones stack. A short last row is centred. Rows are as tall as their pictures, and the group sits in the middle. Cropped pictures (`fill`, `bleed`) go by count: 1 fills the slide, 2 sit side by side, 3 in a row, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, up to 10 as 5×2, then four across.
 
 ### Figure
 
-Text, then pictures: the text in a third, the pictures in the other two thirds. Write the pictures first to put them on the left. Beside text, pictures go one per row up to 3, and 4 make a 2×2. When the text is only headings, it's a title above the pictures, which take the full width.
+Text, then pictures: the text in a third, the pictures in the other two thirds. Write the pictures first to put them on the left. Beside text, whole pictures take the columns that show them biggest, as on an image slide; cropped ones go one per row up to 3, and 4 make a 2×2. When the text is only headings, it's a title above the pictures, which take the full width.
 
 ### Sections
 
@@ -243,7 +243,7 @@ When the slide is too full, pictures get shorter first, then the text gets small
 - With [sections](#sections), the right half starts at the second section. A title sits above the left half, and the two halves start at the same line.
 - Without, the left half is the opening: the headings and the paragraphs right under them. The right half starts at the first list, picture, quote or other block, or at a heading after a paragraph.
 
-Each half then reads its own shape: only text is a headline, only pictures an image (1 to 3 one per row, 4 a 2×2). A half with text and pictures is a column, top to bottom.
+Each half then reads its own shape: only text is a headline, only pictures an image, in the columns that show them biggest. A half with text and pictures is a column, top to bottom.
 
 ```markdown
 <!-- .slide: class="split" -->
@@ -553,7 +553,7 @@ Rebuilds `dist/` from `src/` and `vendor/`. `deck.js` and `deck.css` are the fil
 | --- | --- |
 | `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides), `deck-charts.js`, `deck-source.js` (markdown panel), `deck-start.js` (starts it all). CSS: `deck-tokens.css` (the base theme), `deck-layouts.css` (where cells and blocks go on each slide type), `deck-elements.css` (how text, lists, code and tables look), `deck-page.css` (the panel, overview, load errors) |
 | `src/themes/` | Built-in themes: `dark`, `signal` |
-| `src/editor/` | The editor page, served by `venge-fyi` (`lib/edit.js`, with the library in `lib/library.js`) |
+| `src/editor/` | The editor page, served by `vengeslides` (`lib/edit.js`, with the library in `lib/library.js`) |
 | `lib/`, `bin/` | The CLI and the dev server's renderer |
 | `vendor/` | Third-party files, unchanged |
 | `examples/` | `glou-glou` (every slide type and option; the test deck), `story-ads` and `focus-mode` (real decks) |

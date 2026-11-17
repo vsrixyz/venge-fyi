@@ -5,11 +5,11 @@ import {parseArgs} from 'node:util';
 import {build} from '../lib/build.js';
 import {editServer, editorPath} from '../lib/edit.js';
 
-const USAGE = `Usage: venge-fyi
-       venge-fyi edit <deck.md>
-       venge-fyi build <deck.md> [--out <folder>]
+const USAGE = `Usage: vengeslides
+       vengeslides edit <deck.md>
+       vengeslides build <deck.md> [--out <folder>]
 
-With nothing after it, venge-fyi opens a library of the decks in this folder
+With nothing after it, vengeslides opens a library of the decks in this folder
 and the folders beneath it, at http://localhost:8090. A deck is a .md file that
 starts with front matter. Pick one to open it in the editor, which saves as
 you type.
@@ -47,7 +47,7 @@ if (!command) {
   if (command === 'edit') {
     const rel = path.relative(process.cwd(), path.resolve(file));
     if (rel.startsWith('..') || path.isAbsolute(rel)) {
-      fail(`error: ${file} is outside this folder. Run venge-fyi edit from a folder that holds the deck.`);
+      fail(`error: ${file} is outside this folder. Run vengeslides edit from a folder that holds the deck.`);
     }
     serve(rel.split(path.sep).join('/'));
   } else {
