@@ -133,6 +133,18 @@ function setCurrent(group, move) {
   if (changed && move) glide(group);
 }
 
+// Changing slide in the preview glides its text into the box and puts the cursor there.
+function followPreview(reveal) {
+  if (reveal !== preview) return;
+  const {h, v = 0} = reveal.getIndices();
+  const now = groups.find(g => g.kind === 'slide' && g.key === current);
+  if (now && now.h === h && now.v === v) return showHeader();
+  const group = groups.find(g => g.kind === 'slide' && g.key === `${h}.${v}`);
+  if (!group) return showHeader();
+  text.setSelectionRange(group.start, group.start);
+  setCurrent(group, true);
+}
+
 function ready(win) {
   return new Promise(resolve => {
     const done = () => resolve(win.Reveal && win.Reveal.isReady() ? win.Reveal : null);
@@ -178,7 +190,7 @@ async function render() {
   frame.classList.remove('loading');
   preview = reveal;
   if (reveal) {
-    reveal.on('slidechanged', showHeader);
+    reveal.on('slidechanged', () => followPreview(reveal));
     setCurrent(groups.find(g => g.kind === 'slide' && g.key === current) || caretGroup(), false);
   }
 }
