@@ -358,7 +358,7 @@ One caption for both photos.
 
 ---
 
-<!-- .cell: class="fill" -->
+<!-- .cluster: class="fill" -->
 ![First wide test photo](assets/wide-1.jpg)
 ![A tall test photo](assets/tall.jpg)
 ![A square test photo](assets/square.jpg)
@@ -369,12 +369,12 @@ One caption for both photos.
 
 `bleed` crops the photo and runs it off the slide's edge.
 
-<!-- .cell: class="bleed" -->
+<!-- .cluster: class="bleed" -->
 ![A tall test photo](assets/tall.jpg)
 
 ---
 
-<!-- .cell: class="bleed" -->
+<!-- .cluster: class="bleed" -->
 ![First wide test photo](assets/wide-1.jpg)
 ![Second wide test photo](assets/wide-3.jpg)
 ![Third wide test photo](assets/wide-5.jpg)
@@ -385,7 +385,7 @@ One caption for both photos.
 
 The second picture fades in on top of the first.
 
-<!-- .cell: class="stack" -->
+<!-- .cluster: class="stack" -->
 ![A plain screenshot of an app window](assets/screenshot.png)
 ![A square test photo](assets/square.jpg) <!-- .element: class="fragment" -->
 
@@ -515,7 +515,7 @@ Four make a 2×2.
 
 The picture fills the right half, edge to edge.
 
-<!-- .cell: class="bleed" -->
+<!-- .cluster: class="bleed" -->
 ![A square test photo](assets/square.jpg)
 
 ---
@@ -976,7 +976,7 @@ Back to theme-1
 ### Plain
 No colour of its own.
 
-<!-- .cell: data-background-color="theme-3" -->
+<!-- .cluster: data-background-color="theme-3" -->
 ### Yellow
 `data-background-color="theme-3"` on this part only.
 

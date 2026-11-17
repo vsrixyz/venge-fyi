@@ -121,7 +121,6 @@ All options are optional.
 | --- | --- | --- |
 | `title` | `Deck` | The browser tab title. |
 | `description` | none | The page's `<meta name="description">`. |
-| `eyebrow` | none | A small label on every slide except the first, at the top centre or above left-aligned text. A slide's own eyebrow replaces it. See [Slides](#slides). |
 | `accent` | the theme's | The colour for links, the quote mark and charts. Sets `--deck-theme-1`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
 | `theme` | none | A built-in theme name (`dark`, `signal`) or a path to your own CSS file, relative to the deck file. |
 | `charts` | `[]` | Chart libraries for charts written as JSON: `chartjs`, `echarts`. A deck that links a `.csv` file gets `chartjs` on its own. |
@@ -137,10 +136,10 @@ Other keys are ignored. Front matter is a small part of YAML: one `key: value` p
 | `---` on its own line, with a blank line above and below | A new slide |
 | `--` on its own line, with blank lines around it | A slide below the current one |
 | `<!-- .slide: class="prose" -->` | The slide's type and modifiers |
-| `<!-- .cell: class="stack" -->` | Options for the cell that comes next. See [Cell options](#cell-options). |
+| `<!-- .cluster: class="stack" -->` | Options for the cluster that comes next: a section or a group of pictures. See [Sections](#sections) and [Pictures](#pictures). |
 | `Note:` | Starts the slide's speaker notes. They are hidden. Reveal's speaker view plugin is not included. |
 
-Start with `#` and work down. `#` is the largest heading, then `##`, then `###`; `####` is a small label in capitals. Every heading has the same style, and its size follows its level; the slide decides the actual sizes. Everything shows in the order you write it.
+Start with `#` and work down. `#` is the largest heading, then `##`, then `###`; `####` is a label: small, in capitals. `<!-- .element: class="label" -->` shows any line as a label. Every heading has the same style, and its size follows its level; the slide decides the actual sizes. Everything shows in the order you write it.
 
 The eyebrow is a small label in capitals. When the slide's first heading is left-aligned (beside a picture, or on `split`), it sits right above that heading. Otherwise it is at the top centre of the slide. Mark any line as the eyebrow with `<!-- .element: class="eyebrow" -->` at its end. It keeps its meaning (a `#` is still the slide's title) but shows as the label. Only the first marked line on a slide is the eyebrow.
 
@@ -149,8 +148,6 @@ The eyebrow is a small label in capitals. When the slide's first heading is left
 
 ## We help small teams tell clear stories.
 ```
-
-The front matter `eyebrow` shows on every slide except the first. A slide's own eyebrow replaces it, and `<!-- .slide: class="hide-eyebrow" -->` hides it on that slide.
 
 Reveal's own markdown features still work, such as `<!-- .element: class="fragment" -->`.
 
@@ -204,15 +201,18 @@ When the same heading size appears two or more times, each of those headings sta
 
 Sections sit side by side in the same shapes as pictures, each with a line above it. The title and sections sit together in the middle of the slide. With 9 or 10 sections the text is 20% smaller. Ten is the most that show; later sections stay in the markdown but not on the slide, and while the markdown panel (M) is open a dotted red line marks the slide.
 
-A fragment on a section's heading brings in the whole section.
+A fragment on a section's heading brings in only the heading. To bring in the whole section, put `<!-- .cluster: class="fragment" -->` on the line above its heading.
 
-**Boxes.** A section can be drawn as a box instead of under a line:
+**Cards and fills.** A card is an outline with padding and rounded corners. A fill is a background colour, also with padding. They are separate, so a section can be either or both.
 
-- `<!-- .slide: class="cards" -->` puts every section in a box, in the card colour.
-- `<!-- .slide: class="colors" -->` does the same, each box in the next theme colour: `theme-1` to `theme-5`, then `theme-1` again.
-- `<!-- .cell: data-background-color="theme-2" -->` above one section's heading boxes that section only, in any colour a slide background takes. It wins over `cards` and `colors`.
+- `<!-- .slide: class="cards" -->` makes every section a card.
+- `<!-- .slide: class="colors" -->` fills every section, each in the next theme colour: `theme-1` to `theme-5`, then `theme-1` again.
+- `<!-- .cluster: class="card" -->` above one section's heading makes that section a card.
+- `<!-- .cluster: data-background-color="theme-2" -->` above one section's heading fills that section, in any colour a slide background takes. It wins over `colors`.
 
-Text keeps its colour on every box for now.
+When any section is a card or filled, every section on the slide takes the same padding, so the headings stay on one line. `card` and `data-background-color` also work on one line, with `<!-- .element: … -->`.
+
+Text keeps its colour on every fill for now.
 
 ```markdown
 <!-- .slide: class="cards" -->
@@ -262,12 +262,12 @@ Each half then reads its own shape: only text is a headline, only pictures an im
 
 ### Pictures
 
-Pictures written together are one group, on any slide type: a slide, a half or a section. They are shown whole, never cropped. A `<!-- .cell: … -->` comment right above a group sets its options:
+Pictures written together are one group, on any slide type: a slide, a half or a section. They are shown whole, never cropped. A `<!-- .cluster: … -->` comment right above a group sets its options:
 
 | Class | What it does |
 | --- | --- |
 | `fill` | Crops the pictures to fill their space |
-| `bleed` | Like `fill`, and runs off the edge: the slide's on an image slide or a figure, the half's in split, the box's in a boxed section |
+| `bleed` | Like `fill`, and runs off the edge: the slide's on an image slide or a figure, the half's in split, the section's in a card or filled section |
 | `stack` | Puts the pictures on top of each other, centred. A fragment on a later picture fades it in over the first. |
 
 Other classes and attributes go on the group too, such as `class="fragment"`.
@@ -275,7 +275,7 @@ Other classes and attributes go on the group too, such as `class="fragment"`.
 ```markdown
 ## My first try
 
-<!-- .cell: class="stack" -->
+<!-- .cluster: class="stack" -->
 ![The first guidelines](assets/guidelines.png)
 ![Not like this](assets/not-like-this.gif) <!-- .element: class="fragment" -->
 ```
@@ -307,10 +307,9 @@ Modifiers go in the slide's `class="…"`, next to its type:
 | --- | --- | --- |
 | `dark` | any slide | Makes this slide dark. See [Light and dark](#light-and-dark). |
 | `light` | any slide | Makes this slide light on a dark deck. |
-| `hide-eyebrow` | any slide | Hides the front matter `eyebrow` on this slide. A line you mark `eyebrow` still shows. |
 | `tint` | any slide | Shows the slide's background photo in its `data-background-color`: the photo's light and dark, in that colour. `data-background-opacity` sets how strong the photo is. |
-| `cards` | a slide with [sections](#sections) | Puts each section in a box, in the card colour |
-| `colors` | a slide with [sections](#sections) | Puts each section in a box, in the next theme colour |
+| `cards` | a slide with [sections](#sections) | Makes each section a card: an outline with padding |
+| `colors` | a slide with [sections](#sections) | Fills each section in the next theme colour |
 
 ### When content doesn't fit
 
@@ -411,7 +410,7 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | Token | Default | Used for |
 | --- | --- | --- |
 | `--deck-background` | `#ffffff` | Page and slide background |
-| `--deck-card` | `#f7f5f2` | Boxes on `cards`, the second half of `split` |
+| `--deck-card` | `#f7f5f2` | The colour named `card`, the second half of `split` |
 | `--deck-ink` | `#1f1d1b` | Headings, bold text, `###` |
 | `--deck-ink-soft` | *mixed*: ink at 76% | Paragraphs, list items, table cells, subtitles |
 | `--deck-ink-faint` | *mixed*: ink at 52% | Labels, bullets and list numbers, chart text |
@@ -456,7 +455,7 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-text-heading` | `56px` | `#` on prose and sections, and as the title above a figure's pictures; quotes on a headline slide. `##` is 80% of the slide's `#`, except on headline and sections. |
 | `--deck-text-heading-small` | `48px` | `#` beside a figure's pictures, and on `split` |
 | `--deck-text-body` | `34px` | Paragraphs and lists. `###` is 5% larger; `##` in sections is 30% larger. |
-| `--deck-text-small` | `22px` | Labels: the eyebrow, `####`, table headers; the missing-image box |
+| `--deck-text-small` | `22px` | Labels: `label`, the eyebrow, `####`, table headers; the missing-image box |
 | `--deck-leading-title` | `0.82` | `#` on a headline slide with headings only |
 | `--deck-leading-display` | `1.05` | Other `#` and `##` |
 | `--deck-leading-snug` | `1.25` | The default; `###`, labels, tables |
@@ -485,22 +484,22 @@ These are public: themes and your own CSS can rely on them.
 
 **On the slide `<section>`**, from your markdown: the [slide types](#slide-types) and modifiers above.
 
-**On a line**, from your markdown: `eyebrow` shows that line as the [eyebrow](#slides).
+**On a line or a cluster**, from your markdown: `eyebrow` shows that line as the [eyebrow](#slides); `label` shows it as a label; `card` and `data-background-color` make a card or a fill (see [Sections](#sections)).
 
 **Added by the runtime:**
 
 | Name | On | What it is |
 | --- | --- | --- |
 | `deck-stage` | `div`, the only child of each slide besides notes, the eyebrow and `deck-number` | Holds the slide's content. Insets and gaps are set here. |
-| `deck-eyebrow` | a child of the slide beside `deck-stage`, or right before the first heading when it is left-aligned | The eyebrow: the slide's first line marked `eyebrow`, or a `p` with the front matter's |
+| `deck-eyebrow` | a child of the slide beside `deck-stage`, or right before the first heading when it is left-aligned | The eyebrow: the slide's first line marked `eyebrow` |
 | `data-shape` | a `grid` slide's `deck-stage`, or a split `deck-half` | The layout: `headline`, `figure`, `image` or `sections`. `data-fit` is how far `sections` text was scaled down to fit; `data-dense` marks 9 or 10 cells, with smaller text. |
-| `deck-cell` | `grid` | Each cell. Also `deck-text` or `deck-pictures`, and any classes from a `.cell:` comment. |
+| `deck-cell` | `grid` | Each cell. Also `deck-text` or `deck-pictures`, and any classes from a `.cluster:` comment. |
 | `deck-text` | `grid` | A text cell. `data-headings` when it holds only headings. |
-| `deck-pictures` | any | A group of pictures: a cell on a grid slide or half, or inside a section. `data-count` is the number of pictures; any classes from a `.cell:` comment. |
+| `deck-pictures` | any | A group of pictures: a cell on a grid slide or half, or inside a section. `data-count` is the number of pictures; any classes from a `.cluster:` comment. |
 | `deck-caption` | `grid` | A caption: the last child of its `deck-pictures`, or of a `deck-captioned` |
 | `deck-captioned` | `grid` | A picture with its own caption, when a `deck-pictures` cell has several |
 | `deck-head` | `sections`, `split` | Holds anything above the sections, such as the title |
-| `deck-section` | `sections` | Each section, from its heading to the next. `data-background-color` when it is a box. |
+| `deck-section` | `sections` | Each section, from its heading to the next. `card` or `data-background-color` when it has one. |
 | `deck-half` | `split` | Each half |
 | `deck-chart` | any | The box around a chart |
 | `deck-number` | each slide | The slide's number, shown bottom right only in the overview |

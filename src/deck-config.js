@@ -117,7 +117,6 @@
     return {
       title: text(data, 'title'),
       description: text(data, 'description'),
-      eyebrow: text(data, 'eyebrow'),
       accent,
       theme: text(data, 'theme'),
       charts,

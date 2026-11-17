@@ -97,7 +97,7 @@ I had the Ads Quality UX team rate sample ads by asking them two questions:
 
 ---
 
-<!-- .cell: class="stack" -->
+<!-- .cluster: class="stack" -->
 ![The first guidelines](assets/first-guidelines.png)
 ![The guidelines in use](assets/initial-approach.gif) <!-- .element: class="fragment" -->
 

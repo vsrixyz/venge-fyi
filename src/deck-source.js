@@ -4,7 +4,7 @@
 (function (global) {
   'use strict';
 
-  const MODIFIERS = ['dark', 'light', 'hide-eyebrow', 'tint', 'cards', 'colors'];
+  const MODIFIERS = ['dark', 'light', 'tint', 'cards', 'colors'];
 
   function typeOf(section) {
     const types = ['grid', 'prose', 'split'];

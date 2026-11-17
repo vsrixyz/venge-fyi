@@ -22,7 +22,6 @@ Found while checking the example decks. Notes only; nothing built yet.
 - [ ] **Bug: `data-count` counts tiles, not pictures.** With one caption per picture, `deck-pictures` gets the number of tiles. The docs say it's the number of pictures. They differ when one captioned paragraph holds several pictures.
 - [ ] **Bug: on `split`, per-picture captions overflow.** Two pictures with their own captions in one half share its height without counting the captions, so the last caption runs off the bottom (`examples/focus-mode`, "Decisions, decisions").
 - [ ] **Bug? Cards run almost to the slide edges.** About 40px from each side; other slide types keep `--deck-inset-x` (128px).
-- [ ] **Bug? No eyebrow on the cards slide.** A cards slide with no eyebrow of its own, in a deck that sets `eyebrow` in the front matter, showed none. The screenshot may be cropped; check in the browser.
 - [ ] **The eyebrow sits too close to the content.** On split it also straddles the line where the second half's card colour starts, so it reads as part of neither half. Options: move it higher, or make it a footer item at the bottom of the slide. (Goes with "Pictures touch the eyebrow" above.)
 
 - [ ] **One way to fit content.** Today "too much on the slide" is handled six ways: the text shrink on sections, the picture cap on sections, the CSS height cap on picture groups, text that scales with cell width, the 9–10 "dense" step, and the `r-fit-text` box fit, each with its own numbers. Think through one fit step that every layout uses.
@@ -39,7 +38,11 @@ Found while checking the example decks. Notes only; nothing built yet.
 - [ ] **Audit the base CSS and tokens for excess.** Do this before writing more themes.
 - [ ] **Detailed theming.** Two themes so far: `dark` and `signal`.
 - [ ] **Some WYSIWYG editing.**
-- [ ] **Make adding elements to slides easier in the editor.** Slide and picture options are HTML comments (`<!-- .slide: class="dark" -->`, `<!-- .cell: class="stack" -->`), and one slip, such as a missing colon, quietly does nothing. How to make this easier is not decided.
+- [ ] **A better light/dark.** `dark` mostly means "make the text light", and there's no real light mode. Rethink both names and what they do.
+- [ ] **Prose stretches to its content.** Instead of scrolling inside the frame, a prose slide grows as tall as its text.
+- [ ] **The markdown source (M) should look like the editor.** Today the panel and the editor show the markdown differently.
+- [ ] **Layout names clash.** The `image` layout clashes with "image" (anything not text), and the `sections` layout and `deck-section` clash with "cluster". Pick new names.
+- [ ] **Make adding elements to slides easier in the editor.** Slide and picture options are HTML comments (`<!-- .slide: class="dark" -->`, `<!-- .cluster: class="stack" -->`), and one slip, such as a missing colon, quietly does nothing. How to make this easier is not decided.
 - [ ] **Replay chart animations.** Charts animate once, the first time their slide comes into view (`src/deck-charts.js`). Replay it each time the slide is shown.
 - [ ] **Step through chart data.** Reveal a chart one series or one bar per click, like fragments.
 

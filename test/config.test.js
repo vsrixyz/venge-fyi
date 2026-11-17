@@ -10,7 +10,6 @@ accent: '#12467A'
 theme: dark # trailing comment
 charts: ["echarts"]
 source: true
-eyebrow: Part 1
 page-numbering: true
 order: 3
 ---
@@ -22,7 +21,6 @@ order: 3
   assert.equal(deck.theme, 'dark');
   assert.deepEqual([...deck.charts], ['echarts']);
   assert.equal(deck.source, true);
-  assert.equal(deck.eyebrow, 'Part 1');
   assert.equal(deck.pageNumbering, true);
   assert.equal(deck.markdown, '# Hello');
 });

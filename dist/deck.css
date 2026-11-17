@@ -322,23 +322,33 @@ footer, header, hgroup, main, menu, nav, section {
   color: var(--_ink);
 }
 
-/* A section: a line above it. A boxed section (`cards`, `colors`, or its own
-   data-background-color) is a box instead; its neighbours take the same
-   padding, so the headings stay on one line. */
+/* A cluster: a line above it. When one is a card or filled, all take the same
+   padding and drop the line, so the headings stay on one line. */
 .reveal [data-shape="sections"] > .deck-section {
   padding-top: var(--deck-space-m);
   border-top: 2px solid var(--deck-line);
 }
 
-.reveal [data-shape="sections"]:has(> .deck-section[data-background-color]) > .deck-section {
+.reveal [data-shape="sections"]:has(> .deck-section:is(.card, [data-background-color])) > .deck-section {
   padding: var(--deck-space-m);
+}
+
+.reveal [data-shape="sections"]:has(> .deck-section:is(.card, [data-background-color])) > .deck-section:not(.card) {
   border-top: 0;
 }
 
-.reveal [data-shape="sections"] > .deck-section[data-background-color] {
-  background: var(--_box);
-  border: 1px solid var(--deck-line);
+/* card: an outline. data-background-color: a fill. Both on a cluster or an element. */
+.reveal .deck-stage :is(.card, [data-background-color]) {
+  padding: var(--deck-space-m);
   border-radius: var(--deck-radius);
+}
+
+.reveal .deck-stage .card {
+  border: 1px solid var(--deck-line);
+}
+
+.reveal .deck-stage [data-background-color] {
+  background: var(--_fill);
 }
 
 /* Past ten sections: not shown. */
@@ -400,8 +410,8 @@ footer, header, hgroup, main, menu, nav, section {
   aspect-ratio: 3 / 2;
 }
 
-/* bleed in a boxed section: to the box's sides and bottom. */
-.reveal [data-shape="sections"] > .deck-section[data-background-color] > .deck-pictures.bleed:last-child {
+/* bleed in a card or filled cluster: to its sides and bottom. */
+.reveal [data-shape="sections"] > .deck-section:is(.card, [data-background-color]) > .deck-pictures.bleed:last-child {
   width: auto;
   margin: 0 calc(-1 * var(--deck-space-m)) calc(-1 * var(--deck-space-m));
 }
@@ -699,7 +709,8 @@ footer, header, hgroup, main, menu, nav, section {
   line-height: var(--deck-leading-snug);
 }
 
-/* Labels: the eyebrow, ####, table headers. :where keeps it easy to override. */
+/* Labels: the label class, the eyebrow, ####, table headers. */
+.reveal .label,
 .reveal .deck-eyebrow,
 .reveal h4,
 .reveal th {

@@ -1,6 +1,5 @@
 ---
 title: Inter content plan
-eyebrow: Inter · Content plan
 ---
 
 <!-- .slide: class="dark" data-background-color="theme-1" -->

@@ -126,18 +126,11 @@
     });
   }
 
-  // The eyebrow sits top centre, outside the layout. The first element marked
-  // class="eyebrow" sets it; otherwise it is the deck's, except on the first
-  // slide and on slides marked hide-eyebrow.
-  function placeEyebrow(section, stage, deckEyebrow, isFirst) {
-    const own = stage.querySelector(':scope > .eyebrow');
-    if (own) own.remove();
-
-    const hidden = isFirst || section.classList.contains('hide-eyebrow');
-    const text = own ? own.textContent.trim() : hidden ? '' : deckEyebrow;
-    if (!text) return;
-
-    const eyebrow = own || el('p', null, text);
+  // The eyebrow sits top centre, outside the layout: the first element marked
+  // class="eyebrow".
+  function placeEyebrow(section, stage) {
+    const eyebrow = stage.querySelector(':scope > .eyebrow');
+    if (!eyebrow) return;
     eyebrow.classList.add('deck-eyebrow');
     section.appendChild(eyebrow);
   }
@@ -150,9 +143,9 @@
   const HALF = {1: 1, 2: 1, 3: 1, 4: 2, 5: 2, 6: 2, 7: 3, 8: 3, 9: 3};
   const columnsFor = (table, count) => table[count] || (table === WHOLE ? 4 : 3);
 
-  // <!-- .cell: class="stack" --> → {class: 'stack'}
-  function cellOptions(comment) {
-    const match = comment.textContent.match(/^\s*\.cell:([\s\S]*)$/);
+  // <!-- .cluster: class="stack" --> → {class: 'stack'}
+  function clusterOptions(comment) {
+    const match = comment.textContent.match(/^\s*\.cluster:([\s\S]*)$/);
     if (!match) return null;
     const options = {};
     match[1].replace(/([\w-]+)="([^"]*)"/g, (_, key, value) => { options[key] = value; });
@@ -212,22 +205,6 @@
     return null;
   }
 
-  // Moves a fragment from a cell's heading to the cell, so the whole cell comes in.
-  function liftFragment(heading, cell) {
-    if (!heading.classList.contains('fragment')) return;
-    ['fragment', ...FRAGMENT_STYLES].forEach(name => {
-      if (heading.classList.contains(name)) {
-        heading.classList.remove(name);
-        cell.classList.add(name);
-      }
-    });
-    const index = heading.getAttribute('data-fragment-index');
-    if (index !== null) {
-      heading.removeAttribute('data-fragment-index');
-      cell.setAttribute('data-fragment-index', index);
-    }
-  }
-
   const MAX_SECTIONS = 10;
 
   // Pictures written together are one group, wherever they are: a slide, a
@@ -262,16 +239,6 @@
 
   const isPicture = node => node.matches(MEDIA) || isCaptioned(node);
 
-  // A section's box: its own data-background-color; else `colors` gives the
-  // next theme colour and `cards` the card colour.
-  function boxColour(section, cell, i) {
-    const own = cell.getAttribute('data-background-color');
-    if (own) return own;
-    if (section.classList.contains('colors')) return `theme-${i % 5 + 1}`;
-    if (section.classList.contains('cards')) return 'card';
-    return '';
-  }
-
   function buildSections(section, stage, level) {
     const head = el('div', 'deck-head');
     const cells = [];
@@ -281,7 +248,7 @@
 
     Array.from(stage.childNodes).forEach(node => {
       if (node.nodeType === Node.COMMENT_NODE) {
-        const found = cellOptions(node);
+        const found = clusterOptions(node);
         if (found) {
           options = found;
           node.remove();
@@ -292,7 +259,7 @@
         if (!node.textContent.trim()) node.remove();
         return;
       }
-      // A .cell comment above a section's heading is for the section; above
+      // A .cluster comment above a section's heading is for the section; above
       // pictures, for that group of pictures.
       if (node.tagName === level) {
         cell = el('div', 'deck-cell deck-section');
@@ -300,7 +267,6 @@
           applyOptions(cell, options);
           options = null;
         }
-        liftFragment(node, cell);
         cells.push(cell);
         group = null;
       } else if (cell && isPicture(node)) {
@@ -321,11 +287,12 @@
 
     cells.forEach(c => c.querySelectorAll(':scope > .deck-pictures').forEach(g => settlePictures(g, HALF)));
 
+    // cards: every cluster is a card. colors: each the next theme colour, unless it has its own.
     cells.forEach((c, i) => {
-      const name = boxColour(section, c, i);
-      if (!name) return;
-      c.setAttribute('data-background-color', name);
-      c.style.setProperty('--_box', COLOUR_NAMES[name] ? `var(${COLOUR_NAMES[name]})` : name);
+      if (section.classList.contains('cards')) c.classList.add('card');
+      if (section.classList.contains('colors') && !c.hasAttribute('data-background-color')) {
+        c.setAttribute('data-background-color', `theme-${i % 5 + 1}`);
+      }
     });
 
     stage.dataset.shape = 'sections';
@@ -363,7 +330,7 @@
 
     Array.from(stage.childNodes).forEach(node => {
       if (node.nodeType === Node.COMMENT_NODE) {
-        const found = cellOptions(node);
+        const found = clusterOptions(node);
         if (found) {
           options = found;
           node.remove();
@@ -411,7 +378,15 @@
     background: '--_bg', card: '--_card', ink: '--_ink', line: '--deck-line'
   };
 
-  const OWN_BACKGROUND = ['color', 'image', 'video', 'gradient', 'iframe']
+  // A fill on a cluster or element: colour names become the theme's colours.
+  function paintFills(stage) {
+    stage.querySelectorAll('[data-background-color]').forEach(node => {
+      const name = node.getAttribute('data-background-color');
+      node.style.setProperty('--_fill', COLOUR_NAMES[name] ? `var(${COLOUR_NAMES[name]})` : name);
+    });
+  }
+
+  const OWN_BACKGROUND =['color', 'image', 'video', 'gradient', 'iframe']
     .map(kind => `data-background-${kind}`);
 
   function backgroundNames(section) {
@@ -471,7 +446,7 @@
     const first = el('div', 'deck-half');
     const rest = el('div', 'deck-half');
 
-    // Each node goes where its element goes; a .cell comment goes with the next one.
+    // Each node goes where its element goes; a .cluster comment goes with the next one.
     let pending = [];
     Array.from(stage.childNodes).forEach(node => {
       if (node.nodeType !== Node.ELEMENT_NODE) {
@@ -540,7 +515,7 @@
     });
   }
 
-  function buildSlide(section, isFirst, deckEyebrow) {
+  function buildSlide(section) {
     const layout = normalizeLayout(section);
     const isBuilt = !!section.querySelector(':scope > .deck-stage');
     const stage = wrapStage(section);
@@ -548,7 +523,7 @@
     csvCharts(stage);
     normalizeFragments(stage);
 
-    if (!isBuilt) placeEyebrow(section, stage, deckEyebrow, isFirst);
+    if (!isBuilt) placeEyebrow(section, stage);
 
     switch (layout) {
       case 'grid':
@@ -558,6 +533,7 @@
         buildSplit(stage);
         break;
     }
+    paintFills(stage);
 
     if (!isBuilt) settleEyebrow(section, stage);
   }
@@ -791,8 +767,7 @@
     const root = document.querySelector('.reveal');
     if (!root) return;
 
-    const deckEyebrow = root.getAttribute('data-eyebrow') || '';
-    leafSlides(root).forEach((section, i) => buildSlide(section, i === 0, deckEyebrow));
+    leafSlides(root).forEach(buildSlide);
     leafSlides(root).forEach(backgroundNames);
 
     watchImages(root);
