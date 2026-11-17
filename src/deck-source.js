@@ -1,4 +1,4 @@
-/* Markdown panel for decks with source: true. M toggles it.
+/* Markdown panel. M toggles it; it starts open with source: true.
    Call deckSource(Reveal, markdown) after Reveal.initialize() resolves. */
 
 (function (global) {

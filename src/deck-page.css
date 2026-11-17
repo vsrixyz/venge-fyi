@@ -50,7 +50,7 @@
   }
 }
 
-/* Markdown panel (source: true). M toggles it. */
+/* Markdown panel. M toggles it; source: true starts it open. */
 body.has-source {
   --source-width: clamp(360px, 34vw, 640px);
   margin: 0;

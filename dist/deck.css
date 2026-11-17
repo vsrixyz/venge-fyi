@@ -68,7 +68,7 @@ footer, header, hgroup, main, menu, nav, section {
   --deck-dark-theme-4: color-mix(in oklab, var(--deck-theme-4) 60%, #fff);
   --deck-dark-theme-5: color-mix(in oklab, var(--deck-theme-5) 60%, #fff);
 
-  /* Code blocks. The Markdown panel (source: true) uses these too. */
+  /* Code blocks. The Markdown panel uses these too. */
   --deck-code-background: #22201d;
   --deck-code-ink: #ece8e1;
   --deck-code-comment: #8f887e;
@@ -904,7 +904,7 @@ footer, header, hgroup, main, menu, nav, section {
   }
 }
 
-/* Markdown panel (source: true). M toggles it. */
+/* Markdown panel. M toggles it; source: true starts it open. */
 body.has-source {
   --source-width: clamp(360px, 34vw, 640px);
   margin: 0;

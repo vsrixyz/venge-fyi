@@ -19,7 +19,7 @@ theme:
 # Chart libraries, for charts written as JSON: chartjs, echarts. CSV charts don't need this.
 charts: ["chartjs"]
 
-# Show each slide's Markdown in a panel beside it. Press M to hide it.
+# Start with each slide's Markdown in a panel beside it. M shows or hides it on any deck.
 source: true
 ---
 

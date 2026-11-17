@@ -1031,7 +1031,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 })(window);
 
 /* ---- src/deck-source.js ---- */
-/* Markdown panel for decks with source: true. M toggles it.
+/* Markdown panel. M toggles it; it starts open with source: true.
    Call deckSource(Reveal, markdown) after Reveal.initialize() resolves. */
 
 (function (global) {
@@ -1209,9 +1209,10 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       const file = root.getAttribute('data-deck');
       if (file) await fetchDeck(root, new URL(file, location.href).href);
 
-      const source = root.hasAttribute('data-source');
+      // Every deck has the panel; it starts hidden unless source: true.
       const markdown = markdownOf(root);
-      if (source) document.body.classList.add('has-source');
+      document.body.classList.add('has-source');
+      if (!root.hasAttribute('data-source')) document.body.classList.add('source-hidden');
 
       await global.Reveal.initialize({
         plugins: [global.RevealMarkdown, global.RevealHighlight],
@@ -1232,12 +1233,12 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
         transition: 'fade',
         transitionSpeed: 'fast',
 
-        embedded: source
+        embedded: true
       });
 
       global.deckChrome(global.Reveal);
       global.deckCharts();
-      if (source) global.deckSource(global.Reveal, markdown);
+      global.deckSource(global.Reveal, markdown);
     } catch (error) {
       showError(root, error);
     }

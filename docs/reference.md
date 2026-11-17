@@ -40,8 +40,6 @@ Copy `dist/` to your site, then add a page like this next to your `deck.md`:
 
 The page must be served over http(s). Browsers block `fetch()` for pages opened from disk. If you need that, use the CLI.
 
-A working copy is in [`examples/drop-in/`](../examples/drop-in/).
-
 ### 2. The CLI
 
 ```bash
@@ -113,7 +111,7 @@ All options are optional.
 | `accent` | the theme's | The colour for links, the quote mark and charts. Sets `--deck-theme-1`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
 | `theme` | none | A built-in theme name (`dark`, `signal`) or a path to your own CSS file, relative to the deck file. |
 | `charts` | `[]` | Chart libraries for charts written as JSON: `chartjs`, `echarts`. A deck that links a `.csv` file gets `chartjs` on its own. |
-| `source` | `false` | Shows each slide's markdown in a panel beside it. Press M to hide it. |
+| `source` | `false` | Opens the markdown panel at the start. On every deck, M shows or hides each slide's markdown in a panel beside it. |
 | `page-numbering` | `false` | Shows Reveal's slide number in the bottom right corner of the window. The first slide has none. |
 
 Other keys are ignored. Front matter is a small part of YAML: one `key: value` per line, with text, numbers, `true`/`false` and `[lists]`. Anything else (nesting, multi-line values) stops with an error that names the line.
@@ -135,7 +133,7 @@ The eyebrow is a small label in capitals at the top centre of the slide, whateve
 ```markdown
 # Mission <!-- .element: class="eyebrow" -->
 
-## Inter helps people measure and build resilience.
+## We help small teams tell clear stories.
 ```
 
 The front matter `eyebrow` shows on every slide except the first. A slide's own eyebrow replaces it, and `<!-- .slide: class="hide-eyebrow" -->` hides it on that slide.
@@ -225,7 +223,7 @@ Everything under a cell's heading, until the next one, goes in that cell in orde
 
 When the cells hold more text than fits, the text gets smaller in steps until it fits, down to about 22px body text. Past that, it runs off the bottom.
 
-`prose` stops the split: one column, in order. On `columns` (an older type that will move onto this), each heading starts a column: with `###` headings, each `###` starts a part and a `##` above them is the title.
+`prose` stops the split: one column, in order. On `columns`, each heading starts a column: with `###` headings, each `###` starts a part and a `##` above them is the title.
 
 ### Split
 
@@ -390,7 +388,7 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-dark-theme-4` | theme 4, 40% toward white | `--deck-theme-4` on dark slides |
 | `--deck-dark-theme-5` | theme 5, 40% toward white | `--deck-theme-5` on dark slides |
 
-**Code blocks.** The markdown panel (`source: true`) uses these too.
+**Code blocks.** The markdown panel (M) uses these too.
 
 | Token | Default | Used for |
 | --- | --- | --- |
@@ -474,7 +472,7 @@ These are public: themes and your own CSS can rely on them.
 | --- | --- | --- |
 | `deck-ready` | `.reveal` | Slides are built. Slides are hidden until then. |
 | `is-first` | Reveal's `.slide-number` | Hides the number on the first slide |
-| `has-source`, `source-hidden` | `body` | The markdown panel is on, or hidden with M |
+| `has-source`, `source-hidden` | `body` | The page has the markdown panel (always), and it is hidden |
 | `deck-source` | `aside` | The markdown panel. Children: `deck-source__head`, `deck-source__count`, `deck-source__type`, `deck-source__code`. |
 | `deck-error` | `pre` | The deck failed to load |
 
@@ -510,7 +508,7 @@ Rebuilds `dist/` from `src/` and `vendor/`. `deck.js` and `deck.css` are the fil
 | `src/themes/` | Built-in themes: `dark`, `signal` |
 | `lib/`, `bin/` | The CLI and the dev server's renderer |
 | `vendor/` | Third-party files, unchanged |
-| `examples/` | `glou-glou` (every slide type and option; the test deck), `slide-types`, `drop-in` |
+| `examples/` | `glou-glou` (every slide type and option; the test deck), `story-ads` (a real deck) |
 
 ### Vendored libraries
 

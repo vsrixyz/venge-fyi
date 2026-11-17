@@ -3,7 +3,7 @@
 A local command that opens a deck in the browser: you type markdown on the left and see the slides on the right.
 
 ```bash
-npm run edit examples/slide-types/slides.md
+npm run edit examples/glou-glou/glou-glou.md
 ```
 
 For people using the package: `npx venge-fyi edit talk.md`. Both print the address to open, e.g. `http://localhost:8090/`.
@@ -70,7 +70,7 @@ This is tooling, so it fails loudly (see CLAUDE.md). Slides still never show war
 
 ## Unverified
 
-- Whether reloading the preview on every save is fast enough. It should be for a 13-slide deck. Measure on `examples/petrus`.
+- Whether reloading the preview on every save is fast enough. It should be for a 13-slide deck. Measure on `examples/story-ads`.
 - Whether copying slides for the strip looks right, especially with charts, images still loading, and themes. This is the riskiest part. If it doesn't work, the fallback is one small preview per slide, which is heavier.
 - Whether `npm run edit <file>` passes the file through on every npm version. It works on npm 11.
 - Separators inside code blocks: a `---` line in a fenced code block. Check what Reveal does and match it.

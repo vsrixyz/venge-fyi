@@ -43,7 +43,7 @@ Tooling may exist underneath, but the person using it shouldn't feel it. It's bu
 - Keep code comments very short.
 - `--deck-*` tokens and slide-type class names are the public API. Document every one in `docs/reference.md` (a test checks this).
 - Keep the README thin. Details go in `docs/reference.md`.
-- Docs change in the same commit as behaviour: front matter options, CLI commands, tokens and classes. Docs describe what exists; plans stay in `TODO.md` and the design docs.
+- Docs change in the same commit as behaviour: front matter options, CLI commands, tokens and classes. Docs describe what exists; plans stay in `TODO.md` and the design notes in `notes/`.
 - Pin every vendored library and record its license in `vendor/licenses/`.
 - Don't edit the lookpointweb site repo. It will switch to this package later.
 - After changing `src/`, run `npm run dist`. After an intended change to built output, run `UPDATE=1 npm test` and review the snapshot diff.

@@ -1,6 +1,6 @@
 # Grid layout: design notes
 
-Status: V1 is built (see `docs/reference.md`, [Grid slides](reference.md#grid-slides)). Sibling headings splitting a grid slide, `cards` drawn on those cells, and the `split` comment are built too ([Sections](reference.md#sections), [Split](reference.md#split)); `columns` is not yet. The "Later" parts below are designed, not built. The prototypes used to design it are on the `claude/grid-design-2afdd8` branch.
+Status: V1 is built (see `docs/reference.md`, [Grid slides](../docs/reference.md#grid-slides)). Sibling headings splitting a grid slide, `cards` drawn on those cells, and the `split` comment are built too ([Sections](../docs/reference.md#sections), [Split](../docs/reference.md#split)); `columns` is not yet. The "Later" parts below are designed, not built. The prototypes used to design it are on the `claude/grid-design-2afdd8` branch.
 
 ## The idea
 
@@ -12,7 +12,7 @@ The three layouts a grid slide picks are **headline** (text only), **figure** (t
 
 ## V1
 
-Real decks are simple. In petrus, 20 of 22 slides were one block of text or text beside pictures. In a 63-slide agency deck ("The Art of Deck Making"), nearly every slide was big text alone, a photo behind text, or a photo with a caption. V1 builds only these.
+Real decks are simple. In Story Ads, 20 of 22 slides were one block of text or text beside pictures. In a 63-slide agency deck ("The Art of Deck Making"), nearly every slide was big text alone, a photo behind text, or a photo with a caption. V1 builds only these.
 
 **V1:**
 
@@ -112,7 +112,7 @@ Until then, today's `split`, `cards` and `columns` slide types keep working as t
 - A picture in a cell is content: the heading sits above it. Making it the cell's background is an option (syntax still open).
 - A fragment on a cell's heading brings in the whole cell; a fragment on anything inside brings in just that thing.
 
-Worked example: Inter's "The Shift" slide, a title and a line on the left and a list of five on the right:
+Worked example: a "The Shift" slide, with a title and a line on the left and a list of five on the right:
 
 ```markdown
 <!-- .slide: class="split" -->
@@ -142,7 +142,7 @@ Taken one at a time, in roughly this order.
 
 ## What the real deck showed
 
-`examples/petrus/` is a real portfolio deck (Story Ads), converted with only the rules above plus Reveal's own `data-background-*`. Most slides came out right with no class at all.
+`examples/story-ads/` (once `petrus`) is a real portfolio deck, converted with only the rules above plus Reveal's own `data-background-*`. Most slides came out right with no class at all.
 
 - **Worked:** title slides, text beside one picture (either side), six pictures as a 3×2, slide background colours and a background photo with a wash.
 - **Heading, picture, caption** (slide 15): three cells in a row leave the picture tiny. The original stacked them top to bottom.
