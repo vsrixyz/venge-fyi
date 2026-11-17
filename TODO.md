@@ -43,6 +43,14 @@ Found while checking the example decks. Notes only; nothing built yet.
 
 Newest first. What changed and why, one entry per working session.
 
+### 2026-11-17: editor library (`editor` branch)
+
+- **Start it:** `npm run venge` in this repo, or `npx venge-fyi` with no file in any folder. Opens a library at http://localhost:8090.
+- **Library:** a card for every `.md` that starts with front matter under the folder it runs in (skipping `node_modules`, `build`, dot-folders). Same cards as the `npm run dev` gallery, now shared in `lib/library.js`.
+- **Editor:** the deck is chosen by the address (`?deck=examples/glou-glou/glou-glou.md`). A left rail with `<` goes back to the library, saving first. `venge-fyi edit <file>` still opens one deck straight away; the file must be under the folder you run it in.
+- **Server:** serves the whole library folder, refuses anything outside it, and only reads or saves `.md` files.
+- **Decided:** `npm run dev` stays separate (working on the package itself). The mock-up's `slide` and `theme` rail buttons are not built.
+
 ### 2026-11-16: editor, first version (`editor` branch)
 
 Built in its own folder, `~/dev/venge-fyi-editor`, on the `editor` branch, so the work on `main` could go on alongside. Not merged yet.

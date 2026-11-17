@@ -3,17 +3,23 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {parseArgs} from 'node:util';
 import {build} from '../lib/build.js';
-import {editServer} from '../lib/edit.js';
+import {editServer, editorPath} from '../lib/edit.js';
 
-const USAGE = `Usage: venge-fyi build <deck.md> [--out <folder>]
+const USAGE = `Usage: venge-fyi
        venge-fyi edit <deck.md>
+       venge-fyi build <deck.md> [--out <folder>]
+
+With nothing after it, venge-fyi opens a library of the decks in this folder
+and the folders beneath it, at http://localhost:8090. A deck is a .md file that
+starts with front matter. Pick one to open it in the editor, which saves as
+you type.
+
+edit opens one deck straight in the editor. The deck must be in this folder or
+beneath it. Both use port 8090, or PORT if set.
 
 build writes <folder>/index.html, copies the files the deck links next to it,
 and copies the runtime into <folder>/runtime/. The default folder is
-build/<deck file name>/, e.g. build/talk/ for talk.md.
-
-edit opens the deck in an editor in your browser and saves as you type.
-It uses port 8090, or PORT if set.`;
+build/<deck file name>/, e.g. build/talk/ for talk.md.`;
 
 let args;
 try {
@@ -31,28 +37,40 @@ if (args.values.help) {
   console.log(USAGE);
   process.exit(0);
 }
-if (!['build', 'edit'].includes(command) || !file || rest.length || (command === 'edit' && args.values.out)) {
-  console.error(USAGE);
-  process.exit(1);
-}
-
-if (!fs.existsSync(file) || !fs.statSync(file).isFile()) {
-  console.error(`error: deck file not found: ${file}`);
-  process.exit(1);
-}
-
-if (command === 'edit') {
-  const port = Number(process.env.PORT) || 8090;
-  const server = editServer(file, message => console.error(`error: ${message}`));
-  server.on('error', error => {
-    console.error(error.code === 'EADDRINUSE'
-      ? `error: port ${port} is in use. Stop what is using it, or set PORT, e.g. PORT=${port + 1}`
-      : `error: ${error.message}`);
-    process.exit(1);
-  });
-  server.listen(port, () => console.log(`Editing ${file} at http://localhost:${port}/`));
+if (!command) {
+  if (args.values.out) fail(USAGE);
+  serve(null);
+} else if (!['build', 'edit'].includes(command) || !file || rest.length || (command === 'edit' && args.values.out)) {
+  fail(USAGE);
 } else {
-  runBuild();
+  if (!fs.existsSync(file) || !fs.statSync(file).isFile()) fail(`error: deck file not found: ${file}`);
+  if (command === 'edit') {
+    const rel = path.relative(process.cwd(), path.resolve(file));
+    if (rel.startsWith('..') || path.isAbsolute(rel)) {
+      fail(`error: ${file} is outside this folder. Run venge-fyi edit from a folder that holds the deck.`);
+    }
+    serve(rel.split(path.sep).join('/'));
+  } else {
+    runBuild();
+  }
+}
+
+function fail(message) {
+  console.error(message);
+  process.exit(1);
+}
+
+// The library of decks under this folder; with a deck, its editor is the address shown.
+function serve(deck) {
+  const port = Number(process.env.PORT) || 8090;
+  const server = editServer(process.cwd(), message => console.error(`error: ${message}`));
+  server.on('error', error => fail(error.code === 'EADDRINUSE'
+    ? `error: port ${port} is in use. Stop what is using it, or set PORT, e.g. PORT=${port + 1}`
+    : `error: ${error.message}`));
+  server.listen(port, () => {
+    const url = `http://localhost:${port}`;
+    console.log(deck ? `Editing ${deck} at ${url}${editorPath(deck)}` : `Library at ${url}/`);
+  });
 }
 
 function runBuild() {

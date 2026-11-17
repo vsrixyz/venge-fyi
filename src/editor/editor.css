@@ -20,13 +20,27 @@
 html, body { height: 100%; margin: 0; }
 body {
   display: grid;
-  grid-template-columns: minmax(22rem, 2fr) 5fr;
+  grid-template-columns: auto minmax(22rem, 2fr) 5fr;
   gap: 0.5rem;
   padding: 0.5rem;
   background: var(--ed-bg);
   color: var(--ed-soft);
   font: 13px/1.5 var(--deck-font-mono);
 }
+
+/* Rail */
+.rail { display: flex; flex-direction: column; gap: 0.5rem; }
+.back {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--ed-line);
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+}
+.back:hover, .back:focus-visible { background: var(--ed-panel); }
 
 /* Markdown pane */
 .source {

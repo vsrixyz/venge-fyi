@@ -8,10 +8,12 @@ const note = document.querySelector('.note');
 const count = document.querySelector('.count');
 const type = document.querySelector('.type');
 
-// Served by `venge-fyi edit`: the deck's folder at /, our files under /_/.
-const SOURCE = '/_/source';
+// Served by `venge-fyi`: the library folder at /, our files under /_/, the deck named in ?deck=.
+const deckPath = new URLSearchParams(location.search).get('deck') || '';
+const SOURCE = `/_/source?deck=${encodeURIComponent(deckPath)}`;
 const runtime = new URL('/_/dist/', location.origin).href;
-const base = new URL('/', location.origin).href;
+const folder = deckPath.split('/').slice(0, -1).map(encodeURIComponent).join('/');
+const base = new URL(folder ? `/${folder}/` : '/', location.origin).href;
 
 let preview = null;
 let timer = null;
@@ -212,13 +214,12 @@ async function render() {
 async function open() {
   const response = await fetch(SOURCE, {cache: 'no-store'});
   if (!response.ok) {
-    note.textContent = `${response.status} loading the deck. Start the editor with npm run edit.`;
+    note.textContent = `${response.status} loading ${deckPath || 'the deck'}: ${await response.text()}`;
     return;
   }
   etag = response.headers.get('ETag');
-  const name = decodeURIComponent(response.headers.get('X-Deck-File') || '');
-  document.querySelector('.path').textContent = name;
-  document.title = `${name} · Editor`;
+  document.querySelector('.path').textContent = deckPath;
+  document.title = `${deckPath.split('/').pop()} · Editor`;
   text.value = await response.text();
   text.setSelectionRange(0, 0);
   text.focus();
@@ -235,7 +236,7 @@ async function save() {
     unsaved = false;
     let response;
     try {
-      response = await fetch(SOURCE, {method: 'PUT', headers: {'If-Match': etag}, body: text.value});
+      response = await fetch(SOURCE, {method: 'PUT', headers: {'If-Match': etag}, body: text.value, keepalive: true});
     } catch {
       showProblem('save', 'Not saved: the editor server is not running. Your text is still here.');
       break;
@@ -250,6 +251,19 @@ async function save() {
   saving = false;
 }
 
+// Going back to the library saves first, so the last few keystrokes aren't lost.
+document.querySelector('.back').addEventListener('click', async event => {
+  if (!timer && !saving) return;
+  event.preventDefault();
+  const href = event.currentTarget.href;
+  if (timer) unsaved = true;
+  clearTimeout(timer);
+  timer = null;
+  while (saving) await new Promise(resolve => setTimeout(resolve, 50));
+  await save();
+  if (!problems.save) location.href = href;
+});
+
 text.addEventListener('input', () => {
   drawBackdrop();
   setCurrent(caretGroup(), true);
@@ -257,6 +271,7 @@ text.addEventListener('input', () => {
   if (target) requestAnimationFrame(() => glide(target));
   clearTimeout(timer);
   timer = setTimeout(() => {
+    timer = null;
     unsaved = true;
     save();
     render();

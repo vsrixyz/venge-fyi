@@ -60,10 +60,18 @@ public/my-talk/
 The CLI copies every local file the markdown links (images, video, CSV, a theme path). Those files must be inside the deck's folder. A linked file that doesn't exist is a warning, not an error.
 
 ```bash
+npx venge-fyi
+```
+
+Opens a library at http://localhost:8090: a card for every deck in the folder you ran it in and the folders beneath it. A deck here is a `.md` file that starts with front matter (a line of `---`); `node_modules`, `build` and folders starting with `.` are skipped. Each card shows the file's path, the front matter's `title` and `description`, and a strip in its `accent`. Click a card to open the deck in the editor. The editor only reads and saves files inside that folder.
+
+```bash
 npx venge-fyi edit deck.md
 ```
 
-Opens an editor at http://localhost:8090: the markdown on the left, the deck on the right. The slide you're on sits in a box at the top of the markdown; click, scroll or change slide in the preview to move it. Your typing is saved to `deck.md` about 300 ms after you stop. If the file changes on disk in the meantime, the editor doesn't overwrite it: it says so, and you reload the page. Set `PORT` to use another port.
+Opens `deck.md` straight in the editor; the address to open is printed. The deck must be in the folder you run it in, or beneath it.
+
+The editor has the markdown on the left and the deck on the right, with a rail on the far left whose `<` goes back to the library. The slide you're on sits in a box at the top of the markdown; click, scroll or change slide in the preview to move it. Your typing is saved to `deck.md` about 300 ms after you stop. If the file changes on disk in the meantime, the editor doesn't overwrite it: it says so, and you reload the page. Set `PORT` to use another port.
 
 ### 3. From code
 
@@ -497,10 +505,10 @@ npm run build examples/glou-glou/glou-glou.md
 Builds a deck from this repo with the CLI, into `build/glou-glou/`. Open its `index.html` from disk.
 
 ```bash
-npm run edit examples/glou-glou/glou-glou.md
+npm run venge
 ```
 
-Opens that deck in the editor at http://localhost:8090. It saves to the file as you type.
+Opens the library of `examples/` at http://localhost:8090; pick a deck to edit it. It saves to the file as you type. `npm run edit examples/glou-glou/glou-glou.md` opens one deck straight away.
 
 ```bash
 npm test
@@ -518,7 +526,7 @@ Rebuilds `dist/` from `src/` and `vendor/`. `deck.js` and `deck.css` are the fil
 | --- | --- |
 | `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides), `deck-charts.js`, `deck-source.js` (markdown panel), `deck-start.js` (starts it all). CSS: `deck-tokens.css` (the base theme), `deck-layouts.css` (where cells and blocks go on each slide type), `deck-elements.css` (how text, lists, code, tables and cards look), `deck-page.css` (the panel, overview, load errors) |
 | `src/themes/` | Built-in themes: `dark`, `signal` |
-| `src/editor/` | The editor page, served by `venge-fyi edit` (`lib/edit.js`) |
+| `src/editor/` | The editor page, served by `venge-fyi` (`lib/edit.js`, with the library in `lib/library.js`) |
 | `lib/`, `bin/` | The CLI and the dev server's renderer |
 | `vendor/` | Third-party files, unchanged |
 | `examples/` | `glou-glou` (every slide type and option; the test deck), `story-ads` (a real deck) |

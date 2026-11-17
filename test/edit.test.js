@@ -19,53 +19,80 @@ function statusOf(url, rawPath) {
   });
 }
 
+// A library folder holding one deck, a note, a deck under node_modules, and a file outside it.
 async function withServer(text, run) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'venge-edit-'));
-  const file = path.join(dir, 'deck', 'talk.md');
-  fs.mkdirSync(path.join(dir, 'deck'));
+  const home = path.join(dir, 'home');
+  const file = path.join(home, 'deck', 'talk.md');
+  fs.mkdirSync(path.join(home, 'deck'), {recursive: true});
+  fs.mkdirSync(path.join(home, 'node_modules', 'x'), {recursive: true});
   fs.writeFileSync(file, text);
-  fs.writeFileSync(path.join(dir, 'outside.txt'), 'secret');
-  const server = editServer(file);
+  fs.writeFileSync(path.join(home, 'deck', 'pic.txt'), 'pic');
+  fs.writeFileSync(path.join(home, 'notes.md'), '# Notes\n');
+  fs.writeFileSync(path.join(home, 'node_modules', 'x', 'readme.md'), '---\ntitle: Hidden\n---\n');
+  fs.writeFileSync(path.join(dir, 'outside.md'), 'secret');
+  const server = editServer(home);
   await new Promise(resolve => server.listen(0, resolve));
   const url = `http://localhost:${server.address().port}`;
+  const source = `${url}/_/source?deck=deck%2Ftalk.md`;
   try {
-    await run({url, file});
+    await run({url, file, source});
   } finally {
     server.close();
     fs.rmSync(dir, {recursive: true, force: true});
   }
 }
 
-test('reading and saving round-trips the file', () => withServer('# One\n', async ({url, file}) => {
-  const read = await fetch(`${url}/_/source`);
-  assert.equal(await read.text(), '# One\n');
-  const saved = await fetch(`${url}/_/source`, {method: 'PUT', headers: {'If-Match': read.headers.get('ETag')}, body: '# Two\n'});
-  assert.equal(saved.status, 204);
-  assert.equal(fs.readFileSync(file, 'utf8'), '# Two\n');
-  assert.deepEqual(fs.readdirSync(path.dirname(file)), ['talk.md']);
+const DECK = '---\ntitle: My talk\ndescription: About things\n---\n\n# One\n';
+
+test('the library lists decks with front matter, and links them to the editor', () => withServer(DECK, async ({url}) => {
+  const page = await (await fetch(`${url}/`)).text();
+  assert.match(page, /My talk/);
+  assert.match(page, /About things/);
+  assert.match(page, /href="\/_\/src\/editor\/editor\.html\?deck=deck%2Ftalk\.md"/);
+  assert.doesNotMatch(page, /notes\.md|Hidden/);
 }));
 
-test('a file changed on disk is not overwritten', () => withServer('# One\n', async ({url, file}) => {
-  const read = await fetch(`${url}/_/source`);
+test('reading and saving round-trips the file', () => withServer('# One\n', async ({url, file, source}) => {
+  const read = await fetch(source);
+  assert.equal(await read.text(), '# One\n');
+  const saved = await fetch(source, {method: 'PUT', headers: {'If-Match': read.headers.get('ETag')}, body: '# Two\n'});
+  assert.equal(saved.status, 204);
+  assert.equal(fs.readFileSync(file, 'utf8'), '# Two\n');
+  assert.deepEqual(fs.readdirSync(path.dirname(file)).sort(), ['pic.txt', 'talk.md']);
+  assert.equal(await (await fetch(`${url}/deck/pic.txt`)).text(), 'pic');
+}));
+
+test('a file changed on disk is not overwritten', () => withServer('# One\n', async ({file, source}) => {
+  const read = await fetch(source);
   fs.writeFileSync(file, '# Changed elsewhere\n');
-  const saved = await fetch(`${url}/_/source`, {method: 'PUT', headers: {'If-Match': read.headers.get('ETag')}, body: '# Two\n'});
+  const saved = await fetch(source, {method: 'PUT', headers: {'If-Match': read.headers.get('ETag')}, body: '# Two\n'});
   assert.equal(saved.status, 409);
   assert.equal(fs.readFileSync(file, 'utf8'), '# Changed elsewhere\n');
 }));
 
-test('paths outside the deck folder are refused', () => withServer('# One\n', async ({url}) => {
+test('paths outside the library folder are refused', () => withServer('# One\n', async ({url}) => {
   // Plain ".." is collapsed by URL parsing; an encoded slash is not.
-  assert.equal(await statusOf(url, '/../outside.txt'), 404);
-  assert.equal(await statusOf(url, '/..%2foutside.txt'), 403);
+  assert.equal(await statusOf(url, '/../outside.md'), 404);
+  assert.equal(await statusOf(url, '/..%2foutside.md'), 403);
   assert.equal(await statusOf(url, '/_/..%2fpackage.json'), 403);
   assert.equal(await statusOf(url, '/_/vendor/reveal.js'), 403);
+  assert.equal(await statusOf(url, '/_/source?deck=..%2foutside.md'), 403);
+  assert.equal(await statusOf(url, '/_/source?deck=deck%2Fpic.txt'), 403);
+  assert.equal(await statusOf(url, '/_/source'), 403);
+  assert.equal(await statusOf(url, '/_/source?deck=deck%2Fnope.md'), 404);
   assert.equal((await fetch(`${url}/_/src/editor/editor.html`)).status, 200);
 }));
 
-test('a missing deck fails with a clear message', () => {
-  assert.throws(() => editServer('nope.md'), {message: 'deck file not found: nope.md'});
-  assert.throws(
-    () => execFileSync(process.execPath, [path.join(root, 'bin/venge-fyi.js'), 'edit', 'nope.md'], {stdio: 'pipe'}),
-    error => error.stderr.toString().includes('error: deck file not found: nope.md')
-  );
+test('a missing deck or folder fails with a clear message', () => {
+  assert.throws(() => editServer('nope'), {message: 'folder not found: nope'});
+  const cli = args => execFileSync(process.execPath, [path.join(root, 'bin/venge-fyi.js'), ...args], {stdio: 'pipe', cwd: root});
+  assert.throws(() => cli(['edit', 'nope.md']), error => error.stderr.toString().includes('error: deck file not found: nope.md'));
+  const outside = path.join(os.tmpdir(), `venge-outside-${process.pid}.md`);
+  fs.writeFileSync(outside, '# One\n');
+  try {
+    assert.throws(() => cli(['edit', outside]), error => error.stderr.toString().includes('is outside this folder'));
+  } finally {
+    fs.rmSync(outside);
+  }
 });

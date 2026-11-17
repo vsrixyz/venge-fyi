@@ -17,10 +17,10 @@ npm run build examples/glou-glou/glou-glou.md
 Builds a deck into `build/glou-glou/`. Open its `index.html` from disk or upload the folder anywhere.
 
 ```bash
-npm run edit examples/glou-glou/glou-glou.md
+npm run venge
 ```
 
-Opens the deck in an editor at http://localhost:8090, with a live preview. It saves as you type.
+Opens a library of the example decks at http://localhost:8090. Pick one to edit it beside a live preview. It saves as you type; `<` goes back to the library.
 
 ## Use it on a site
 
