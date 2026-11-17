@@ -1,4 +1,4 @@
-/* Elements: how text, lists, code, tables and cards look. Values live in deck-tokens.css.
+/* Elements: how text, lists, code and tables look. Values live in deck-tokens.css.
    The reset removes margins; the slide layout's gap spaces blocks. */
 
 .reveal-viewport {
@@ -19,13 +19,11 @@
   mix-blend-mode: luminosity;
 }
 
-/* --- Headings. Size comes from the slide type (--_h-size).
-   A split half's heading takes the ## look, a card's or column's the ### look,
-   whichever level was written. --- */
-.reveal :is(h1, h2),
-.reveal .deck-half > h3 {
+/* --- Headings: one style; the size follows the level. # is --_h-size, set by
+   the slide type; ## is 80% of it unless the type sets --_h2-size; ### is a
+   little bigger than body text; #### is a label. --- */
+.reveal :is(h1, h2, h3) {
   font-family: var(--deck-font-display);
-  font-size: var(--_h-size);
   font-weight: var(--deck-weight-display);
   line-height: var(--deck-leading-display);
   letter-spacing: var(--deck-track-display);
@@ -33,22 +31,23 @@
   text-wrap: balance;
 }
 
-/* :where keeps plain ### easy to override. */
-.reveal :where(h3),
-.reveal :is(.deck-card, .deck-column) > h2 {
-  font-family: var(--deck-font-base);
-  font-size: calc(var(--_p-size) * 1.05);
-  font-weight: 700;
-  line-height: var(--deck-leading-snug);
-  letter-spacing: normal;
-  color: var(--_ink);
+.reveal h1 {
+  font-size: var(--_h-size);
 }
 
-/* Labels: the eyebrow, ####, ### on a headline slide, table headers. :where keeps it easy to override. */
+.reveal h2 {
+  font-size: var(--_h2-size, calc(var(--_h-size) * 0.8));
+}
+
+.reveal h3 {
+  font-size: calc(var(--_p-size) * 1.05);
+  line-height: var(--deck-leading-snug);
+}
+
+/* Labels: the eyebrow, ####, table headers. :where keeps it easy to override. */
 .reveal .deck-eyebrow,
 .reveal h4,
-.reveal th,
-.reveal :where([data-shape="headline"]) > .deck-text > h3 {
+.reveal th {
   font-family: var(--deck-font-mono);
   font-size: var(--deck-text-small);
   font-weight: 400;
@@ -220,25 +219,6 @@
   max-width: 100%;
 }
 
-/* --- Cards --- */
-.reveal .deck-card {
-  padding: var(--deck-space-m);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--deck-space-s);
-  text-align: left;
-  background: var(--_card);
-  border: 1px solid var(--deck-line);
-  border-radius: var(--deck-radius);
-}
-
-/* --- Columns --- */
-.reveal .deck-column {
-  padding-top: var(--deck-space-m);
-  border-top: 2px solid var(--deck-line);
-}
-
 /* --- Missing image (deck-chrome.js) --- */
 .reveal .deck-missing {
   box-sizing: border-box;
@@ -260,6 +240,15 @@
   letter-spacing: var(--deck-track-caps);
   text-transform: uppercase;
   color: var(--_ink);
+}
+.reveal .deck-missing__icon {
+  width: 48px;
+  height: 48px;
+  color: var(--_theme-3);
+}
+.reveal .deck-missing__icon > svg {
+  width: 100%;
+  height: 100%;
 }
 .reveal .deck-missing__alt {
   font-family: var(--deck-font-base);

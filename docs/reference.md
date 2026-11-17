@@ -121,7 +121,7 @@ All options are optional.
 | --- | --- | --- |
 | `title` | `Deck` | The browser tab title. |
 | `description` | none | The page's `<meta name="description">`. |
-| `eyebrow` | none | A small label at the top centre of every slide except the first. A slide's own eyebrow replaces it. See [Slides](#slides). |
+| `eyebrow` | none | A small label on every slide except the first, at the top centre or above left-aligned text. A slide's own eyebrow replaces it. See [Slides](#slides). |
 | `accent` | the theme's | The colour for links, the quote mark and charts. Sets `--deck-theme-1`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
 | `theme` | none | A built-in theme name (`dark`, `signal`) or a path to your own CSS file, relative to the deck file. |
 | `charts` | `[]` | Chart libraries for charts written as JSON: `chartjs`, `echarts`. A deck that links a `.csv` file gets `chartjs` on its own. |
@@ -140,9 +140,9 @@ Other keys are ignored. Front matter is a small part of YAML: one `key: value` p
 | `<!-- .cell: class="stack" -->` | Options for the cell that comes next. See [Cell options](#cell-options). |
 | `Note:` | Starts the slide's speaker notes. They are hidden. Reveal's speaker view plugin is not included. |
 
-Headings are sizes: `#` is the largest and `####` the smallest. The slide decides the actual size. Everything shows in the order you write it.
+Start with `#` and work down. `#` is the largest heading, then `##`, then `###`; `####` is a small label in capitals. Every heading has the same style, and its size follows its level; the slide decides the actual sizes. Everything shows in the order you write it.
 
-The eyebrow is a small label in capitals at the top centre of the slide, whatever the slide type. Mark any line as the eyebrow with `<!-- .element: class="eyebrow" -->` at its end. It keeps its meaning (a `#` is still the slide's title) but shows as the label. Only the first marked line on a slide is the eyebrow.
+The eyebrow is a small label in capitals. When the slide's first heading is left-aligned (beside a picture, or on `split`), it sits right above that heading. Otherwise it is at the top centre of the slide. Mark any line as the eyebrow with `<!-- .element: class="eyebrow" -->` at its end. It keeps its meaning (a `#` is still the slide's title) but shows as the label. Only the first marked line on a slide is the eyebrow.
 
 ```markdown
 # Mission <!-- .element: class="eyebrow" -->
@@ -154,53 +154,123 @@ The front matter `eyebrow` shows on every slide except the first. A slide's own 
 
 Reveal's own markdown features still work, such as `<!-- .element: class="fragment" -->`.
 
+### Presenting
+
+Reveal's keys work: arrows or space to move, F for full screen. Also:
+
+| Key | What it does |
+| --- | --- |
+| Esc | The overview: every slide, each with its number. Swipe sideways or scroll to move through them; click one to open it. |
+| G | Reveal's jump box: type a slide number, then Enter, to go to it |
+| M | Shows or hides each slide's markdown in a panel beside it |
+
 ## Slide types
 
-Each slide has one type. A slide with no type is `grid`, and most slides need nothing else.
+Most slides need no class: the slide reads its shape from what you write. Two you ask for: `split` and `prose`.
 
-| Class | Use it for | Works best with |
+| You write | You get |
+| --- | --- |
+| Only text | **Headline**: centred and big |
+| Only pictures | **Image**: the pictures fill the slide |
+| Text, then pictures | **Figure**: the text in a third, the pictures in two thirds |
+| The same heading size two or more times | **Sections**: one per heading, side by side |
+| `<!-- .slide: class="split" -->` | **Split**: two halves |
+| `<!-- .slide: class="prose" -->` | **Prose**: one column, like a page; it scrolls |
+
+A slide with no class is `grid`: the slide finds its own shape. Text and pictures that take turns more than once (text, a picture, more text) make a `prose` slide.
+
+### Headline
+
+Only text. It sits in the middle, as big as the slide allows. `#` is headline size, or title size when the slide has only headings. `##` is the subheading size. A `>` quote gets a big quote mark.
+
+### Image
+
+Only pictures. 1 fills the slide, 2 sit side by side, 3 in a row. More keep going: 4 as 2×2, 5 as 3 + 2, 6 as 3×2, up to 10 as 5×2, then four across. A short last row is centred. Rows are as tall as their pictures, and the group sits in the middle.
+
+### Figure
+
+Text, then pictures: the text in a third, the pictures in the other two thirds. Write the pictures first to put them on the left. Beside text, pictures go one per row up to 3, and 4 make a 2×2. When the text is only headings, it's a title above the pictures, which take the full width.
+
+### Sections
+
+When the same heading size appears two or more times, each of those headings starts a section, and everything under it, up to the next one, belongs to it: text, lists, smaller headings, pictures. A heading above the first section is the title.
+
+| You write | Title | Sections |
 | --- | --- | --- |
-| `grid` | Almost everything | Text, pictures, or both. The slide finds its own [cells](#grid-slides). |
-| `prose` | Longer text | `##` title, then paragraphs, lists, tables and code. The only type that scrolls. |
-| `split` | Two sides | The first part on the left, the rest on the right, the right half tinted. See [Split](#split). |
-| `cards` | Short points | A grid slide whose [sections](#sections) are drawn as boxes |
-| `columns` | Side-by-side text | 2 to 4 [sections](#sections) in one row. |
+| `#`, `##`, `##` | `#` | one per `##` |
+| `##`, `###`, `###`, `###` | `##` | one per `###` |
+| `#`, `#` | none | one per `#` |
+| `#`, `##`, then text | none | none: a headline |
 
-### Grid slides
+Sections sit side by side in the same shapes as pictures, each with a line above it. The title and sections sit together in the middle of the slide. With 9 or 10 sections the text is 20% smaller. Ten is the most that show; later sections stay in the markdown but not on the slide, and while the markdown panel (M) is open a dotted red line marks the slide.
 
-A grid slide picks one of four layouts from what you write. Text that runs together is one cell; the pictures and charts beside it are another. Cells keep the order you wrote them in.
+A fragment on a section's heading brings in the whole section.
 
-| Layout | You write | You get |
-| --- | --- | --- |
-| headline | Only text | One centred cell. `#` is headline size, or title size with headings only. `##` is a subtitle, `###` a small line. A `>` quote gets a big quote mark. |
-| figure | Text, then pictures | Text in a third, the pictures in the other two thirds. Write the pictures first to put them on the left. |
-| image | Only pictures | The pictures fill the slide |
-| sections | The same heading size two or more times | One cell per heading. See [Sections](#sections). |
+**Boxes.** A section can be drawn as a box instead of under a line:
 
-Text and pictures that take turns more than once (text, a picture, more text) make a `prose` slide instead: one column, top to bottom. For parts side by side, give each part a heading: see [Sections](#sections).
+- `<!-- .slide: class="cards" -->` puts every section in a box, in the card colour.
+- `<!-- .slide: class="colors" -->` does the same, each box in the next theme colour: `theme-1` to `theme-5`, then `theme-1` again.
+- `<!-- .cell: data-background-color="theme-2" -->` above one section's heading boxes that section only, in any colour a slide background takes. It wins over `cards` and `colors`.
 
-Text scales with its cell. Pictures go 1 full, 2 across, 3 across, 4 as 2×2, 5 as 3 + 2, 6 as 3×2, 7 as 4 + 3, 8 as 4×2, 9 as 3×3, 10 as 5×2, and past 10 four across. A short last row is centred. Beside text they turn on their side: 2 stack, 3 make 2 + 1, 4 a 2×2.
-
-Pictures are shown whole, never cropped, unless you ask for `fill` or `bleed`.
-
-**Captions.** Text directly under a picture, with no blank line between, is its caption. Under several pictures written on lines one after another, it captions them all. When pictures are separated by blank lines and more than one has text under it, each keeps its own caption, right under it.
+Text keeps its colour on every box for now.
 
 ```markdown
-![The bar at night](assets/bar.jpg)
-Open since 2019.
+<!-- .slide: class="cards" -->
+
+## Check these before you share
+
+### One idea
+Each slide makes one point.
+
+### Fits the frame
+Nothing runs off the edge.
 ```
 
-#### Cell options
+**Big numbers.** Reveal's `r-fit-text` makes a line as big as its section allows, for a dashboard. Reveal fits it to the width; in a section it also stays inside the height, and the rows share the slide's height.
 
-A `<!-- .cell: … -->` comment sets options for the cell of whatever comes right after it.
+```markdown
+### Slides made
+
+128 <!-- .element: class="r-fit-text" -->
+```
+
+When the slide is too full, pictures get shorter first, then the text gets smaller in steps, down to about 22px body text. Past that, it runs off the bottom.
+
+### Split
+
+`<!-- .slide: class="split" -->` puts the first part of the slide on the left and the rest on the right. The right half is tinted to the window's edge.
+
+- With [sections](#sections), the right half starts at the second section. A title sits above the left half, and the two halves start at the same line.
+- Without, the left half is the opening: the headings and the paragraphs right under them. The right half starts at the first list, picture, quote or other block, or at a heading after a paragraph.
+
+Each half then reads its own shape: only text is a headline, only pictures an image (1 to 3 one per row, 4 a 2×2). A half with text and pictures is a column, top to bottom.
+
+```markdown
+<!-- .slide: class="split" -->
+
+# The Shift
+
+## Who your audience becomes
+
+- Name the Enemy
+- Answer: Why Now?
+```
+
+### Prose
+
+`<!-- .slide: class="prose" -->` writes everything down in one column, in order, like a page: no arranging. For paragraphs, tables and code. It is the only type that scrolls.
+
+### Pictures
+
+Pictures written together are one group, on any slide type: a slide, a half or a section. They are shown whole, never cropped. A `<!-- .cell: … -->` comment right above a group sets its options:
 
 | Class | What it does |
 | --- | --- |
-| `fill` | Crops the pictures to fill their cell |
-| `bleed` | Like `fill`, and the cell runs off the slide's edge on the sides it touches |
+| `fill` | Crops the pictures to fill their space |
+| `bleed` | Like `fill`, and runs off the edge: the slide's on an image slide or a figure, the half's in split, the box's in a boxed section |
 | `stack` | Puts the pictures on top of each other, centred. A fragment on a later picture fades it in over the first. |
 
-Other classes and attributes go on the cell too, such as `class="fragment"`.
+Other classes and attributes go on the group too, such as `class="fragment"`.
 
 ```markdown
 ## My first try
@@ -208,6 +278,13 @@ Other classes and attributes go on the cell too, such as `class="fragment"`.
 <!-- .cell: class="stack" -->
 ![The first guidelines](assets/guidelines.png)
 ![Not like this](assets/not-like-this.gif) <!-- .element: class="fragment" -->
+```
+
+**Captions.** Text directly under a picture, with no blank line between, is its caption. Under several pictures written on lines one after another, it captions them all. When pictures are separated by blank lines and more than one has text under it, each keeps its own caption.
+
+```markdown
+![The bar at night](assets/bar.jpg)
+Open since 2019.
 ```
 
 ### Backgrounds
@@ -222,70 +299,22 @@ A slide's background uses Reveal's own attributes: `data-background-color`, `dat
 
 `data-background-color` also takes the theme's colour names: `theme-1` to `theme-5`, `background`, `card`, `ink` and `line`. Any CSS colour works too.
 
-### Sections
+### Modifiers
 
-Sibling headings split a slide into parts, with no class needed. On a grid or `cards` slide, the first heading size that appears two or more times starts one cell each. Headings above it that appear once are the title and subtitle, and sit on top. Smaller headings stay inside their cell.
-
-| You write | Title | Cells |
-| --- | --- | --- |
-| `#`, `##`, `##` | `#` | one per `##` |
-| `##`, `###`, `###`, `###` | `##` | one per `###` |
-| `#`, `##`, `###` × 10 | `#`, with `##` as its subtitle | one per `###` |
-| `#`, `##`, then text | none | none: one cell, a title and subtitle |
-
-Everything under a cell's heading, until the next one, goes in that cell in order: text, lists, smaller headings, pictures. Cells go in the same shapes as pictures: 2 across, 3 across, 4 as 2×2, and so on; past 9, four across. A short last row is centred. A fragment on a cell's heading brings in the whole cell.
-
-When the cells hold more text than fits, the text gets smaller in steps until it fits, down to about 22px body text. Past that, it runs off the bottom.
-
-`prose` stops the split: one column, in order. On `columns`, each heading starts a column: with `###` headings, each `###` starts a part and a `##` above them is the title.
-
-### Split
-
-`<!-- .slide: class="split" -->` puts the first part of the slide on the left and the rest on the right.
-
-- With [sections](#sections), the right half starts at the second section's heading. A title sits above the first part, on the left. The two parts start at the same line, and the group is centred top to bottom.
-- Without, the left half is the opening: the headings and the paragraphs right under them. The right half starts at the first list, picture, quote or other block, or at a heading after a paragraph. Each half is centred top to bottom.
-- Pictures in a half share its height.
-
-```markdown
-<!-- .slide: class="split" -->
-
-# The Shift
-
-## Who your audience becomes
-
-- Name the Enemy
-- Answer: Why Now?
-```
-
-```markdown
-<!-- .slide: class="cards" -->
-
-## Check these before you share
-
-### One idea
-Each slide makes one point.
-
-### Fits the frame
-Nothing runs off the edge.
-```
-
-A cell's heading looks the same whichever level you write: like `###` on grid, cards and columns. On `split`, a `###` looks like `##`.
-
-Modifiers go in the same `class="…"`:
+Modifiers go in the slide's `class="…"`, next to its type:
 
 | Class | Works on | What it does |
 | --- | --- | --- |
-| `dark` | any type | Makes this slide dark. See [Light and dark](#light-and-dark). |
-| `light` | any type | Makes this slide light on a dark deck. |
-| `hide-eyebrow` | any type | Hides the front matter `eyebrow` on this slide. A line you mark `eyebrow` still shows. |
-| `tint` | any type | Shows the slide's background photo in its `data-background-color`: the photo's light and dark, in that colour. `data-background-opacity` sets how strong the photo is. |
+| `dark` | any slide | Makes this slide dark. See [Light and dark](#light-and-dark). |
+| `light` | any slide | Makes this slide light on a dark deck. |
+| `hide-eyebrow` | any slide | Hides the front matter `eyebrow` on this slide. A line you mark `eyebrow` still shows. |
+| `tint` | any slide | Shows the slide's background photo in its `data-background-color`: the photo's light and dark, in that colour. `data-background-opacity` sets how strong the photo is. |
+| `cards` | a slide with [sections](#sections) | Puts each section in a box, in the card colour |
+| `colors` | a slide with [sections](#sections) | Puts each section in a box, in the next theme colour |
 
-### When content doesn't fit the rules
+### When content doesn't fit
 
-Slides never warn. Whatever you write shows, in the order you wrote it: a tenth picture, a seventh card. Text that doesn't fit the frame runs off it, except on `prose`, which scrolls.
-
-A missing image becomes a dashed box with its file name.
+Slides never warn. Whatever you write shows, in the order you wrote it, with two exceptions: a missing image becomes a dashed box with a warning sign, "File not found" and its file name; and sections past the tenth don't show (see [Sections](#sections)). Text that doesn't fit the frame runs off it, except on `prose`, which scrolls.
 
 ## Charts
 
@@ -381,8 +410,8 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 
 | Token | Default | Used for |
 | --- | --- | --- |
-| `--deck-background` | `#f7f5f2` | Page and slide background |
-| `--deck-card` | `#fffdfa` | Cards, the second half of `split` |
+| `--deck-background` | `#ffffff` | Page and slide background |
+| `--deck-card` | `#f7f5f2` | Boxes on `cards`, the second half of `split` |
 | `--deck-ink` | `#1f1d1b` | Headings, bold text, `###` |
 | `--deck-ink-soft` | *mixed*: ink at 76% | Paragraphs, list items, table cells, subtitles |
 | `--deck-ink-faint` | *mixed*: ink at 52% | Labels, bullets and list numbers, chart text |
@@ -417,22 +446,22 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 
 | Token | Default | Used for |
 | --- | --- | --- |
-| `--deck-font-base` | `sans-serif` | Body text, `###`, chart text |
-| `--deck-font-display` | `var(--deck-font-base)` | `#` and `##` headings, quotes |
+| `--deck-font-base` | `sans-serif` | Body text, chart text |
+| `--deck-font-display` | `var(--deck-font-base)` | `#`, `##` and `###`, quotes |
 | `--deck-font-mono` | `ui-monospace, …, monospace` | Code, labels, numbered list markers |
-| `--deck-weight-display` | `700` | `#` and `##` headings, the big quote mark |
+| `--deck-weight-display` | `700` | `#`, `##` and `###`, the big quote mark |
 | `--deck-text-title` | `200px` | `#` on a headline slide with headings only |
 | `--deck-text-headline` | `144px` | `#` on a headline slide with text |
 | `--deck-text-subheading` | `64px` | `##` on a headline slide |
-| `--deck-text-heading` | `56px` | `#`/`##` on prose, cards and columns; quotes on a headline slide |
-| `--deck-text-heading-small` | `48px` | `#`/`##` on a figure, and on `split` |
-| `--deck-text-body` | `34px` | Paragraphs and lists. `###` and card labels are 5% larger. |
-| `--deck-text-small` | `22px` | Labels: the eyebrow, `####`, `###` on a headline slide, table headers; the missing-image box |
+| `--deck-text-heading` | `56px` | `#` on prose and sections, and as the title above a figure's pictures; quotes on a headline slide. `##` is 80% of the slide's `#`, except on headline and sections. |
+| `--deck-text-heading-small` | `48px` | `#` beside a figure's pictures, and on `split` |
+| `--deck-text-body` | `34px` | Paragraphs and lists. `###` is 5% larger; `##` in sections is 30% larger. |
+| `--deck-text-small` | `22px` | Labels: the eyebrow, `####`, table headers; the missing-image box |
 | `--deck-leading-title` | `0.82` | `#` on a headline slide with headings only |
 | `--deck-leading-display` | `1.05` | Other `#` and `##` |
-| `--deck-leading-snug` | `1.25` | The default; `###`, card labels, labels, tables |
+| `--deck-leading-snug` | `1.25` | The default; `###`, labels, tables |
 | `--deck-leading-body` | `1.5` | Paragraphs, lists, code blocks |
-| `--deck-track-display` | `-0.02em` | `#` and `##` |
+| `--deck-track-display` | `-0.02em` | `#`, `##` and `###` |
 | `--deck-track-caps` | `0.18em` | Labels |
 
 **Space.** Set `--deck-space-m` and the others scale with it. You can still set one yourself.
@@ -443,7 +472,7 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-space-xs` | `12px` | The missing-image box |
 | `--deck-space-s` | `20px` | Between list items; between the parts of a card or column |
 | `--deck-space-l` | `48px` | Between cells, and between blocks on a headline slide and `split` |
-| `--deck-space-xl` | `64px` | Between blocks on a headline slide with headings only; between columns |
+| `--deck-space-xl` | `64px` | Between blocks on a headline slide with headings only |
 | `--deck-inset-x` | `128px` | Left and right space inside a slide |
 | `--deck-inset-y` | `64px` | Top and bottom space inside a slide |
 | `--deck-inset-tight` | `96px` | Space inside each `split` half |
@@ -462,22 +491,20 @@ These are public: themes and your own CSS can rely on them.
 
 | Name | On | What it is |
 | --- | --- | --- |
-| `deck-stage` | `div`, the only child of each slide besides notes and the eyebrow | Holds the slide's content. Insets and gaps are set here. |
-| `deck-eyebrow` | a child of the slide beside `deck-stage` | The eyebrow: the slide's first line marked `eyebrow`, or a `p` with the front matter's |
-| `data-shape` | `grid` or `cards` slide's `deck-stage` | The layout: `headline`, `figure`, `image` or `sections`. `data-fit` is how far `sections` text was scaled down to fit. |
+| `deck-stage` | `div`, the only child of each slide besides notes, the eyebrow and `deck-number` | Holds the slide's content. Insets and gaps are set here. |
+| `deck-eyebrow` | a child of the slide beside `deck-stage`, or right before the first heading when it is left-aligned | The eyebrow: the slide's first line marked `eyebrow`, or a `p` with the front matter's |
+| `data-shape` | a `grid` slide's `deck-stage`, or a split `deck-half` | The layout: `headline`, `figure`, `image` or `sections`. `data-fit` is how far `sections` text was scaled down to fit; `data-dense` marks 9 or 10 cells, with smaller text. |
 | `deck-cell` | `grid` | Each cell. Also `deck-text` or `deck-pictures`, and any classes from a `.cell:` comment. |
 | `deck-text` | `grid` | A text cell. `data-headings` when it holds only headings. |
-| `deck-pictures` | `grid` | A cell of pictures. `data-count` is the number of pictures. |
+| `deck-pictures` | any | A group of pictures: a cell on a grid slide or half, or inside a section. `data-count` is the number of pictures; any classes from a `.cell:` comment. |
 | `deck-caption` | `grid` | A caption: the last child of its `deck-pictures`, or of a `deck-captioned` |
 | `deck-captioned` | `grid` | A picture with its own caption, when a `deck-pictures` cell has several |
-| `deck-head` | `sections`, `split` | Holds anything above the cells or parts, such as the title |
-| `deck-section` | `sections` | Each cell, from its heading to the next |
+| `deck-head` | `sections`, `split` | Holds anything above the sections, such as the title |
+| `deck-section` | `sections` | Each section, from its heading to the next. `data-background-color` when it is a box. |
 | `deck-half` | `split` | Each half |
-| `deck-card` | `cards` | Each cell, drawn as a box |
-| `deck-columns` | `columns` | The row. `data-count` is the number of columns. |
-| `deck-column` | `columns` | Each column |
 | `deck-chart` | any | The box around a chart |
-| `deck-missing` | any | Stands in for a missing image or a failed chart. Children: `deck-missing__title`, `deck-missing__file`, `deck-missing__alt`. |
+| `deck-number` | each slide | The slide's number, shown bottom right only in the overview |
+| `deck-missing` | any | Stands in for a missing image or a failed chart. Children: `deck-missing__icon` (a warning sign, on a missing image), `deck-missing__title`, `deck-missing__file`, `deck-missing__alt`. |
 | `is-scrollable` | `prose` slide | The text is taller than the slide |
 
 **On the page:**
@@ -524,12 +551,12 @@ Rebuilds `dist/` from `src/` and `vendor/`. `deck.js` and `deck.css` are the fil
 
 | Folder | Holds |
 | --- | --- |
-| `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides), `deck-charts.js`, `deck-source.js` (markdown panel), `deck-start.js` (starts it all). CSS: `deck-tokens.css` (the base theme), `deck-layouts.css` (where cells and blocks go on each slide type), `deck-elements.css` (how text, lists, code, tables and cards look), `deck-page.css` (the panel, overview, load errors) |
+| `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides), `deck-charts.js`, `deck-source.js` (markdown panel), `deck-start.js` (starts it all). CSS: `deck-tokens.css` (the base theme), `deck-layouts.css` (where cells and blocks go on each slide type), `deck-elements.css` (how text, lists, code and tables look), `deck-page.css` (the panel, overview, load errors) |
 | `src/themes/` | Built-in themes: `dark`, `signal` |
 | `src/editor/` | The editor page, served by `venge-fyi` (`lib/edit.js`, with the library in `lib/library.js`) |
 | `lib/`, `bin/` | The CLI and the dev server's renderer |
 | `vendor/` | Third-party files, unchanged |
-| `examples/` | `glou-glou` (every slide type and option; the test deck), `story-ads` (a real deck) |
+| `examples/` | `glou-glou` (every slide type and option; the test deck), `story-ads` and `focus-mode` (real decks) |
 
 ### Vendored libraries
 

@@ -37,6 +37,11 @@
   text-align: center;
 }
 
+/* Above left-aligned text: in its flow, close to the heading. */
+.reveal .deck-stage .deck-eyebrow {
+  margin: 0 0 calc(-0.5 * var(--deck-space-m));
+}
+
 /* Don't let flex squash blocks; overflow is flagged instead. */
 .reveal .deck-stage > * {
   max-width: 100%;
@@ -45,7 +50,7 @@
 
 /* --- grid: deck-chrome.js picks headline, figure or image. Cells span two
    half-tracks so a short last row of pictures can be centred. --- */
-.reveal section:is(.grid, .cards) > .deck-stage {
+.reveal section.grid > .deck-stage {
   display: grid;
   grid-template-columns: repeat(calc(var(--_cols, 1) * 2), minmax(0, 1fr));
   grid-template-rows: repeat(var(--_rows, 1), minmax(0, 1fr));
@@ -85,6 +90,24 @@
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
 }
 
+/* Headings only: a title above (or below) the pictures, full width. */
+.reveal section.grid > .deck-stage[data-shape="figure"]:has(> .deck-text[data-headings]) {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--deck-space-m);
+
+  &:has(> .deck-pictures:first-child) {
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  > .deck-text {
+    container-type: inline-size;
+    align-items: center;
+    text-align: center;
+    --_h-size: var(--deck-text-heading);
+  }
+}
+
 /* headline: one text cell, centred and big. */
 .reveal [data-shape="headline"] > .deck-text {
   align-items: center;
@@ -103,11 +126,9 @@
   }
 }
 
-/* ## subhead. ### takes the label style. */
-.reveal [data-shape="headline"] > .deck-text > h2 {
-  font-size: clamp(40px, 4cqi, var(--deck-text-subheading));
-  font-weight: 400;
-  color: var(--deck-ink-soft);
+/* ## under a headline: the subheading size. */
+.reveal [data-shape="headline"] > .deck-text {
+  --_h2-size: clamp(40px, 4cqi, var(--deck-text-subheading));
 }
 
 .reveal [data-shape="headline"] > .deck-text > p {
@@ -134,9 +155,9 @@
 }
 
 /* sections: a cell per sibling heading, in the count shapes. Rows fit their
-   text and sit in the middle; with pictures they share the height. deck-chrome.js
+   content and the group sits in the middle; pictures are capped to fit. deck-chrome.js
    lowers --_fit until the text fits. */
-.reveal section:is(.grid, .cards) > .deck-stage[data-shape="sections"] {
+.reveal section.grid > .deck-stage[data-shape="sections"] {
   --_fit: 1;
   grid-template-rows: auto;
   grid-auto-rows: auto;
@@ -144,14 +165,47 @@
   column-gap: var(--deck-space-l);
   row-gap: var(--deck-space-l);
   --_h-size: calc(var(--deck-text-heading) * var(--_fit));
+  --_h2-size: calc(var(--_p-size) * 1.3);
   --_p-size: calc(var(--deck-text-body) * var(--_fit));
 }
 
-.reveal section.cards.cards > .deck-stage[data-shape="sections"] {
-  gap: var(--deck-space-m);
+/* Reveal's r-fit-text in a part: deck-chrome.js sizes it to fill what's left. */
+.reveal [data-shape="sections"] > .deck-section > .r-fit-text {
+  line-height: 1;
+  font-weight: var(--deck-weight-display);
+  color: var(--_ink);
 }
 
-.reveal section:is(.grid, .cards) > .deck-stage[data-shape="sections"][data-pictures] {
+/* A section: a line above it. A boxed section (`cards`, `colors`, or its own
+   data-background-color) is a box instead; its neighbours take the same
+   padding, so the headings stay on one line. */
+.reveal [data-shape="sections"] > .deck-section {
+  padding-top: var(--deck-space-m);
+  border-top: 2px solid var(--deck-line);
+}
+
+.reveal [data-shape="sections"]:has(> .deck-section[data-background-color]) > .deck-section {
+  padding: var(--deck-space-m);
+  border-top: 0;
+}
+
+.reveal [data-shape="sections"] > .deck-section[data-background-color] {
+  background: var(--_box);
+  border: 1px solid var(--deck-line);
+  border-radius: var(--deck-radius);
+}
+
+/* Past ten sections: not shown. */
+.reveal [data-shape="sections"] > .deck-section[hidden] {
+  display: none;
+}
+
+.reveal section.grid > .deck-stage[data-shape="sections"][data-dense] {
+  --_p-size: calc(var(--deck-text-body) * 0.8 * var(--_fit));
+}
+
+/* Fitted text (a dashboard): the rows share the slide's height. */
+.reveal section.grid > .deck-stage[data-shape="sections"]:has(> .deck-section > .r-fit-text) {
   grid-template-rows: auto;
   grid-auto-rows: minmax(0, 1fr);
 }
@@ -165,13 +219,6 @@
   text-align: center;
 }
 
-/* A second heading in the head is a subtitle. */
-.reveal [data-shape="sections"] > .deck-head > :is(h1, h2, h3) ~ :is(h1, h2, h3) {
-  font-size: calc(var(--_h-size) * 0.65);
-  font-weight: 400;
-  color: var(--deck-ink-soft);
-}
-
 .reveal [data-shape="sections"] > .deck-section {
   container-type: normal;
   min-height: auto; /* rows grow to their text, so a slide that is too full can be measured */
@@ -181,21 +228,36 @@
   gap: var(--deck-space-s);
 }
 
-/* A cell's heading, whatever level was written. */
-.reveal [data-shape="sections"] > .deck-section > :is(h1, h2, h3, h4, h5, h6):first-child {
-  font-family: var(--deck-font-base);
-  font-size: calc(var(--_p-size) * 1.05);
-  font-weight: 700;
-  line-height: var(--deck-leading-snug);
-  letter-spacing: normal;
+/* Pictures in a section: one group, full width under the heading, rows as
+   tall as the pictures. deck-chrome.js lowers --_pic-max until the slide fits. */
+.reveal [data-shape="sections"] > .deck-section > .deck-pictures {
+  width: 100%;
+  grid-template-rows: none;
+  grid-auto-rows: auto;
+  align-content: start;
 }
 
-.reveal [data-shape="sections"] > .deck-section > :is(img, video, picture, .deck-chart, .deck-missing) {
-  flex: 1 1 0;
+.reveal [data-shape="sections"] > .deck-section > .deck-pictures :is(img, video, picture, .deck-chart, .deck-missing) {
+  flex: none;
   width: 100%;
-  min-height: 0;
+  height: auto;
+  max-height: var(--_pic-max, none);
   object-fit: contain;
-  object-position: center top;
+  object-position: left top;
+}
+
+.reveal [data-shape="sections"] > .deck-section > .deck-pictures :is(.deck-chart, .deck-missing) {
+  aspect-ratio: 16 / 10;
+}
+
+.reveal [data-shape="sections"] > .deck-section > .deck-pictures:is(.fill, .bleed) :is(img, video, picture) {
+  aspect-ratio: 3 / 2;
+}
+
+/* bleed in a boxed section: to the box's sides and bottom. */
+.reveal [data-shape="sections"] > .deck-section[data-background-color] > .deck-pictures.bleed:last-child {
+  width: auto;
+  margin: 0 calc(-1 * var(--deck-space-m)) calc(-1 * var(--deck-space-m));
 }
 
 /* Pictures: a grid of their own. Whole by default; fill and bleed crop. */
@@ -218,6 +280,18 @@
 
 .reveal .deck-pictures > .deck-chart {
   position: relative;
+}
+
+/* Whole pictures: rows as tall as their pictures, the group centred, so wide
+   pictures don't float in tall rows. Charts, captions and missing files keep equal rows. */
+.reveal .deck-cell.deck-pictures:not(.fill, .bleed, .stack):not(:has(> :is(.deck-caption, .deck-captioned, .deck-chart, .deck-missing))) {
+  grid-auto-rows: auto;
+  align-content: center;
+
+  > :is(img, video, picture, svg) {
+    height: auto;
+    max-height: calc((100cqh - (var(--_rows, 1) - 1) * var(--deck-space-s)) / var(--_rows, 1));
+  }
 }
 
 .reveal .deck-pictures:is(.fill, .bleed) > :is(img, video, picture),
@@ -365,6 +439,24 @@
   object-fit: contain;
 }
 
+/* A half of only text or only pictures: a headline or an image, in cells. */
+.reveal section.split .deck-half[data-shape] {
+  display: grid;
+  grid-template-columns: repeat(calc(var(--_cols, 1) * 2), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--_rows, 1), minmax(0, 1fr));
+  align-items: stretch;
+  gap: var(--deck-space-l);
+}
+
+/* Text sizes from the half's width, so a half can be as tall as its text. */
+.reveal section.split .deck-half > .deck-text {
+  container-type: inline-size;
+}
+
+.reveal .deck-half[data-shape="image"] > .deck-pictures.bleed {
+  margin: calc(-1 * var(--deck-inset-tight));
+}
+
 /* Sections: the title in a row above the left part; the parts share the next
    row and start at the same line. The group is centred top to bottom. */
 .reveal section.split > .deck-stage[data-sections] {
@@ -390,8 +482,13 @@
 }
 
 /* With pictures, the parts' row takes the rest of the height for them to share. */
-.reveal section.split > .deck-stage[data-sections]:has(> .deck-half > :is(img, video, picture, .deck-chart, .deck-missing)) {
+.reveal section.split > .deck-stage[data-sections]:has(> .deck-half :is(img, video, picture, .deck-chart, .deck-missing)) {
   grid-template-rows: auto minmax(0, 1fr);
+}
+
+/* No background of its own: Reveal draws the panel, to the window's edges. */
+.reveal section.split[data-panel] > .deck-stage::before {
+  display: none;
 }
 
 /* Nothing for the second half: one column, no panel. */
@@ -401,24 +498,6 @@
 
 .reveal section.split > .deck-stage:has(> .deck-half:only-child)::before {
   display: none;
-}
-
-/* --- columns: one per heading --- */
-.reveal section.columns .deck-columns {
-  display: grid;
-  width: 100%;
-  grid-auto-columns: 1fr;
-  grid-auto-flow: column;
-  gap: var(--deck-space-xl);
-  text-align: left;
-}
-
-.reveal section.columns .deck-column {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--deck-space-s);
 }
 
 /* --- charts: the canvas fills its box --- */
