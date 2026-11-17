@@ -140,7 +140,10 @@
   max-width: calc(var(--deck-measure-prose) * 1.25);
   padding: 0;
   border: 0;
-  font-size: var(--deck-text-heading);
+  font-size: clamp(var(--deck-text-heading), 6cqi, var(--deck-text-subheading) * 1.5);
+  font-weight: var(--deck-weight-display);
+  line-height: var(--deck-leading-display);
+  letter-spacing: var(--deck-track-display);
   text-align: center;
 }
 
@@ -148,7 +151,7 @@
   content: "\201C";
   display: block;
   height: 0.6em;
-  font-size: 2.85em;
+  font-size: calc(var(--deck-text-heading) * 2.85);
   font-weight: var(--deck-weight-display);
   line-height: 1;
   color: var(--_theme-1);
