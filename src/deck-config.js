@@ -127,5 +127,13 @@
     };
   }
 
+  // Slides as [horizontal][vertical] text, split like Reveal's markdown plugin.
+  function deckSlides(markdown) {
+    return String(markdown)
+      .split(/\r?\n---\r?\n/)
+      .map(chunk => chunk.split(/\r?\n--\r?\n/).map(part => part.trim()));
+  }
+
   global.deckConfig = deckConfig;
+  global.deckSlides = deckSlides;
 })(globalThis);

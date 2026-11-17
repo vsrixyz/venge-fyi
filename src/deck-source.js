@@ -4,16 +4,6 @@
 (function (global) {
   'use strict';
 
-  // Same separators as deck-start.js.
-  const HORIZONTAL = /\r?\n---\r?\n/;
-  const VERTICAL = /\r?\n--\r?\n/;
-
-  function slidesOf(markdown) {
-    return markdown
-      .split(HORIZONTAL)
-      .map(chunk => chunk.split(VERTICAL).map(part => part.trim()));
-  }
-
   const MODIFIERS = ['dark', 'light', 'hide-eyebrow', 'tint'];
 
   function typeOf(section) {
@@ -45,7 +35,7 @@
 
   function deckSource(reveal, markdown) {
     const panel = buildPanel();
-    const slides = slidesOf(markdown || '');
+    const slides = global.deckSlides(markdown || '');
 
     const total = reveal.getTotalSlides();
     const count = panel.querySelector('.deck-source__count');
