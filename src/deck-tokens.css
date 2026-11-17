@@ -3,8 +3,8 @@
 
 :root {
   /* Colours. Set background, card and ink; the greys mix from them (below). */
-  --deck-background: #f7f5f2;
-  --deck-card: #fffdfa;
+  --deck-background: #ffffff;
+  --deck-card: #f7f5f2;
   --deck-ink: #1f1d1b;
 
   /* The palette: bullets, links, quotes, charts, backgrounds. */
@@ -42,7 +42,7 @@
   --deck-text-title: 200px;        /* # on a headline slide with headings only */
   --deck-text-headline: 144px;     /* # on a headline slide with text */
   --deck-text-subheading: 64px;    /* ## on a headline slide */
-  --deck-text-heading: 56px;       /* #/## on prose, cards, columns; quotes on a headline slide */
+  --deck-text-heading: 56px;       /* # on prose and sections; quotes on a headline slide */
   --deck-text-heading-small: 48px; /* #/## on a figure, and on split */
   --deck-text-body: 34px;
   --deck-text-small: 22px;         /* labels: ####, ### on a headline slide, table headers */

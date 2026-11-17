@@ -14,10 +14,10 @@
       .map(chunk => chunk.split(VERTICAL).map(part => part.trim()));
   }
 
-  const MODIFIERS = ['dark', 'light', 'hide-eyebrow', 'tint'];
+  const MODIFIERS = ['dark', 'light', 'hide-eyebrow', 'tint', 'cards', 'colors'];
 
   function typeOf(section) {
-    const types = ['grid', 'prose', 'split', 'cards', 'columns'];
+    const types = ['grid', 'prose', 'split'];
     let type = types.find(name => section.classList.contains(name)) || 'grid';
     // A grid slide shows the layout it found: headline, figure or image.
     const stage = section.querySelector(':scope > .deck-stage');

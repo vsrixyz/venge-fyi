@@ -43,6 +43,54 @@
   outline: 2px solid var(--_theme-1);
 }
 
+/* Each slide's number, bottom right like the page number, only in the overview. Sizes are in
+   slide px; the overview shrinks them. */
+.reveal .deck-number {
+  display: none;
+}
+
+.reveal.overview .deck-number {
+  display: block;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 16px 32px;
+  font-family: var(--deck-font-mono);
+  font-size: 80px;
+  line-height: 1;
+  color: var(--deck-background);
+  background: var(--deck-ink);
+}
+
+.reveal.overview section.present > .deck-number {
+  background: var(--deck-theme-1);
+}
+
+/* Reveal's jump box (G): type a slide number, then Enter. Bigger and centred. */
+.reveal .jump-to-slide {
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.reveal .jump-to-slide > .jump-to-slide-input {
+  width: 300px;
+  padding: 12px 20px;
+  font-family: var(--deck-font-mono);
+  font-size: 26px;
+  color: var(--deck-ink);
+  background: var(--deck-background);
+  border-radius: var(--deck-radius);
+  box-shadow: 0 12px 32px color-mix(in oklab, var(--deck-ink) 24%, transparent);
+}
+
+/* A sideways swipe never goes back a page. */
+html,
+body {
+  overscroll-behavior-x: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal-viewport:has(.reveal.overview),
   .reveal-viewport.reveal.overview {
@@ -160,4 +208,17 @@ body.source-hidden .deck-source { display: none; }
 
 .reveal .slide-number.is-first {
   visibility: hidden;
+}
+
+/* Sections past the tenth don't show. While the markdown panel is open, a
+   dotted red line marks a slide with content that isn't showing. Never printed. */
+body.has-source:not(.source-hidden) .reveal .slides section:has(> .deck-stage > .deck-section[hidden]) {
+  outline: 6px dotted #e5484d;
+  outline-offset: -12px;
+}
+
+@media print {
+  .reveal .slides section {
+    outline: none !important;
+  }
 }

@@ -166,7 +166,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
   'use strict';
 
   // A slide with no type is grid: it finds its own cells.
-  const LAYOUTS = ['grid', 'prose', 'split', 'cards', 'columns'];
+  const LAYOUTS = ['grid', 'prose', 'split'];
 
   const MEDIA =
     'img, picture, video, svg, iframe, canvas, [data-chart], ' +
@@ -255,12 +255,20 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     });
   }
 
+  const WARNING = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" ' +
+    'stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>' +
+    '<path d="M12 9v4M12 17h.01"/></svg>';
+
   // A failed image becomes a labelled box.
   function markMissing(img) {
     if (!img.isConnected) return;
     const box = el('div', 'deck-missing');
     const file = (img.getAttribute('src') || '').split('/').pop();
-    box.appendChild(el('span', 'deck-missing__title', 'Missing image'));
+    const icon = el('span', 'deck-missing__icon');
+    icon.setAttribute('aria-hidden', 'true');
+    icon.innerHTML = WARNING;
+    box.appendChild(icon);
+    box.appendChild(el('span', 'deck-missing__title', 'File not found'));
     if (file) box.appendChild(el('span', 'deck-missing__file', file));
     const alt = img.getAttribute('alt');
     if (alt) box.appendChild(el('span', 'deck-missing__alt', alt));
@@ -300,7 +308,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 
   // Columns per number of cells or pictures: on the whole slide, and in a half.
   const WHOLE = {1: 1, 2: 2, 3: 3, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 3, 10: 5};
-  const HALF = {1: 1, 2: 1, 3: 2, 4: 2, 5: 2, 6: 2, 7: 3, 8: 3, 9: 3};
+  const HALF = {1: 1, 2: 1, 3: 1, 4: 2, 5: 2, 6: 2, 7: 3, 8: 3, 9: 3};
   const columnsFor = (table, count) => table[count] || (table === WHOLE ? 4 : 3);
 
   // <!-- .cell: class="stack" --> → {class: 'stack'}
@@ -380,10 +388,55 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     }
   }
 
+  const MAX_SECTIONS = 10;
+
+  // Pictures written together are one group, wherever they are: a slide, a
+  // split half or a section. Text in the same paragraph is their caption.
+  function addPicture(group, node) {
+    if (!isCaptioned(node)) {
+      group.appendChild(boxChart(node));
+      return;
+    }
+    const item = el('div', 'deck-captioned');
+    Array.from(node.children)
+      .filter(kid => kid.matches(MEDIA))
+      .forEach(pic => item.appendChild(boxChart(pic)));
+    node.classList.add('deck-caption');
+    item.appendChild(node);
+    group.appendChild(item);
+  }
+
+  // A caption under all of a group's pictures captions the group; with
+  // several, each stays under its own picture. Then the count shape.
+  function settlePictures(group, table) {
+    const only = group.children.length === 1 && group.firstElementChild.matches('.deck-captioned');
+    if (only) {
+      const item = group.firstElementChild;
+      item.replaceWith(...item.childNodes);
+    }
+    const pictures = Array.from(group.children).filter(kid => !kid.matches('.deck-caption'));
+    const cols = group.classList.contains('stack') ? 1 : columnsFor(table, pictures.length);
+    place(group, pictures, cols);
+    group.dataset.count = String(pictures.length);
+  }
+
+  const isPicture = node => node.matches(MEDIA) || isCaptioned(node);
+
+  // A section's box: its own data-background-color; else `colors` gives the
+  // next theme colour and `cards` the card colour.
+  function boxColour(section, cell, i) {
+    const own = cell.getAttribute('data-background-color');
+    if (own) return own;
+    if (section.classList.contains('colors')) return `theme-${i % 5 + 1}`;
+    if (section.classList.contains('cards')) return 'card';
+    return '';
+  }
+
   function buildSections(section, stage, level) {
     const head = el('div', 'deck-head');
     const cells = [];
     let cell = null;
+    let group = null;
     let options = null;
 
     Array.from(stage.childNodes).forEach(node => {
@@ -399,22 +452,50 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
         if (!node.textContent.trim()) node.remove();
         return;
       }
+      // A .cell comment above a section's heading is for the section; above
+      // pictures, for that group of pictures.
       if (node.tagName === level) {
         cell = el('div', 'deck-cell deck-section');
-        if (section.classList.contains('cards')) cell.classList.add('deck-card');
         if (options) {
           applyOptions(cell, options);
           options = null;
         }
         liftFragment(node, cell);
         cells.push(cell);
+        group = null;
+      } else if (cell && isPicture(node)) {
+        if (!group) {
+          group = el('div', 'deck-pictures');
+          if (options) {
+            applyOptions(group, options);
+            options = null;
+          }
+          cell.appendChild(group);
+        }
+        addPicture(group, node);
+        return;
       }
+      group = null;
       (cell || head).appendChild(node.matches(MEDIA) ? boxChart(node) : node);
     });
 
+    cells.forEach(c => c.querySelectorAll(':scope > .deck-pictures').forEach(g => settlePictures(g, HALF)));
+
+    cells.forEach((c, i) => {
+      const name = boxColour(section, c, i);
+      if (!name) return;
+      c.setAttribute('data-background-color', name);
+      c.style.setProperty('--_box', COLOUR_NAMES[name] ? `var(${COLOUR_NAMES[name]})` : name);
+    });
+
     stage.dataset.shape = 'sections';
-    if (cells.some(c => c.querySelector(MEDIA))) stage.dataset.pictures = '';
-    place(stage, cells, columnsFor(WHOLE, cells.length));
+    // Past ten, sections stay in the markdown but don't show.
+    cells.slice(MAX_SECTIONS).forEach(c => { c.hidden = true; });
+    const shown = cells.slice(0, MAX_SECTIONS);
+    const cols = columnsFor(WHOLE, shown.length);
+    place(stage, shown, cols);
+    // Three rows or five across: smaller text, like a dashboard.
+    if (Math.ceil(shown.length / cols) >= 3 || cols >= 5) stage.dataset.dense = '';
     if (head.children.length) stage.appendChild(head);
     stage.append(...cells);
   }
@@ -430,23 +511,15 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       section.classList.replace('grid', 'prose');
       return;
     }
+    inferCells(stage, false);
+  }
 
+  // headline, figure or image, from what was written. In a split half,
+  // pictures take the half's shapes.
+  function inferCells(stage, inHalf) {
     const cells = [];
     let cell = null;
     let options = null;
-
-    const add = (node, kind) => {
-      if (!cell || cell.kind !== kind) {
-        cell = {kind, el: el('div', `deck-cell deck-${kind}`), count: 0};
-        cells.push(cell);
-      }
-      if (options) {
-        applyOptions(cell.el, options);
-        options = null;
-      }
-      cell.el.appendChild(node);
-      if (kind === 'pictures') cell.count += 1;
-    };
 
     Array.from(stage.childNodes).forEach(node => {
       if (node.nodeType === Node.COMMENT_NODE) {
@@ -461,50 +534,31 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
         if (!node.textContent.trim()) node.remove();
         return;
       }
-
-      // Text in the same paragraph as pictures is their caption.
-      if (isCaptioned(node)) {
-        const item = el('div', 'deck-captioned');
-        Array.from(node.children)
-          .filter(kid => kid.matches(MEDIA))
-          .forEach(pic => item.appendChild(boxChart(pic)));
-        node.classList.add('deck-caption');
-        item.appendChild(node);
-        add(item, 'pictures');
-        return;
+      const kind = isPicture(node) ? 'pictures' : 'text';
+      if (!cell || cell.kind !== kind) {
+        cell = {kind, el: el('div', `deck-cell deck-${kind}`)};
+        cells.push(cell);
       }
-
-      if (node.matches(MEDIA)) add(boxChart(node), 'pictures');
-      else add(node, 'text');
-    });
-
-    // A caption under all of a cell's pictures captions the group; with
-    // several, each stays under its own pictures.
-    cells.filter(c => c.kind === 'pictures').forEach(c => {
-      const only = c.el.children.length === 1 && c.el.firstElementChild.matches('.deck-captioned');
-      if (only) {
-        const item = c.el.firstElementChild;
-        item.replaceWith(...item.childNodes);
+      if (options) {
+        applyOptions(cell.el, options);
+        options = null;
       }
-      c.count = c.el.querySelectorAll(':scope > :not(.deck-caption)').length;
+      if (kind === 'pictures') addPicture(cell.el, node);
+      else cell.el.appendChild(node);
     });
 
     // headline: text only. image: pictures only. figure: text beside pictures.
     const shape = cells.length === 2 ? 'figure' : cells[0] && cells[0].kind === 'text' ? 'headline' : 'image';
     stage.dataset.shape = shape;
-    place(stage, cells.map(c => c.el), cells.length);
-
-    cells.forEach(c => {
-      if (c.kind === 'text') {
-        if (!c.el.querySelector(':scope > :not(h1, h2, h3, h4)')) c.el.dataset.headings = '';
-        return;
-      }
-      const pictures = Array.from(c.el.children).filter(kid => !kid.matches('.deck-caption'));
-      const cols = c.el.classList.contains('stack') ? 1
-        : columnsFor(shape === 'image' ? WHOLE : HALF, c.count);
-      place(c.el, pictures, cols);
-      c.el.dataset.count = String(c.count);
+    cells.filter(c => c.kind === 'text').forEach(c => {
+      if (!c.el.querySelector(':scope > :not(h1, h2, h3, h4)')) c.el.dataset.headings = '';
     });
+    // A figure whose text is only headings: a title above the pictures.
+    const titled = shape === 'figure' && cells.some(c => 'headings' in c.el.dataset);
+    place(stage, cells.map(c => c.el), titled ? 1 : cells.length);
+
+    const table = !inHalf && (shape === 'image' || titled) ? WHOLE : HALF;
+    cells.filter(c => c.kind === 'pictures').forEach(c => settlePictures(c.el, table));
 
     stage.append(...cells.map(c => c.el));
   }
@@ -527,24 +581,21 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     }
     // A dark or light slide with no background of its own: Reveal draws it, full bleed.
     if (OWN_BACKGROUND.some(attr => section.hasAttribute(attr))) return;
+    // split: the tinted right half too, to the window's edges.
+    if (section.classList.contains('split') && section.querySelectorAll(':scope > .deck-stage > .deck-half').length > 1) {
+      section.dataset.panel = '';
+      const side = section.classList.contains('dark') ? 'dark-' : section.classList.contains('light') ? '' : null;
+      const bg = side === null ? 'var(--_bg)' : `var(--deck-${side}background)`;
+      const card = side === null ? 'var(--_card)' : `var(--deck-${side}card)`;
+      section.setAttribute('data-background-gradient',
+        `linear-gradient(to right, transparent 50%, ${card} 50%), linear-gradient(${bg}, ${bg})`);
+      return;
+    }
     if (section.classList.contains('dark')) {
       section.setAttribute('data-background-color', 'var(--deck-dark-background)');
     } else if (section.classList.contains('light')) {
       section.setAttribute('data-background-color', 'var(--deck-background)');
     }
-  }
-
-  // Columns: the smallest heading on the slide (### if there is one, else ##)
-  // starts each part. Anything before the first stays on top.
-  function sections(stage, partClass) {
-    const level = stage.querySelector(':scope > h3') ? 'H3' : 'H2';
-    const parts = [];
-    let current = null;
-    Array.from(stage.children).forEach(child => {
-      if (child.tagName === level) parts.push((current = el('div', partClass)));
-      if (current) current.appendChild(child);
-    });
-    return parts;
   }
 
   // split: the first part on one side, the rest on the other. With sibling
@@ -575,36 +626,38 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     const kids = Array.from(stage.children);
     const level = sectionLevel(stage);
     const cut = splitAt(stage, kids, level);
+    const start = level ? Math.max(kids.findIndex(kid => kid.tagName === level), 0) : 0;
+    const head = el('div', 'deck-head');
     const first = el('div', 'deck-half');
     const rest = el('div', 'deck-half');
 
+    // Each node goes where its element goes; a .cell comment goes with the next one.
+    let pending = [];
+    Array.from(stage.childNodes).forEach(node => {
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        pending.push(node);
+        return;
+      }
+      const i = kids.indexOf(node);
+      const into = i < start ? head : i < cut ? first : rest;
+      into.append(...pending, node);
+      pending = [];
+    });
+
     // Sections are siblings: a title goes in a row above them, and the two
     // parts share a row so their headings line up.
-    if (level) {
-      stage.dataset.sections = '';
-      const start = kids.findIndex(kid => kid.tagName === level);
-      if (start > 0) {
-        const head = el('div', 'deck-head');
-        head.append(...kids.slice(0, start));
-        stage.appendChild(head);
-      }
-      first.append(...kids.slice(Math.max(start, 0), cut));
-    } else {
-      first.append(...kids.slice(0, cut));
-    }
-    rest.append(...kids.slice(cut));
+    if (level) stage.dataset.sections = '';
+    if (head.children.length) stage.appendChild(head);
     stage.appendChild(first);
     if (rest.children.length) stage.appendChild(rest);
-  }
 
-  function buildColumns(stage) {
-    if (stage.querySelector(':scope > .deck-columns')) return;
-
-    const columns = sections(stage, 'deck-column');
-    const row = el('div', 'deck-columns');
-    row.dataset.count = String(columns.length);
-    row.append(...columns);
-    stage.appendChild(row);
+    // A half of only text is a headline; only pictures, an image. Both: a column.
+    // Sections in a split are parallel parts: columns, so their headings line up.
+    if (level) return;
+    [first, rest].forEach(half => {
+      const kids = Array.from(half.children);
+      if (kids.length && (kids.every(isPicture) || !kids.some(isPicture))) inferCells(half, true);
+    });
   }
 
   const INLINE = 'strong, em, code, span, a, b, i, mark, small, sub, sup';
@@ -664,14 +717,31 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       case 'split':
         buildSplit(stage);
         break;
-      case 'cards':
-        buildGrid(section, stage);
-        break;
-      case 'columns':
-        buildColumns(stage);
-        break;
     }
 
+    if (!isBuilt) settleEyebrow(section, stage);
+  }
+
+  // Above left-aligned text, the eyebrow joins it, right above its first
+  // heading. Not inside a card, column or section cell.
+  function settleEyebrow(section, stage) {
+    const eyebrow = section.querySelector(':scope > .deck-eyebrow');
+    const heading = stage.querySelector('h1, h2, h3, h4');
+    if (!eyebrow || !heading || heading.closest('.deck-section')) return;
+    const align = getComputedStyle(heading).textAlign;
+    if (align !== 'left' && align !== 'start') return;
+
+    // Split parts: above both, so their headings stay on one line.
+    if (heading.parentElement.matches('.deck-half') && 'sections' in stage.dataset) {
+      let head = stage.querySelector(':scope > .deck-head');
+      if (!head) {
+        head = el('div', 'deck-head');
+        stage.prepend(head);
+      }
+      head.prepend(eyebrow);
+      return;
+    }
+    heading.before(eyebrow);
   }
 
   // Sections: lower the text size in steps until the slide fits, down to
@@ -679,20 +749,89 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
   // measured, so each is fitted the first time it shows.
   const FIT_FLOOR = 0.65;
 
+  // Reveal's r-fit-text fills the width only. In a part, also keep it inside
+  // the part's height: the text takes whatever the part has left.
+  const PROBE = 100;
+
+  function fitBoxes(section) {
+    if (!section) return;
+    section.querySelectorAll('.deck-section > .r-fit-text').forEach(text => {
+      const part = text.parentElement;
+      if (!part.clientHeight) return;
+      const style = getComputedStyle(part);
+      const px = name => parseFloat(style[name]) || 0;
+      const width = part.clientWidth - px('paddingLeft') - px('paddingRight');
+      const height = part.clientHeight - px('paddingTop') - px('paddingBottom');
+      const others = Array.from(part.children).filter(kid => kid !== text);
+      const used = others.reduce((sum, kid) => sum + kid.offsetHeight + px('rowGap'), 0);
+      text.style.fontSize = PROBE + 'px';
+      const scale = Math.min(width / text.offsetWidth, (height - used) / text.offsetHeight);
+      text.style.fontSize = Math.max(0, Math.floor(PROBE * scale)) + 'px';
+    });
+  }
+
+  // After Reveal has sized r-fit-text (a frame after the slide loads).
+  const afterReveal = fn => requestAnimationFrame(() => requestAnimationFrame(fn));
+
+  // Sections with pictures: rows fit their content. If the slide is too tall,
+  // cap the pictures' height, then shrink the text.
+  const PICTURE_FLOOR = 120;
+
+  // How far the content runs past the stage's padding, in slide px.
+  function excessOf(stage) {
+    const box = stage.getBoundingClientRect();
+    const scale = box.height / stage.offsetHeight || 1;
+    const kids = Array.from(stage.children).filter(kid => !kid.hidden);
+    const bottom = Math.max(...kids.map(kid => kid.getBoundingClientRect().bottom));
+    const limit = box.bottom - (parseFloat(getComputedStyle(stage).paddingBottom) || 0) * scale;
+    return (bottom - limit) / scale;
+  }
+
+  function fitPictures(stage) {
+    stage.style.removeProperty('--_pic-max');
+    const pictures = Array.from(stage.querySelectorAll(
+      ':scope > .deck-section .deck-pictures :is(img, video, picture, .deck-chart, .deck-missing)'));
+    if (!pictures.length) return;
+    const rows = parseInt(stage.style.getPropertyValue('--_rows'), 10) || 1;
+    for (let i = 0; i < 4 && excessOf(stage) > 1; i++) {
+      const tallest = Math.max(...pictures.map(p => p.offsetHeight));
+      const excess = excessOf(stage);
+      stage.style.setProperty('--_pic-max', Math.max(PICTURE_FLOOR, Math.floor(tallest - excess / rows)) + 'px');
+    }
+  }
+
   function fitSlide(section) {
+    fitBoxes(section);
     const stage = section && section.querySelector(':scope > .deck-stage[data-shape="sections"]');
     if (!stage || stage.dataset.fit || !stage.clientHeight) return;
+    fitPictures(stage);
     let fit = 1;
-    while (stage.scrollHeight > stage.clientHeight + 1 && fit > FIT_FLOOR) {
+    while (excessOf(stage) > 1 && fit > FIT_FLOOR) {
       fit = Math.max(FIT_FLOOR, fit - 0.05);
       stage.style.setProperty('--_fit', fit.toFixed(2));
     }
     stage.dataset.fit = fit.toFixed(2);
+    fitBoxes(section);
   }
 
   function watchFit(reveal, root) {
     const fitAll = () => leafSlides(root).forEach(fitSlide);
-    reveal.on('slidechanged', event => fitSlide(event.currentSlide));
+    reveal.on('slidechanged', event => {
+      fitSlide(event.currentSlide);
+      afterReveal(() => fitBoxes(event.currentSlide));
+    });
+    reveal.on('overviewshown', () => afterReveal(() => leafSlides(root).forEach(fitBoxes)));
+    // A picture that loads later changes the height: fit its slide again.
+    root.querySelectorAll('.deck-stage[data-shape="sections"] img').forEach(img => {
+      if (img.complete) return;
+      img.addEventListener('load', () => {
+        const stage = img.closest('.deck-stage');
+        delete stage.dataset.fit;
+        stage.style.removeProperty('--_fit');
+        fitSlide(stage.parentElement);
+      }, {once: true});
+    });
+    afterReveal(() => fitBoxes(reveal.getCurrentSlide()));
     fitAll();
     if (document.fonts) document.fonts.ready.then(() => {
       leafSlides(root).forEach(section => {
@@ -737,6 +876,32 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     update();
   }
 
+  // Overview: a sideways swipe or a scroll moves through the slides instead of
+  // going back a page. Each slide shows its number.
+  const WHEEL_STEP = 60;
+  const WHEEL_PAUSE = 90;
+
+  function watchOverview(reveal, root) {
+    leafSlides(root).forEach((section, i) => {
+      const number = el('span', 'deck-number', String(i + 1));
+      number.setAttribute('aria-hidden', 'true');
+      section.appendChild(number);
+    });
+
+    let travel = 0;
+    let quietUntil = 0;
+    document.addEventListener('wheel', event => {
+      if (!reveal.isOverview()) return;
+      event.preventDefault();
+      const sideways = Math.abs(event.deltaX) > Math.abs(event.deltaY);
+      travel += sideways ? event.deltaX : event.deltaY;
+      if (Math.abs(travel) < WHEEL_STEP || event.timeStamp < quietUntil) return;
+      if (travel > 0) reveal.next(); else reveal.prev();
+      travel = 0;
+      quietUntil = event.timeStamp + WHEEL_PAUSE;
+    }, {passive: false});
+  }
+
   function deckChrome(reveal) {
     const root = document.querySelector('.reveal');
     if (!root) return;
@@ -757,6 +922,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     watchScroll(reveal);
     watchSlideNumber(reveal, root);
     watchFit(reveal, root);
+    watchOverview(reveal, root);
   }
 
   global.deckChrome = deckChrome;
@@ -1047,10 +1213,10 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       .map(chunk => chunk.split(VERTICAL).map(part => part.trim()));
   }
 
-  const MODIFIERS = ['dark', 'light', 'hide-eyebrow', 'tint'];
+  const MODIFIERS = ['dark', 'light', 'hide-eyebrow', 'tint', 'cards', 'colors'];
 
   function typeOf(section) {
-    const types = ['grid', 'prose', 'split', 'cards', 'columns'];
+    const types = ['grid', 'prose', 'split'];
     let type = types.find(name => section.classList.contains(name)) || 'grid';
     // A grid slide shows the layout it found: headline, figure or image.
     const stage = section.querySelector(':scope > .deck-stage');
