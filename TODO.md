@@ -2,7 +2,7 @@
 
 ## Next
 
-- [ ] **Build the editor.** `npm run edit <deck.md>`: markdown, live preview and a slide strip in the browser, saved as you type. Plan: `notes/editor-design.md`.
+- [ ] **Finish the editor.** Built on the `editor` branch: `npm run edit`, markdown with the current slide boxed, live preview drawn in the browser, saved as you type. Still to do: the slide strip, then a version with no install. Plan: `notes/editor-design.md`.
 - [ ] **Add Reveal's speaker view.** `Note:` text is parsed but never shown. Vendor the notes plugin at Reveal 5.2.0, record its license, turn it on in `src/deck-start.js`, and document the `S` key in `docs/reference.md`.
 - [ ] **Merge `grid-v1` into `main`.** It has the grid code, `docs/grid-design.md` and the example decks. Not pushed. Once it's merged, `claude/grid-design-2afdd8` (early notes and the prototype) can go.
 

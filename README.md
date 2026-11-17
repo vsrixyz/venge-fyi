@@ -16,6 +16,12 @@ npm run build examples/glou-glou/glou-glou.md
 
 Builds a deck into `build/glou-glou/`. Open its `index.html` from disk or upload the folder anywhere.
 
+```bash
+npm run edit examples/glou-glou/glou-glou.md
+```
+
+Opens the deck in an editor at http://localhost:8090, with a live preview. It saves as you type.
+
 ## Use it on a site
 
 Either build each deck with the command above, or copy `dist/` to your site and add a page next to your `deck.md`:

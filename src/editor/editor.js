@@ -8,15 +8,25 @@ const note = document.querySelector('.note');
 const count = document.querySelector('.count');
 const type = document.querySelector('.type');
 
-const file = new URLSearchParams(location.search).get('deck');
-const deckUrl = file && new URL(file, location.origin);
-const runtime = new URL('/dist/', location.origin).href;
+// Served by `venge-fyi edit`: the deck's folder at /, our files under /_/.
+const SOURCE = '/_/source';
+const runtime = new URL('/_/dist/', location.origin).href;
+const base = new URL('/', location.origin).href;
 
 let preview = null;
 let timer = null;
 let groups = [];
 let current = null;
 let wheeling = false;
+let etag = null;
+let saving = false;
+let unsaved = false;
+const problems = {deck: '', save: ''};
+
+function showProblem(kind, message) {
+  problems[kind] = message;
+  note.textContent = problems.save || problems.deck;
+}
 
 // Runs of lines that belong to one slide, or to a separator between slides.
 // Same separators as the deck: a line of --- or --. Front matter counts as the first slide.
@@ -106,7 +116,11 @@ function topGap() {
   return parseFloat(getComputedStyle(text).paddingTop);
 }
 
+// Typing during a glide stops it, so input resumes it until it lands.
+let gliding = null;
+
 function glide(group) {
+  gliding = group.key;
   text.scrollTo({top: group.el.offsetTop - topGap(), behavior: 'smooth'});
 }
 
@@ -162,15 +176,15 @@ async function render() {
   let deck;
   try {
     deck = deckConfig(text.value);
-    note.textContent = '';
+    showProblem('deck', '');
   } catch (error) {
-    note.textContent = error.message;
+    showProblem('deck', error.message);
     return;
   }
   // The text box is the source, so the deck's own panel stays off.
   deck.source = false;
   const html = renderDeck(deck, {runtime})
-    .replace('<head>', `<head>\n<base href="${new URL('.', deckUrl).href}" />`);
+    .replace('<head>', `<head>\n<base href="${base}" />`);
 
   const frame = document.createElement('iframe');
   frame.className = 'loading';
@@ -196,16 +210,15 @@ async function render() {
 }
 
 async function open() {
-  if (!file) {
-    note.textContent = 'No deck. Open this page with ?deck=/examples/glou-glou/glou-glou.md';
-    return;
-  }
-  document.querySelector('.path').textContent = file;
-  const response = await fetch(deckUrl, {cache: 'no-store'});
+  const response = await fetch(SOURCE, {cache: 'no-store'});
   if (!response.ok) {
-    note.textContent = `${response.status} loading ${file}`;
+    note.textContent = `${response.status} loading the deck. Start the editor with npm run edit.`;
     return;
   }
+  etag = response.headers.get('ETag');
+  const name = decodeURIComponent(response.headers.get('X-Deck-File') || '');
+  document.querySelector('.path').textContent = name;
+  document.title = `${name} · Editor`;
   text.value = await response.text();
   text.setSelectionRange(0, 0);
   text.focus();
@@ -214,11 +227,40 @@ async function open() {
   render();
 }
 
+// One save at a time; typing during a save saves again after it.
+async function save() {
+  if (saving) return;
+  saving = true;
+  while (unsaved) {
+    unsaved = false;
+    let response;
+    try {
+      response = await fetch(SOURCE, {method: 'PUT', headers: {'If-Match': etag}, body: text.value});
+    } catch {
+      showProblem('save', 'Not saved: the editor server is not running. Your text is still here.');
+      break;
+    }
+    if (!response.ok) {
+      showProblem('save', `Not saved: ${await response.text()}`);
+      break;
+    }
+    etag = response.headers.get('ETag');
+    showProblem('save', '');
+  }
+  saving = false;
+}
+
 text.addEventListener('input', () => {
   drawBackdrop();
   setCurrent(caretGroup(), true);
+  const target = gliding && groups.find(g => g.kind === 'slide' && g.key === gliding);
+  if (target) requestAnimationFrame(() => glide(target));
   clearTimeout(timer);
-  timer = setTimeout(render, 300);
+  timer = setTimeout(() => {
+    unsaved = true;
+    save();
+    render();
+  }, 300);
 });
 
 document.addEventListener('selectionchange', () => {
@@ -232,6 +274,8 @@ text.addEventListener('scroll', () => {
 // Scrolling by hand: the slide that comes to rest nearest the top becomes current.
 text.addEventListener('wheel', () => { wheeling = true; }, {passive: true});
 text.addEventListener('scrollend', () => {
+  const target = gliding && groups.find(g => g.kind === 'slide' && g.key === gliding);
+  if (target && Math.abs(text.scrollTop - (target.el.offsetTop - topGap())) < 2) gliding = null;
   if (!wheeling) return;
   wheeling = false;
   const top = text.scrollTop + topGap();

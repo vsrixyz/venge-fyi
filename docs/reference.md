@@ -59,6 +59,12 @@ public/my-talk/
 
 The CLI copies every local file the markdown links (images, video, CSV, a theme path). Those files must be inside the deck's folder. A linked file that doesn't exist is a warning, not an error.
 
+```bash
+npx venge-fyi edit deck.md
+```
+
+Opens an editor at http://localhost:8090: the markdown on the left, the deck on the right. The slide you're on sits in a box at the top of the markdown; click, scroll or change slide in the preview to move it. Your typing is saved to `deck.md` about 300 ms after you stop. If the file changes on disk in the meantime, the editor doesn't overwrite it: it says so, and you reload the page. Set `PORT` to use another port.
+
 ### 3. From code
 
 For a site builder that makes its own pages, such as Eleventy:
@@ -491,6 +497,12 @@ npm run build examples/glou-glou/glou-glou.md
 Builds a deck from this repo with the CLI, into `build/glou-glou/`. Open its `index.html` from disk.
 
 ```bash
+npm run edit examples/glou-glou/glou-glou.md
+```
+
+Opens that deck in the editor at http://localhost:8090. It saves to the file as you type.
+
+```bash
 npm test
 ```
 
@@ -506,6 +518,7 @@ Rebuilds `dist/` from `src/` and `vendor/`. `deck.js` and `deck.css` are the fil
 | --- | --- |
 | `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides), `deck-charts.js`, `deck-source.js` (markdown panel), `deck-start.js` (starts it all). CSS: `deck-tokens.css` (the base theme), `deck-layouts.css` (where cells and blocks go on each slide type), `deck-elements.css` (how text, lists, code, tables and cards look), `deck-page.css` (the panel, overview, load errors) |
 | `src/themes/` | Built-in themes: `dark`, `signal` |
+| `src/editor/` | The editor page, served by `venge-fyi edit` (`lib/edit.js`) |
 | `lib/`, `bin/` | The CLI and the dev server's renderer |
 | `vendor/` | Third-party files, unchanged |
 | `examples/` | `glou-glou` (every slide type and option; the test deck), `story-ads` (a real deck) |

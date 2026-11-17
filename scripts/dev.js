@@ -5,17 +5,11 @@ import path from 'node:path';
 import {root, writeDist} from '../lib/dist.js';
 import {prepare} from '../lib/build.js';
 import {renderDeck} from '../lib/render.js';
+import {contentType} from '../lib/types.js';
 
 const port = Number(process.env.PORT) || 8080;
 const examples = path.join(root, 'examples');
 
-const TYPES = {
-  '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript',
-  '.md': 'text/markdown; charset=utf-8', '.csv': 'text/csv', '.json': 'application/json',
-  '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif', '.webp': 'image/webp', '.avif': 'image/avif',
-  '.mp4': 'video/mp4', '.webm': 'video/webm'
-};
 
 const RELOAD = `<script>new EventSource('/__reload').onmessage = () => location.reload();</script>`;
 
@@ -110,7 +104,7 @@ function handle(req, res) {
     req.on('close', () => clients.delete(res));
     return;
   }
-  if (pathname === '/') return send(res, 200, listPage(), TYPES['.html']);
+  if (pathname === '/') return send(res, 200, listPage(), contentType('.html'));
 
   const file = path.join(root, pathname);
   if (!file.startsWith(root + path.sep)) return send(res, 403, 'Forbidden');
@@ -132,18 +126,17 @@ function handle(req, res) {
       try {
         const {deck, csv} = prepare(md, message => console.warn(`${path.relative(root, md)}: ${message}`));
         const html = renderDeck(deck, {runtime: '/dist/', csv});
-        return send(res, 200, withReload(html), TYPES['.html']);
+        return send(res, 200, withReload(html), contentType('.html'));
       } catch (error) {
         return send(res, 500, `${path.relative(root, md)}: ${error.message}`);
       }
     }
     const index = path.join(file, 'index.html');
     if (!fs.existsSync(index)) return send(res, 404, 'Not found');
-    return send(res, 200, withReload(fs.readFileSync(index, 'utf8')), TYPES['.html']);
+    return send(res, 200, withReload(fs.readFileSync(index, 'utf8')), contentType('.html'));
   }
 
-  const type = TYPES[path.extname(file).toLowerCase()] || 'application/octet-stream';
-  send(res, 200, fs.readFileSync(file), type);
+  send(res, 200, fs.readFileSync(file), contentType(file));
 }
 
 writeDist();
