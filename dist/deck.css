@@ -262,8 +262,8 @@ footer, header, hgroup, main, menu, nav, section {
   --_h-size: clamp(64px, 9cqi, var(--deck-text-headline));
 }
 
-/* Headings only (a title or a section break): # goes up to title size. */
-.reveal [data-shape="headline"] > .deck-text[data-headings] {
+/* Headings only (a title or a section break): a short # goes up to title size. */
+.reveal [data-shape="headline"] > .deck-text[data-headings]:not([data-long]) {
   --_h-size: clamp(80px, 12cqi, var(--deck-text-title));
   gap: var(--deck-space-xl);
 

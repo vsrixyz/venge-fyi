@@ -374,6 +374,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
   }
 
   const MAX_SECTIONS = 10;
+  const TITLE_LENGTH = 30;
 
   // Pictures written together are one group, wherever they are: a slide, a
   // split half or a section. Text in the same paragraph is their caption.
@@ -563,6 +564,9 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     stage.dataset.shape = shape;
     cells.filter(c => c.kind === 'text').forEach(c => {
       if (!c.el.querySelector(':scope > :not(h1, h2, h3, h4)')) c.el.dataset.headings = '';
+      // A # longer than a short title is a sentence: headline size, not title size.
+      const long = Array.from(c.el.querySelectorAll(':scope > h1')).some(h => h.textContent.trim().length > TITLE_LENGTH);
+      if (long) c.el.dataset.long = '';
     });
     // A figure whose text is only headings: a title above the pictures.
     const titled = shape === 'figure' && cells.some(c => 'headings' in c.el.dataset);

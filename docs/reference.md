@@ -178,7 +178,7 @@ A slide with no class is `grid`: the slide finds its own shape. Text and picture
 
 ### Headline
 
-Only text. It sits in the middle, as big as the slide allows. `#` is headline size, or title size when the slide has only headings. `##` is the subheading size. A `>` quote gets a big quote mark.
+Only text. It sits in the middle, as big as the slide allows. `#` is headline size, or title size when the slide has only headings and the `#` is 30 characters or fewer. A longer one is a sentence, so it stays headline size. `##` is the subheading size. A `>` quote gets a big quote mark.
 
 ### Image
 
