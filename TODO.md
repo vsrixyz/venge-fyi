@@ -56,6 +56,11 @@ Fixed: a finding written as a `>` quote ("No top or recent title in the scan men
 
 Newest first. What changed and why, one entry per working session.
 
+### 2026-11-19: cards from a list (`editor`)
+
+- **`cards` on a list:** a `cards` slide with no repeated headings had nothing to turn into cards, so a plain bulleted list stayed a list. Now a list that ends the slide becomes the clusters, one card per item, with anything above it as the title. A `.element` comment on an item (a fill, `card`, `fragment`) goes to its card. Two ways to write clusters is on purpose: a simple list should be enough.
+- **Not extended:** `colors` still needs headings. Checked in the browser by V, not by Claude.
+
 ### 2026-11-17: content framework example (`main`, uncommitted)
 
 - **New deck:** `examples/content-framework/content-framework.md`, the Inter core messaging framework (v2), copied unchanged from `inter.md`.

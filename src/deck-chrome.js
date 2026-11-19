@@ -286,7 +286,42 @@
     });
 
     cells.forEach(c => c.querySelectorAll(':scope > .deck-pictures').forEach(g => settlePictures(g, HALF)));
+    settleSections(section, stage, head, cells);
+  }
 
+  // cards with no sections: a list that ends the slide makes one section per item.
+  function buildListSections(section, stage) {
+    const kids = Array.from(stage.children);
+    const list = kids[kids.length - 1];
+    if (!list || !list.matches('ul, ol') || kids.some(kid => kid !== list && kid.matches('ul, ol'))) return false;
+
+    const head = el('div', 'deck-head');
+    kids.slice(0, -1).forEach(kid => head.appendChild(kid));
+    const cells = Array.from(list.children).map(item => {
+      const cell = el('div', item.className);
+      cell.classList.add('deck-cell', 'deck-section');
+      Array.from(item.attributes).forEach(a => { if (a.name !== 'class') cell.setAttribute(a.name, a.value); });
+      // The item's own text becomes a paragraph; nested lists stay as they are.
+      let para = null;
+      Array.from(item.childNodes).forEach(node => {
+        if (node.nodeType === Node.COMMENT_NODE) return;
+        if (node.nodeType === Node.ELEMENT_NODE && !node.matches(INLINE)) {
+          para = null;
+          cell.appendChild(node);
+          return;
+        }
+        if (!para && !node.textContent.trim()) return;
+        if (!para) para = cell.appendChild(el('p'));
+        para.appendChild(node);
+      });
+      return cell;
+    });
+    list.remove();
+    settleSections(section, stage, head, cells);
+    return true;
+  }
+
+  function settleSections(section, stage, head, cells) {
     // cards: every cluster is a card. colors: each the next theme colour, unless it has its own.
     cells.forEach((c, i) => {
       if (section.classList.contains('cards')) c.classList.add('card');
@@ -314,6 +349,7 @@
       buildSections(section, stage, level);
       return;
     }
+    if (section.classList.contains('cards') && buildListSections(section, stage)) return;
     if (takesTurns(stage)) {
       section.classList.replace('grid', 'prose');
       return;

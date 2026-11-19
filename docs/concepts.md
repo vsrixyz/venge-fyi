@@ -199,7 +199,7 @@ A class changes how something looks. It's written in an HTML comment, and where 
 A `<!-- .slide: class="…" -->` comment at the top of a slide changes the whole slide.
 
 - `split` and `prose`: the two layouts you ask for.
-- `cards`: makes every cluster a card.
+- `cards`: makes every cluster a card. On a slide with no clusters, each item of a list that ends the slide is one.
 - `colors`: fills every cluster, each in the next theme colour.
 
 ### Modifiers

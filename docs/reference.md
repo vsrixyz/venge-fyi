@@ -205,12 +205,12 @@ A fragment on a section's heading brings in only the heading. To bring in the wh
 
 **Cards and fills.** A card is an outline with padding and rounded corners. A fill is a background colour, also with padding. They are separate, so a section can be either or both.
 
-- `<!-- .slide: class="cards" -->` makes every section a card.
+- `<!-- .slide: class="cards" -->` makes every section a card. On a slide with no sections, a list that ends the slide becomes the sections instead: one card per item, with anything above the list as the title.
 - `<!-- .slide: class="colors" -->` fills every section, each in the next theme colour: `theme-1` to `theme-5`, then `theme-1` again.
 - `<!-- .cluster: class="card" -->` above one section's heading makes that section a card.
 - `<!-- .cluster: data-background-color="theme-2" -->` above one section's heading fills that section, in any colour a slide background takes. It wins over `colors`.
 
-When any section is a card or filled, every section on the slide takes the same padding, so the headings stay on one line. `card` and `data-background-color` also work on one line, with `<!-- .element: … -->`.
+When any section is a card or filled, every section on the slide takes the same padding, so the headings stay on one line. `card` and `data-background-color` also work on one line, with `<!-- .element: … -->`. On a list item that becomes a card, they go to the card.
 
 Text keeps its colour on every fill for now.
 
@@ -308,7 +308,7 @@ Modifiers go in the slide's `class="…"`, next to its type:
 | `dark` | any slide | Makes this slide dark. See [Light and dark](#light-and-dark). |
 | `light` | any slide | Makes this slide light on a dark deck. |
 | `tint` | any slide | Shows the slide's background photo in its `data-background-color`: the photo's light and dark, in that colour. `data-background-opacity` sets how strong the photo is. |
-| `cards` | a slide with [sections](#sections) | Makes each section a card: an outline with padding |
+| `cards` | a slide with [sections](#sections), or ending in a list | Makes each section a card: an outline with padding. With no sections, each item of the last list is one |
 | `colors` | a slide with [sections](#sections) | Fills each section in the next theme colour |
 
 ### When content doesn't fit
