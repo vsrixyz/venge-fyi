@@ -118,3 +118,58 @@ body {
   background: var(--ed-panel);
 }
 .stage iframe.loading { visibility: hidden; }
+
+/* Slide navigation */
+.strip {
+  display: flex;
+  flex: 0 0 7.5rem;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0.25rem 0.5rem;
+  scrollbar-width: thin;
+}
+.slide-thumb {
+  display: flex;
+  flex: 0 0 10.5rem;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 0.25rem;
+  border: 1px solid var(--ed-line);
+  border-radius: 6px;
+  color: var(--ed-soft);
+  background: var(--ed-panel);
+  font: inherit;
+  cursor: pointer;
+}
+.slide-thumb:hover, .slide-thumb:focus-visible { border-color: var(--ed-soft); }
+.slide-thumb.current {
+  border-color: var(--deck-theme-1);
+  box-shadow: inset 0 0 0 1px var(--deck-theme-1);
+}
+.thumb-viewport {
+  position: relative;
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--ed-panel);
+}
+.thumb-viewport iframe {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 1920px;
+  height: 1080px;
+  border: 0;
+  transform: scale(0.0833333333);
+  transform-origin: top left;
+  pointer-events: none;
+}
+.thumb-label {
+  display: block;
+  text-align: left;
+  font-size: 0.7rem;
+}

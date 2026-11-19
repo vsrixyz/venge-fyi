@@ -2,49 +2,55 @@
 
 ## Next
 
-- [ ] **Finish the editor.** Built on the `editor` branch: `npm run edit`, markdown with the current slide boxed, live preview drawn in the browser, saved as you type. Still to do: the slide strip, then a version with no install. Plan: `notes/editor-design.md`.
+- [ ] **Finish the editor.** Built so far: `npm run venge` (library) and `npm run edit`, markdown with the current slide boxed, live preview drawn in the browser, saved as you type, and a horizontal slide strip. Still to do: the deck settings pane, Add slide picker, then a version with no install. Plan: `notes/editor-design.md`.
 - [ ] **Add Reveal's speaker view.** `Note:` text is parsed but never shown. Vendor the notes plugin at Reveal 5.2.0, record its license, turn it on in `src/deck-start.js`, and document the `S` key in `docs/reference.md`.
-- [ ] **Merge `grid-v1` into `main`.** It has the grid code, `docs/grid-design.md` and the example decks. Not pushed. Once it's merged, `claude/grid-design-2afdd8` (early notes and the prototype) can go.
+- [ ] **Delete old branches.** `grid-v1` and `new-slide-model` are merged into `main`. `claude/grid-design-2afdd8` has five design-note commits that never reached `main`; check them against `notes/grid-design.md` first.
 
-## QA: grid-v1
+## Layout QA
 
-Found while checking the example decks. Notes only; nothing built yet.
+Found while checking the example decks.
 
-- [ ] **Pictures touch the eyebrow.** The eyebrow sits above the layout (32–54px from the top) and content starts at 64px, so pictures nearly touch it and `bleed` runs under it. Idea: on slides with an eyebrow, push the content down about 32px. Decide whether `bleed` should stop below it too.
-- [x] **No heading over a group of pictures.** On a grid slide, a `##` after the text joins the text cell; the picture cell can't hold a heading. The fix is designed in `notes/grid-design.md` ("Headings as cell markers": two or more `##` make one cell per `##`) but not built.
-- [x] **split: pictures run off the bottom.** Three pictures under a `##` in a split half stack full width at full size, and the third is cut off. The docs say split is text only, but nothing stops pictures, and "a slide type is a container" says it should hold them.
-- [ ] **image: 3 and 5 pictures leave too much space top to bottom.** Rows split the slide's height equally, and wide pictures are shown whole inside each cell, so each one floats in a tall cell with empty bands above and below. With 5, the gap between the rows is as big as a picture. Idea: size rows to the pictures and centre the whole group on the slide.
-- [ ] **Sections: pictures leave a band under them.** A picture under a heading takes its row's share of height and sits at the top, so short pictures leave empty space below (a sections slide with one picture under each heading).
-- [x] **Move `columns` onto sections.** `notes/grid-design.md`: `columns` puts every cell in one row. (`split` is done.)
-- [ ] **cards: the title should sit higher.** The title and the cards are centred together as one block, so with one row of cards the title floats in the middle of the slide. Wanted: the title near the top.
-- [ ] **Heading sizes feel off; `#` should be bigger.** Outside headline slides, `#` and `##` are the same size (`--deck-text-heading`, 56px), so a `#` title on cards looks no bigger than a prose heading. Check the whole heading scale across slide types.
-- [ ] **Bug: the dev server doesn't pick up `lib/` changes.** `scripts/dev.js` rebuilds `dist/` when `src/` changes, but `lib/render.js` and the front matter reader (`src/deck-config.js`, run once at start) stay as they were. A new front matter option does nothing until `npm run dev` is restarted, and nothing says so.
-- [ ] **Bug: `data-count` counts tiles, not pictures.** With one caption per picture, `deck-pictures` gets the number of tiles. The docs say it's the number of pictures. They differ when one captioned paragraph holds several pictures.
+- [ ] **The eyebrow and the content.** Above a left-aligned heading it now sits in the text. Everywhere else it is top centre, outside the layout, and content starts just under it, so pictures nearly touch it and `bleed` runs under it. Options: push the content down on slides with an eyebrow, or move it to a footer. Not rechecked since the eyebrow became a marked line.
+- [ ] **Sections: the title should sit higher.** The title and the sections are centred together, so with one row of cards the title floats in the middle of the slide. Wanted: the title near the top.
+- [ ] **Heading sizes feel off; `#` should be bigger.** Outside headline slides, `#` is `--deck-text-heading` (56px), so a `#` title over sections looks no bigger than a prose heading. Check the whole heading scale across layouts.
+- [ ] **Cards run almost to the slide edges?** About 40px from each side, where other layouts keep `--deck-inset-x` (128px). Found on the old `cards` layout; not rechecked on sections with `cards`.
 - [ ] **Bug: on `split`, per-picture captions overflow.** Two pictures with their own captions in one half share its height without counting the captions, so the last caption runs off the bottom (`examples/focus-mode`, "Decisions, decisions").
-- [ ] **Bug? Cards run almost to the slide edges.** About 40px from each side; other slide types keep `--deck-inset-x` (128px).
-- [ ] **The eyebrow sits too close to the content.** On split it also straddles the line where the second half's card colour starts, so it reads as part of neither half. Options: move it higher, or make it a footer item at the bottom of the slide. (Goes with "Pictures touch the eyebrow" above.)
-
+- [ ] **Bug: `data-count` counts tiles, not pictures.** With one caption per picture, `deck-pictures` gets the number of tiles. The docs say it's the number of pictures. They differ when one captioned paragraph holds several pictures.
+- [ ] **Bug: the dev server doesn't pick up `lib/` changes.** `scripts/dev.js` rebuilds `dist/` when `src/` or `vendor/` changes, but `lib/render.js` and the front matter reader (`src/deck-config.js`) are loaded once at start. A new front matter option does nothing until `npm run dev` is restarted, and nothing says so.
 - [ ] **One way to fit content.** Today "too much on the slide" is handled six ways: the text shrink on sections, the picture cap on sections, the CSS height cap on picture groups, text that scales with cell width, the 9–10 "dense" step, and the `r-fit-text` box fit, each with its own numbers. Think through one fit step that every layout uses.
+
+## Prompt QA
+
+The longform prompt (`docs/longform-prompt.md`) is an output of this project, beside the editor and the built decks: someone pastes long writing and gets a deck that uses only our layouts and options. First test: `examples/substack-landscape/`, made from a brand-research write-up. Slides 1–17 were checked in a browser; 18–28 weren't.
+
+- [ ] **Check slides 18–28 of `examples/substack-landscape/`** in Chrome Dev.
+- [ ] **The headline count doesn't match the list.** "Six topics perform well" lists five; the sixth is only in the notes. The prompt's checklist doesn't catch it.
+- [ ] **A slide with no headline.** The Free / Paid split states its point only in the notes.
+- [ ] **A split with an empty half.** "The liver appears in no title in the scan" is a heading alone on the left; it should be the headline above both halves.
+- [ ] **Extra front matter.** The model kept Obsidian's `date-created` and `date-modified`. Harmless, but the prompt says not to.
+- [ ] **On `split`, `##` reads barely bigger than body text.** Fix the prompt (steer splits to `#`) or the heading scale; see "Heading sizes feel off" above.
+- [ ] **Test more sources.** One deck is not a test: try a short essay, a document with images, one with a table of numbers, and one in another language.
+
+Fixed: a finding written as a `>` quote ("No top or recent title in the scan mentions…"). The prompt now keeps `>` for words someone actually said or wrote.
 
 ## Missing from the goal
 
 - [ ] **PDF output.** There's no command for it yet. See `notes/slide-layout-lessons.md` §3.12: one page per slide, captured from the screen layout.
-- [ ] **A prompt that turns a long narrative into a deck.** A core goal beside the editor: someone pastes long-form writing, and the prompt splits it into slides and picks the right type for each one, using only our types and options. Keep this in mind while designing: the rules for choosing a type should be plain enough to write down in `docs/reference.md` and hand to a model.
 - [ ] **Whole-website output.** Decide if this is still wanted. Today a build is one deck folder.
 
 ## Later
 
+- [ ] **Layout names clash.** The `image` layout clashes with "image" (anything not text), and the `sections` layout and `deck-section` clash with "cluster". Pick new names.
+- [ ] **A better light/dark.** `dark` mostly means "make the text light", and there's no real light mode. Rethink both names and what they do.
+- [ ] **Prose stretches to its content.** Instead of scrolling inside the frame, a prose slide grows as tall as its text.
 - [ ] **Go through `notes/slide-layout-lessons.md`.** Check which "Copy" lessons the CSS already follows, then pick which of the rest to do.
 - [ ] **Audit the base CSS and tokens for excess.** Do this before writing more themes.
 - [ ] **Detailed theming.** Two themes so far: `dark` and `signal`.
-- [ ] **Some WYSIWYG editing.**
-- [ ] **A better light/dark.** `dark` mostly means "make the text light", and there's no real light mode. Rethink both names and what they do.
-- [ ] **Prose stretches to its content.** Instead of scrolling inside the frame, a prose slide grows as tall as its text.
-- [ ] **The markdown source (M) should look like the editor.** Today the panel and the editor show the markdown differently.
-- [ ] **Layout names clash.** The `image` layout clashes with "image" (anything not text), and the `sections` layout and `deck-section` clash with "cluster". Pick new names.
-- [ ] **Make adding elements to slides easier in the editor.** Slide and picture options are HTML comments (`<!-- .slide: class="dark" -->`, `<!-- .cluster: class="stack" -->`), and one slip, such as a missing colon, quietly does nothing. How to make this easier is not decided.
-- [ ] **Replay chart animations.** Charts animate once, the first time their slide comes into view (`src/deck-charts.js`). Replay it each time the slide is shown.
-- [ ] **Step through chart data.** Reveal a chart one series or one bar per click, like fragments.
+- [ ] **Editor: the markdown source (M) should look like the editor.** Today the panel and the editor show the markdown differently.
+- [ ] **Editor: make slide and cluster options easier to add.** They are HTML comments (`<!-- .slide: class="dark" -->`, `<!-- .cluster: class="stack" -->`), and one slip, such as a missing colon, quietly does nothing. How is not decided.
+- [ ] **Editor: some WYSIWYG editing.**
+- [ ] **Charts: replay the animation.** Charts animate once, the first time their slide comes into view (`src/deck-charts.js`). Replay it each time the slide is shown.
+- [ ] **Charts: step through the data.** Reveal a chart one series or one bar per click, like fragments.
 
 ## Log
 
@@ -72,10 +78,18 @@ Went through every concept in the docs and the code looking for collisions and f
 
 - **Why:** the docs mixed `npx venge-fyi` and `npm run venge`. `venge` is taken on npm by someone else's package, so `npx venge` would run their code. `vengeslides` was free (checked, not reserved; `venge-fyi` was never published).
 - **Package and command:** both are `vengeslides`, so `npx vengeslides`, `npx vengeslides edit talk.md`, `npx vengeslides build talk.md`. The CLI is `bin/vengeslides.js`. The `npm run venge`, `edit` and `build` scripts in this repo keep their names.
-- **Repo:** GitHub is `vsrixyz/vengeslides` (the old address forwards), the folder is `~/dev/vengeslides`. `~/dev/venge-fyi-editor` and the `grid-design` worktree were left with the old name.
+- **Repo:** GitHub is `vsrixyz/vengeslides` (the old address forwards), the folder is `~/dev/vengeslides`. The `grid-design` worktree was left with the old name. `~/dev/venge-fyi-editor` is an empty leftover holding only `.claude/`.
 - **Docs:** `docs/reference.md`, `notes/editor-design.md`, tests and code comments use the new name.
 
-### 2026-11-17: editor library (`editor` branch)
+### 2026-11-17: editor merged, extra folder removed (`main`, `8d76093`, `a8cee96`)
+
+- **Merged:** the `editor` branch went into `main`, then `new-slide-model` was merged on top (`8d76093`). `~/dev/venge-fyi` went back to being on `main`.
+- **Cleaned up:** `~/dev/venge-fyi-editor` was only ever meant to be temporary, so it and the `editor` branch were deleted. Its uncommitted `inter-content` deck moved into `examples/`. Its `package-lock.json` and its test edits to glou-glou were dropped.
+- **Pushed:** `main` went to GitHub with the `inter-content` deck and the `CLAUDE.md` edits (`a8cee96`). The push was 35–40 MiB at about 100 KiB/s, so it took about 6 minutes. Most of the size is the `focus-mode` images (about 8 MB; `fork-in-the-road.gif` alone is 4.2 MB) and `dist/deck.js` (1.1 MB), which was committed five times.
+
+### 2026-11-17: editor library (`main`, `a97ebce`)
+
+Built in a second session started from the editor work, and merged into `main` the same morning.
 
 - **Start it:** `npm run venge` in this repo, or `npx vengeslides` with no file in any folder. Opens a library at http://localhost:8090.
 - **Library:** a card for every `.md` that starts with front matter under the folder it runs in (skipping `node_modules`, `build`, dot-folders). Same cards as the `npm run dev` gallery, now shared in `lib/library.js`.
@@ -83,13 +97,15 @@ Went through every concept in the docs and the code looking for collisions and f
 - **Server:** serves the whole library folder, refuses anything outside it, and only reads or saves `.md` files.
 - **Decided:** `npm run dev` stays separate (working on the package itself). The mock-up's `slide` and `theme` rail buttons are not built.
 
-### 2026-11-16: editor, first version (`editor` branch)
+### 2026-11-16: editor, first version (`1063193` to `1785313`, merged into `main` 2026-11-17)
 
-Built in its own folder, `~/dev/venge-fyi-editor`, on the `editor` branch, so the work on `main` could go on alongside. Not merged yet.
+Built in a second folder, `~/dev/venge-fyi-editor` (a git worktree on the `editor` branch), so the work on `main` could go on alongside in another session. Started from the Figma mock-ups and `notes/editor-design.md`. The long-term goal is an editor that runs in the browser with no install, so the first steps were chosen to carry over to that.
 
 - **Start it:** `npm run edit examples/glou-glou/glou-glou.md`, then open http://localhost:8090.
 - **Text and preview:** markdown on the left, the deck on the right. The preview is drawn in the browser from the text, not by the server. That's the first step towards a version with no install. A redraw takes about 55 ms on a 22-slide deck.
 - **Current slide in a box:** the slide you're on is framed at the top of the markdown with a "Slide n of N · type" header. The rest is dimmed. Clicking, scrolling or changing slide in the preview glides the right slide into the box.
 - **Saving:** typing is saved to the file about 300 ms after you stop. If the file changed on disk, the editor won't overwrite it and says so.
-- **Under the hood:** `renderDeck()` moved to `lib/page.js` so the browser can run it. Slide splitting is shared (`deckSlides()`), so the editor and the M panel agree.
+- **Under the hood:** `renderDeck()` moved to `lib/page.js` so the browser can run it. Slide splitting is shared (`deckSlides()`), so the editor and the M panel agree. The current-slide box is drawn on a layer under a see-through text box, which is still the browser's own (no editor library). The server is `lib/edit.js`, and the content types are shared with `npm run dev` in `lib/types.js`.
+- **Tests:** saving round-trips the file, a file changed on disk isn't overwritten, paths outside the folder are refused, and a missing deck gives a clear error.
+- **Fixed along the way:** typing straight after a click stopped the glide halfway; the glide now finishes. The saving commit broke `npm run dev`: `contentType('.html')` reads `.html` as a hidden file with no extension, so pages were sent as unknown files. It was fixed with `contentType('page.html')`.
 - **Open questions:** whether the preview changing as you scroll is distracting, since you might want to scroll without changing slide. The mock-up's slide strip, deck panel and slide-type buttons are not built.

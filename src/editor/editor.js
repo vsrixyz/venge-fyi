@@ -4,6 +4,7 @@ import {renderDeck} from '../../lib/page.js';
 const text = document.querySelector('.text');
 const backdrop = document.querySelector('.backdrop');
 const stage = document.querySelector('.stage');
+const strip = document.querySelector('.strip');
 const note = document.querySelector('.note');
 const count = document.querySelector('.count');
 const type = document.querySelector('.type');
@@ -19,6 +20,7 @@ let preview = null;
 let timer = null;
 let groups = [];
 let current = null;
+let stripItems = [];
 let wheeling = false;
 let etag = null;
 let saving = false;
@@ -136,6 +138,112 @@ function showHeader() {
     : win.deckSlideType ? win.deckSlideType(preview.getCurrentSlide()) : '';
 }
 
+function markStripSlide(h, v) {
+  let selected = null;
+  stripItems.forEach(item => {
+    const active = item.h === h && item.v === (v || 0);
+    item.button.classList.toggle('current', active);
+    if (active) {
+      item.button.setAttribute('aria-current', 'true');
+      selected = item.button;
+    } else {
+      item.button.removeAttribute('aria-current');
+    }
+  });
+  if (!selected) return;
+  const itemRect = selected.getBoundingClientRect();
+  const stripRect = strip.getBoundingClientRect();
+  if (itemRect.left < stripRect.left) {
+    strip.scrollLeft += itemRect.left - stripRect.left;
+  } else if (itemRect.right > stripRect.right) {
+    strip.scrollLeft += itemRect.right - stripRect.right;
+  }
+}
+
+function fillThumbnail(frame, slide) {
+  const sourceDoc = stage.querySelector('iframe:not(.loading)').contentDocument;
+  const doc = frame.contentDocument;
+  doc.open();
+  doc.write('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body></body></html>');
+  doc.close();
+
+  const baseTag = doc.createElement('base');
+  baseTag.href = sourceDoc.querySelector('base')?.href || base;
+  doc.head.append(baseTag);
+  sourceDoc.head.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
+    doc.head.append(node.cloneNode(true));
+  });
+  const styles = doc.createElement('style');
+  styles.textContent = `
+    html, body { width: 1920px !important; height: 1080px !important; margin: 0 !important; overflow: hidden !important; }
+    body { background: var(--deck-background) !important; }
+    .reveal { position: relative !important; inset: auto !important; width: 1920px !important; height: 1080px !important; margin: 0 !important; overflow: hidden !important; }
+    .reveal .slides { position: relative !important; inset: auto !important; width: 1920px !important; height: 1080px !important; transform: none !important; overflow: hidden !important; }
+    .reveal .slides section { display: block !important; position: absolute !important; inset: 0 !important; width: 1920px !important; height: 1080px !important; opacity: 1 !important; visibility: visible !important; transform: none !important; }
+  `;
+  doc.head.append(styles);
+
+  const root = doc.createElement('div');
+  root.className = 'reveal deck-ready';
+  const slides = doc.createElement('div');
+  slides.className = 'slides';
+  root.append(slides);
+  doc.body.append(root);
+
+  const clone = slide.cloneNode(true);
+  clone.classList.remove('past', 'present', 'future', 'stack');
+  clone.style.cssText = '';
+  clone.removeAttribute('data-index-h');
+  clone.removeAttribute('data-index-v');
+  clone.removeAttribute('data-index');
+  const canvases = slide.querySelectorAll('canvas');
+  clone.querySelectorAll('canvas').forEach((canvas, index) => {
+    const image = doc.createElement('img');
+    try {
+      image.src = canvases[index].toDataURL();
+    } catch (error) {
+      console.error('Could not copy a chart into its slide thumbnail.', error);
+      return;
+    }
+    image.width = canvases[index].width;
+    image.height = canvases[index].height;
+    image.style.cssText = canvases[index].style.cssText;
+    canvas.replaceWith(image);
+  });
+  slides.append(clone);
+}
+
+function drawStrip(reveal) {
+  stripItems = reveal.getSlides().map((slide, index) => {
+    const {h, v = 0} = reveal.getIndices(slide);
+    const button = document.createElement('button');
+    button.className = 'slide-thumb';
+    button.type = 'button';
+    button.setAttribute('aria-label', `Go to slide ${index + 1}`);
+
+    const viewport = document.createElement('span');
+    viewport.className = 'thumb-viewport';
+    const frame = document.createElement('iframe');
+    frame.title = '';
+    frame.tabIndex = -1;
+    frame.setAttribute('aria-hidden', 'true');
+    viewport.append(frame);
+    const label = document.createElement('span');
+    label.className = 'thumb-label';
+    label.textContent = `Slide ${index + 1}`;
+    button.append(viewport, label);
+    button.addEventListener('click', () => {
+      reveal.slide(h, v);
+      followPreview(reveal);
+    });
+    strip.append(button);
+    fillThumbnail(frame, slide);
+    return {h, v, button};
+  });
+  const indices = reveal.getIndices();
+  markStripSlide(indices.h, indices.v);
+}
+
 function setCurrent(group, move) {
   if (!group) return;
   const changed = group.key !== current;
@@ -144,6 +252,7 @@ function setCurrent(group, move) {
   if (preview) {
     const now = preview.getIndices();
     if (now.h !== group.h || (now.v || 0) !== group.v) preview.slide(group.h, group.v);
+    markStripSlide(group.h, group.v);
   }
   showHeader();
   if (changed && move) glide(group);
@@ -206,6 +315,8 @@ async function render() {
   frame.classList.remove('loading');
   preview = reveal;
   if (reveal) {
+    strip.replaceChildren();
+    drawStrip(reveal);
     reveal.on('slidechanged', () => followPreview(reveal));
     setCurrent(groups.find(g => g.kind === 'slide' && g.key === current) || caretGroup(), false);
   }

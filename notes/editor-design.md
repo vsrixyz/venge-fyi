@@ -71,7 +71,7 @@ This is tooling, so it fails loudly (see CLAUDE.md). Slides still never show war
 ## Unverified
 
 - Whether reloading the preview on every save is fast enough. It should be for a 13-slide deck. Measure on `examples/story-ads`.
-- Whether copying slides for the strip looks right, especially with charts, images still loading, and themes. This is the riskiest part. If it doesn't work, the fallback is one small preview per slide, which is heavier.
+- **Verified:** slide thumbnails copy the rendered slides, including chart canvases as images. Checked on `examples/glou-glou` with 81 slides and 14 charts.
 - Whether `npm run edit <file>` passes the file through on every npm version. It works on npm 11.
 - Separators inside code blocks: a `---` line in a fenced code block. Check what Reveal does and match it.
 

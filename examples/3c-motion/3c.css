@@ -1,0 +1,55 @@
+/* Test theme for the 3c motion rebuild. A 960×700 canvas, centred. */
+.reveal .c3 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  aspect-ratio: 960 / 700;
+  translate: -50% 0;
+  container-type: size;
+  font-family: "Overpass", "Helvetica Neue", Arial, sans-serif;
+  font-size: 4cqh;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.reveal .c3 > * { position: absolute; margin: 0; }
+.reveal .c3-circle { border-radius: 50%; }
+
+.reveal section .c3 :is(p, h1, h2) {
+  margin: 0;
+  max-width: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: 1em;
+  line-height: inherit;
+}
+.reveal section .c3 :is(h1, h2) {
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.reveal section .c3 h1 { font-size: 3.77em; }
+.reveal section .c3 h2 { font-size: 2.11em; }
+.reveal section .c3 strong { color: inherit; font-weight: 700; }
+.reveal section .c3 p + p { margin-top: 1em; }
+
+/* Lines: stroke only, drawn on when they first appear. */
+.reveal .c3-line svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.reveal .c3-line path { fill: none; stroke: currentColor; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.reveal .c3-line defs path { fill: currentColor; stroke: none; }
+.reveal section.present .c3-line[data-auto-animate-target^="unmatched"] > svg > path {
+  stroke-dasharray: 1;
+  animation: c3-draw 0.5s ease both;
+  animation-delay: calc(0.6s + var(--i, 0) * 0.08s);
+}
+@keyframes c3-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+/* Slides.com-style entrances. An animation, not a transition: hidden slides are display: none. */
+.reveal section.present .c3 [data-enter] { animation: c3-enter 0.6s ease both; }
+.reveal .c3 [data-enter="slide-down"] { --from: 0 -40px; }
+.reveal .c3 [data-enter="slide-up"] { --from: 0 40px; }
+.reveal .c3 [data-enter="slide-left"] { --from: 40px 0; }
+@keyframes c3-enter { from { opacity: 0; translate: var(--from); } }
