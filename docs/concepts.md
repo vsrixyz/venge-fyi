@@ -200,7 +200,7 @@ A `<!-- .slide: class="…" -->` comment at the top of a slide changes the whole
 
 - `split` and `prose`: the two layouts you ask for.
 - `cards`: makes every cluster a card. On a slide with no clusters, each item of a list that ends the slide is one.
-- `colors`: fills every cluster, each in the next theme colour.
+- `spectrum`: fills every cluster, each in the next theme colour.
 
 ### Modifiers
 Slide classes that change the look but not the layout.
@@ -208,7 +208,7 @@ Slide classes that change the look but not the layout.
 - `dark`: a dark background with light text.
 - `light`: a light slide in a dark deck.
 - `tint`: shows the background photo in the slide's background colour.
-- `cards` and `colors`, above.
+- `cards` and `spectrum`, above.
 
 ### Cluster classes
 A `<!-- .cluster: … -->` comment on the line right above a cluster changes the whole cluster.
@@ -269,7 +269,7 @@ A theme is the set of choices you change together to change how a deck looks: ty
 Each choice in a theme is a token, a CSS variable starting with `--deck-`, such as `--deck-theme-1` or `--deck-font-base`. A theme only sets the tokens it changes.
 
 ### Theme colours
-Five colours, `theme-1` to `theme-5`, used for links, charts, `colors` and backgrounds.
+Five colours, `theme-1` to `theme-5`, used for links, charts, `spectrum` and backgrounds.
 
 ### Accent
 `accent` in the front matter sets `theme-1` for one deck, without writing a theme.

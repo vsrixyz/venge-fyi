@@ -1,0 +1,26 @@
+/* The sidebar, shared by the editor and the library. Tabs read bottom to top. */
+.rail { display: flex; flex-direction: column; gap: 0.75rem; }
+.tab {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  min-height: 3.25rem;
+  padding: 0.5rem 0;
+  border: 1px solid color-mix(in oklab, currentColor 30%, transparent);
+  border-radius: 3px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: inherit;
+  font: 600 11px/1 var(--deck-font-base);
+  text-decoration: none;
+}
+a.tab[href]:hover, a.tab[href]:focus-visible { background: color-mix(in oklab, currentColor 10%, transparent); }
+a.tab:not([href]) { opacity: 0.6; }
+.logo {
+  --logo: #d9404a;
+  border-color: var(--logo);
+  color: var(--logo);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}

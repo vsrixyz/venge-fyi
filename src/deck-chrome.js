@@ -6,7 +6,7 @@
 
   // A slide with no type is grid: it finds its own cells.
   const LAYOUTS = ['grid', 'prose', 'split'];
-  const MODIFIERS = ['dark', 'light', 'tint', 'cards', 'colors'];
+  const MODIFIERS = ['dark', 'light', 'tint', 'cards', 'spectrum'];
 
   const MEDIA =
     'img, picture, video, svg, iframe, canvas, [data-chart], ' +
@@ -332,10 +332,10 @@
   }
 
   function settleSections(section, stage, head, cells) {
-    // cards: every cluster is a card. colors: each the next theme colour, unless it has its own.
+    // cards: every cluster is a card. spectrum: each the next theme colour, unless it has its own.
     cells.forEach((c, i) => {
       if (section.classList.contains('cards')) c.classList.add('card');
-      if (section.classList.contains('colors') && !c.hasAttribute('data-background-color')) {
+      if (section.classList.contains('spectrum') && !c.hasAttribute('data-background-color')) {
         c.setAttribute('data-background-color', `theme-${i % 5 + 1}`);
       }
     });

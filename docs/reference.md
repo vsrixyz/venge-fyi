@@ -71,7 +71,9 @@ npx vengeslides edit deck.md
 
 Opens `deck.md` straight in the editor; the address to open is printed. The deck must be in the folder you run it in, or beneath it.
 
-The editor has the deck on the left and the markdown on the right, with a rail on the far left whose `<` goes back to the library. The front matter folds open in a Deck box above the slides, and each slide has its own box: click into one to show that slide, or change slide in the preview to bring its box into view. Typing a `---` line in a box splits it in two. Hover a box for its delete button and, on its lower edge, a + that adds a slide after it. Outside a text box (Esc leaves one), M slides the markdown out and back, ← → ↑ ↓ change slide and Esc shows every slide. Your typing is saved to `deck.md` about 300 ms after you stop. If the file changes on disk in the meantime, the editor doesn't overwrite it: it says so, and you reload the page. Set `PORT` to use another port.
+The editor has the deck on the left and the markdown on the right, with a sidebar on the far left: the VENGE mark, then a library tab that goes back to the library (saving first). The library page has the same sidebar. The front matter folds open in a Deck box above the slides, and each slide has its own box: click into one to show that slide, or change slide in the preview to bring its box into view. Typing a `---` line in a box splits it in two. Inside a box, ↓ at the very end goes to the next slide and ↑ at the very start to the one before, so the boxes read like one document. Hover a box for its delete button and, on its lower edge, a + that adds a slide after it. The pane's header stays at the top, with Top to scroll back up.
+
+The toolbar under the preview sets the current slide's options by writing its `<!-- .slide: -->` line, which stays in the box: Auto, Split or Prose; Colour (Default is the theme's background, or a theme colour); Image (a link, or Upload, which copies the file into `assets/` beside the deck, adding -2 to the name if a different file has it); Tint, once there's an image; and Cards and Spectrum, on a slide with sections. Outside a text box (Esc leaves one), M slides the markdown out and back, ← → ↑ ↓ change slide and Esc shows every slide. Your typing is saved to `deck.md` about 300 ms after you stop. If the file changes on disk in the meantime, the editor doesn't overwrite it: it says so, and you reload the page. Set `PORT` to use another port.
 
 ### 3. From code
 
@@ -204,9 +206,9 @@ A fragment on a section's heading brings in only the heading. To bring in the wh
 **Cards and fills.** A card is an outline with padding and rounded corners. A fill is a background colour, also with padding. They are separate, so a section can be either or both.
 
 - `<!-- .slide: class="cards" -->` makes every section a card. On a slide with no sections, a list that ends the slide becomes the sections instead: one card per item, with anything above the list as the title.
-- `<!-- .slide: class="colors" -->` fills every section, each in the next theme colour: `theme-1` to `theme-5`, then `theme-1` again.
+- `<!-- .slide: class="spectrum" -->` fills every section, each in the next theme colour: `theme-1` to `theme-5`, then `theme-1` again.
 - `<!-- .cluster: class="card" -->` above one section's heading makes that section a card.
-- `<!-- .cluster: data-background-color="theme-2" -->` above one section's heading fills that section, in any colour a slide background takes. It wins over `colors`.
+- `<!-- .cluster: data-background-color="theme-2" -->` above one section's heading fills that section, in any colour a slide background takes. It wins over `spectrum`.
 
 When any section is a card or filled, every section on the slide takes the same padding, so the headings stay on one line. `card` and `data-background-color` also work on one line, with `<!-- .element: … -->`. On a list item that becomes a card, they go to the card.
 
@@ -307,7 +309,7 @@ Modifiers go in the slide's `class="…"`, next to its type:
 | `light` | any slide | Makes this slide light on a dark deck. |
 | `tint` | any slide | Shows the slide's background photo in its `data-background-color`: the photo's light and dark, in that colour. `data-background-opacity` sets how strong the photo is. |
 | `cards` | a slide with [sections](#sections), or ending in a list | Makes each section a card: an outline with padding. With no sections, each item of the last list is one |
-| `colors` | a slide with [sections](#sections) | Fills each section in the next theme colour |
+| `spectrum` | a slide with [sections](#sections) | Fills each section in the next theme colour |
 
 ### When content doesn't fit
 

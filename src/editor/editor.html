@@ -5,11 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Editor</title>
 <link rel="stylesheet" href="../deck-tokens.css" />
+<link rel="stylesheet" href="rail.css" />
 <link rel="stylesheet" href="editor.css" />
 </head>
 <body>
 <nav class="rail">
-  <a class="back" href="/" title="Library" aria-label="Library">&lt;</a>
+  <span class="tab logo">VENGE</span>
+  <a class="tab" href="/">library</a>
+  <a class="tab" aria-disabled="true">themes</a>
 </nav>
 <main class="view">
   <header class="bar">
@@ -18,8 +21,14 @@
     <span class="count"></span>
   </header>
   <div class="stage"></div>
+  <div class="toolbar" role="toolbar" aria-label="Slide options"></div>
+  <div class="tool-panel" popover></div>
 </main>
 <section class="source" aria-label="Markdown">
+  <header class="pane-head">
+    <span>Slides</span>
+    <button type="button" class="to-top">Top <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 10l4-4 4 4"/></svg></button>
+  </header>
   <div class="source-scroll">
     <details class="card front">
       <summary><span>Deck</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></summary>

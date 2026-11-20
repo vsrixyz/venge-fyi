@@ -566,7 +566,7 @@ Nothing runs off the edge.
 
 ---
 
-<!-- .slide: class="colors" -->
+<!-- .slide: class="spectrum" -->
 
 ## Dashboard
 
@@ -581,7 +581,7 @@ Nothing runs off the edge.
 
 ---
 
-<!-- .slide: class="cards colors" -->
+<!-- .slide: class="cards spectrum" -->
 
 ## Five cards
 
@@ -922,7 +922,7 @@ March <!-- .element: class="r-fit-text" -->
 
 ---
 
-<!-- .slide: class="colors" -->
+<!-- .slide: class="spectrum" -->
 
 ## Dashboard in colour
 
@@ -944,7 +944,7 @@ March <!-- .element: class="r-fit-text" -->
 
 ---
 
-<!-- .slide: class="cards colors" -->
+<!-- .slide: class="cards spectrum" -->
 
 ## Five colours, then again
 

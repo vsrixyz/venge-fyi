@@ -34,6 +34,7 @@ The deck settings panel, the "Add slide" picker, slide-type buttons (dark, prose
 - Outside the text, ← → ↑ ↓ and Esc reach the preview, and M slides the markdown out and back.
 - The front matter folds open in a Deck box above the slides, and each slide is its own box (its own text field), so the cursor is always inside one slide. Separators and the blank lines around them live between boxes and are joined back exactly on save.
 - Each box has delete in its header and a + on its lower edge to add a slide after it.
+- A toolbar under the preview edits the current slide's `.slide:` line: layout, colour, image (link or upload to `assets/`, via `POST /_/asset`), tint (only with an image), cards and spectrum (only with sections). Each button is an icon over a word.
 - Changing slide in the preview moves the cursor to the start of that slide's text.
 
 ## How it works

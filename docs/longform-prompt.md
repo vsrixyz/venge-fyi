@@ -69,7 +69,7 @@ Big numbers in sections:
 - `---` on its own line, with a blank line above and below, starts a new slide. Don't use `--` (vertical slides).
 - Slide classes go in one comment at the top of the slide: `<!-- .slide: class="split dark" -->`.
   - `dark` gives that slide light text on a dark background. Use it now and then for openers and big claims, not on every slide.
-  - `cards` puts an outline around each section. `colors` fills each section with a theme colour.
+  - `cards` puts an outline around each section. `spectrum` fills each section with the next theme colour.
 - Eyebrow: a small label at the top, for a part name or a date. Put `<!-- .element: class="eyebrow" -->` at the end of the line.
 - `>` is only for words a named person or source actually said or wrote, copied exactly. A strong claim of your own is a `#` headline, not a quote.
 - Pictures: `![alt text](path)`. Use only image paths that appear in the source, exactly as written. Never invent an image file. A line right under a picture, with no blank line between, is its caption.

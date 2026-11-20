@@ -117,7 +117,8 @@ function drawSlides(focusAt) {
     area.value = slide.body;
     area.setAttribute('aria-label', `Slide ${i + 1}`);
     area.addEventListener('focus', () => setCurrent(i));
-    area.addEventListener('input', () => edited(i, area));
+    area.addEventListener('keydown', event => leaveBox(event, i, area));
+    area.addEventListener('input', () => { edited(i, area); refreshToolbar(); });
     const add = document.createElement('button');
     add.type = 'button';
     add.className = 'add';
@@ -163,6 +164,7 @@ function setCurrent(i, scroll) {
     if (now.h !== h || (now.v || 0) !== v) preview.slide(h, v);
   }
   showCount();
+  refreshToolbar();
   if (scroll) all[i].scrollIntoView({block: 'start'});
 }
 
@@ -203,6 +205,21 @@ function addSlide(i) {
   drawSlides({index: i + 1, caret: 0});
   setCurrent(i + 1);
   changed();
+}
+
+// Like one document: ↓ at the end of a box goes to the next slide, ↑ at its start to the one before.
+function leaveBox(event, i, area) {
+  if (event.shiftKey || event.metaKey || event.ctrlKey || event.altKey) return;
+  if (area.selectionStart !== area.selectionEnd) return;
+  const down = event.key === 'ArrowDown' && area.selectionEnd === area.value.length && i < slides.length - 1;
+  const up = event.key === 'ArrowUp' && area.selectionStart === 0 && i > 0;
+  if (!down && !up) return;
+  event.preventDefault();
+  const next = boxes()[down ? i + 1 : i - 1].querySelector('textarea');
+  next.focus({preventScroll: true});
+  const at = down ? 0 : next.value.length;
+  next.setSelectionRange(at, at);
+  setCurrent(down ? i + 1 : i - 1, true);
 }
 
 // The only slide is emptied instead. A column's first slide passes its --- to the next.
@@ -284,6 +301,228 @@ async function render() {
   }
 }
 
+// --- Toolbar: the current slide's options, written into its <!-- .slide: --> line.
+
+const toolbar = document.querySelector('.toolbar');
+const LINE = /<!--\s*\.slide:\s*([\s\S]*?)\s*-->/;
+const LAYOUTS = ['grid', 'split', 'prose'];
+const COLOURS = ['theme-1', 'theme-2', 'theme-3', 'theme-4', 'theme-5', 'card', 'ink'];
+const ICONS = {
+  auto: '<path d="M2.5 3.5h11v9h-11z"/><path d="M5 6.5h6M5 9.5h4"/>',
+  split: '<path d="M2.5 3.5h11v9h-11zM8 3.5v9"/>',
+  prose: '<path d="M4 4h8M4 6.7h8M4 9.4h8M4 12h5"/>',
+  image: '<path d="M2.5 3.5h11v9h-11z"/><path d="M2.5 10.5l3-3 3 3 2-2 3 3"/><circle cx="10.5" cy="6" r="1"/>',
+  tint: '<path d="M8 2.5c2.2 2.6 3.5 4.6 3.5 6.3a3.5 3.5 0 0 1-7 0c0-1.7 1.3-3.7 3.5-6.3z"/>',
+  cards: '<rect x="2" y="4" width="5" height="8" rx="1.3"/><rect x="9" y="4" width="5" height="8" rx="1.3"/>',
+  spectrum: '<path d="M3 3.5v9M6.3 3.5v9M9.7 3.5v9M13 3.5v9"/>'
+};
+
+function slideLine(body) {
+  const match = body.match(LINE);
+  const attrs = [];
+  if (match) {
+    for (const [, name, value] of match[1].matchAll(/([\w-]+)(?:\s*=\s*"([^"]*)")?/g)) attrs.push([name, value ?? null]);
+  }
+  return {match, attrs};
+}
+
+const attr = (attrs, name) => attrs.find(([key]) => key === name)?.[1] ?? null;
+const classesOf = attrs => (attr(attrs, 'class') || '').split(/\s+/).filter(Boolean);
+
+// Changes the current slide's line; adds it at the top, or removes it once it's empty.
+function setSlideLine(change) {
+  const slide = slides[current];
+  const {match, attrs} = slideLine(slide.body);
+  change(attrs);
+  const kept = attrs.filter(([key, value]) => !(key === 'class' && !value));
+  const text = kept.map(([key, value]) => value === null ? key : `${key}="${value}"`).join(' ');
+  let body = slide.body;
+  if (match) {
+    body = kept.length
+      ? body.replace(LINE, `<!-- .slide: ${text} -->`)
+      : body.slice(0, match.index) + body.slice(match.index + match[0].length).replace(/^[ \t]*\r?\n(?:[ \t]*\r?\n)?/, '');
+  } else if (kept.length) {
+    body = `<!-- .slide: ${text} -->\n\n${body}`;
+  }
+  slide.body = body;
+  const area = boxes()[current]?.querySelector('textarea');
+  if (area) area.value = body;
+  refreshToolbar();
+  changed();
+}
+
+function setAttr(attrs, name, value) {
+  const at = attrs.findIndex(([key]) => key === name);
+  if (value === null) { if (at !== -1) attrs.splice(at, 1); return; }
+  if (at === -1) attrs.push([name, value]); else attrs[at][1] = value;
+}
+
+function setClasses(attrs, edit) {
+  const list = classesOf(attrs);
+  edit(list);
+  setAttr(attrs, 'class', [...new Set(list)].join(' '));
+}
+
+function toggleClass(name) {
+  setSlideLine(attrs => setClasses(attrs, list => {
+    const at = list.indexOf(name);
+    if (at === -1) list.push(name); else list.splice(at, 1);
+  }));
+}
+
+function button(name, label, onClick) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'tool';
+  b.dataset.tool = name;
+  b.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true">${ICONS[name] || ''}</svg><span>${label}</span>`;
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+// The theme's colour for a name, read from the preview.
+function colourOf(name) {
+  const win = stage.querySelector('iframe:not(.loading)')?.contentWindow;
+  if (!win) return 'transparent';
+  const token = name === 'background' ? '--deck-background' : `--deck-${name}`;
+  return win.getComputedStyle(win.document.documentElement).getPropertyValue(token).trim() || 'transparent';
+}
+
+// A small panel above a toolbar button. Clicking elsewhere closes it.
+function openPanel(anchor, fill) {
+  const panel = document.querySelector('.tool-panel');
+  panel.replaceChildren();
+  fill(panel);
+  panel.showPopover();
+  const a = anchor.getBoundingClientRect();
+  const p = panel.getBoundingClientRect();
+  panel.style.left = `${Math.max(8, Math.min(innerWidth - p.width - 8, a.left + a.width / 2 - p.width / 2))}px`;
+  panel.style.top = `${a.top - p.height - 8}px`;
+}
+
+function closePanel() {
+  const panel = document.querySelector('.tool-panel');
+  if (panel.matches(':popover-open')) panel.hidePopover();
+}
+
+function colourPanel(anchor) {
+  openPanel(anchor, panel => {
+    const now = attr(slideLine(slides[current].body).attrs, 'data-background-color');
+    ['', ...COLOURS].forEach(name => {
+      const swatch = document.createElement('button');
+      swatch.type = 'button';
+      swatch.className = 'swatch';
+      swatch.classList.toggle('on', (now || '') === name);
+      swatch.style.setProperty('--swatch', colourOf(name || 'background'));
+      swatch.setAttribute('aria-label', name || 'Default');
+      swatch.innerHTML = `<span></span>${name ? name.replace('theme-', '') : 'Default'}`;
+      swatch.addEventListener('click', () => {
+        setSlideLine(attrs => setAttr(attrs, 'data-background-color', name || null));
+        closePanel();
+      });
+      panel.append(swatch);
+    });
+  });
+}
+
+function imagePanel(anchor) {
+  openPanel(anchor, panel => {
+    const now = attr(slideLine(slides[current].body).attrs, 'data-background-image');
+    const form = document.createElement('form');
+    const field = document.createElement('input');
+    field.type = 'text';
+    field.placeholder = 'Paste a link, or upload';
+    field.value = now || '';
+    field.spellcheck = false;
+    form.append(field);
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      setSlideLine(attrs => setAttr(attrs, 'data-background-image', field.value.trim() || null));
+      closePanel();
+    });
+    const file = document.createElement('input');
+    file.type = 'file';
+    file.accept = 'image/*,video/mp4,video/webm';
+    file.hidden = true;
+    file.addEventListener('change', async () => {
+      const chosen = file.files[0];
+      if (!chosen) return;
+      const response = await fetch(`/_/asset?deck=${encodeURIComponent(deckPath)}&name=${encodeURIComponent(chosen.name)}`, {method: 'POST', body: chosen});
+      if (!response.ok) return showProblem('save', `Not uploaded: ${await response.text()}`);
+      const where = await response.text();
+      setSlideLine(attrs => setAttr(attrs, 'data-background-image', where));
+      closePanel();
+    });
+    const upload = document.createElement('button');
+    upload.type = 'button';
+    upload.textContent = 'Upload';
+    upload.addEventListener('click', () => file.click());
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.append(upload);
+    if (now) {
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.textContent = 'Remove';
+      remove.addEventListener('click', () => {
+        setSlideLine(attrs => {
+          setAttr(attrs, 'data-background-image', null);
+          setClasses(attrs, list => { const at = list.indexOf('tint'); if (at !== -1) list.splice(at, 1); });
+        });
+        closePanel();
+      });
+      row.append(remove);
+    }
+    panel.append(form, file, row);
+    requestAnimationFrame(() => field.focus());
+  });
+}
+
+function drawToolbar() {
+  const layout = document.createElement('div');
+  layout.className = 'group';
+  [['auto', 'Auto', null], ['split', 'Split', 'split'], ['prose', 'Prose', 'prose']].forEach(([name, label, value]) => {
+    layout.append(button(name, label, () => setSlideLine(attrs => setClasses(attrs, list => {
+      LAYOUTS.forEach(l => { const at = list.indexOf(l); if (at !== -1) list.splice(at, 1); });
+      if (value) list.unshift(value);
+    }))));
+  });
+  const colour = button('colour', 'Colour', event => colourPanel(event.currentTarget));
+  colour.querySelector('svg').outerHTML = '<span class="dot"></span>';
+  const look = document.createElement('div');
+  look.className = 'group';
+  look.append(colour, button('image', 'Image', event => imagePanel(event.currentTarget)), button('tint', 'Tint', () => toggleClass('tint')));
+  const sections = document.createElement('div');
+  sections.className = 'group sections';
+  sections.append(button('cards', 'Cards', () => toggleClass('cards')), button('spectrum', 'Spectrum', () => toggleClass('spectrum')));
+  toolbar.replaceChildren(layout, look, sections);
+}
+
+// Shows what the current slide has set. Tint needs an image; cards and spectrum need sections.
+function refreshToolbar() {
+  if (!toolbar.childElementCount || !slides[current]) return;
+  const {attrs} = slideLine(slides[current].body);
+  const classes = classesOf(attrs);
+  const layout = classes.find(c => c === 'split' || c === 'prose') || 'auto';
+  const tool = name => toolbar.querySelector(`[data-tool="${name}"]`);
+  ['auto', 'split', 'prose'].forEach(name => tool(name).classList.toggle('on', name === layout));
+  const colour = attr(attrs, 'data-background-color');
+  tool('colour').classList.toggle('on', !!colour);
+  tool('colour').querySelector('.dot').style.background = colour ? colourOf(colour) : colourOf('background');
+  const image = attr(attrs, 'data-background-image');
+  tool('image').classList.toggle('on', !!image);
+  tool('tint').hidden = !image;
+  tool('tint').classList.toggle('on', classes.includes('tint'));
+  const box = boxes()[current];
+  const section = preview && box && preview.getSlide(Number(box.dataset.h), Number(box.dataset.v));
+  const hasSections = !!section?.querySelector('[data-shape="sections"]') || classes.includes('cards') || classes.includes('spectrum');
+  toolbar.querySelector('.sections').hidden = !hasSections;
+  tool('cards').classList.toggle('on', classes.includes('cards'));
+  tool('spectrum').classList.toggle('on', classes.includes('spectrum'));
+}
+
+drawToolbar();
+
 async function open() {
   const response = await fetch(SOURCE, {cache: 'no-store'});
   if (!response.ok) {
@@ -291,8 +530,9 @@ async function open() {
     return;
   }
   etag = response.headers.get('ETag');
-  document.querySelector('.path').textContent = deckPath;
-  document.title = `${deckPath.split('/').pop()} · Editor`;
+  const name = deckPath.split('/').pop();
+  document.querySelector('.path').textContent = name;
+  document.title = `${name} · Editor`;
   const file = splitFile(await response.text());
   fence = file.fence;
   front.value = file.front;
@@ -325,7 +565,7 @@ async function save() {
 }
 
 // Going back to the library saves first, so the last few keystrokes aren't lost.
-document.querySelector('.back').addEventListener('click', async event => {
+document.querySelector('.rail a[href]').addEventListener('click', async event => {
   if (!timer && !saving) return;
   event.preventDefault();
   const href = event.currentTarget.href;
@@ -349,7 +589,11 @@ function changed() {
 
 front.addEventListener('input', changed);
 
-const typing = event => event.target.closest?.('textarea, input, summary, button') || event.metaKey || event.ctrlKey || event.altKey;
+document.querySelector('.to-top').addEventListener('click', () => {
+  document.querySelector('.source-scroll').scrollTo({top: 0});
+});
+
+const typing = event => event.target.closest?.('textarea, input') || event.metaKey || event.ctrlKey || event.altKey;
 
 // M shows or hides the markdown, from anywhere but a text box (the preview included).
 function toggleKey(event) {

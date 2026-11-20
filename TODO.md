@@ -2,10 +2,13 @@
 
 ## Next
 
-- [ ] **Finish the editor.** Built so far: `npm run venge` (library) and `npm run edit`, markdown with the current slide boxed, live preview drawn in the browser, saved as you type. Still to do: a toolbar under the preview for slide options (layout, cards, a background colour from the theme, a background image by URL or upload), the deck settings pane, Add slide picker, then a version with no install. Plan: `notes/editor-design.md`.
+- [ ] **Finish the editor.** Built so far: `npm run venge` (library) and `npm run edit`, markdown with the current slide boxed, live preview drawn in the browser, saved as you type. Still to do: search in the markdown pane (a place for it in the pane's sticky header), the deck settings pane, Add slide picker, then a version with no install. Plan: `notes/editor-design.md`.
 - [ ] **"Changed on disk" loses the box's text.** The editor says to reload, but reloading replaces the box with the file, and there's no draft kept, so unsaved typing is gone. Proposed fix: the editor follows the file, loading changes from disk whenever the box has nothing unsaved. Add a way to collapse the editor: collapsed, it saves first and the disk wins; open, unsaved typing wins. Not decided: whether an open box with nothing unsaved still loads from disk (proposed: yes, or a keystroke saves stale text over the change).
 - [ ] **Add Reveal's speaker view.** `Note:` text is parsed but never shown. Vendor the notes plugin at Reveal 5.2.0, record its license, turn it on in `src/deck-start.js`, and document the `S` key in `docs/reference.md`.
 - [ ] **Delete old branches.** `grid-v1` and `new-slide-model` are merged into `main`. The remote branches `package-setup`, `simplify-base-css`, `site-options` and `slide-review-fixes` are fully in `main` too. `claude/grid-design-2afdd8` has 14 commits that never reached `main` (design notes, plus prototypes: the stack arrangement, shapes for 5, 7 and past 9, the petrus deck); check them against `notes/grid-design.md` first.
+
+- [ ] **Editor: a slide's layout label can say `grid`.** Seen on glou-glou slide 9 (a quote); expected `headline`. Not reproduced in Chrome later: no box said `grid`.
+- [ ] **`spectrum`: dark text on dark fills.** On glou-glou slide 55, the `theme-1` (blue) card keeps the dark body text, which is hard to read.
 
 ## Layout QA
 
@@ -55,6 +58,18 @@ Fixed: a finding written as a `>` quote ("No top or recent title in the scan men
 ## Log
 
 Newest first. What changed and why, one entry per working session.
+
+### 2026-11-19: toolbar (`editor`)
+
+- **Built:** the toolbar under the preview, as decided below; icon over a word on each button. Colour and Image open a small panel above the button. Removing an image also removes tint.
+- **Upload:** `POST /_/asset?deck=…&name=…` saves a picture or video into `assets/` beside the deck. A different file with the same name gets `-2`; the same file again is reused. Tested.
+- **Pane header:** stays at the top as the slides scroll, with Top. Search is for later.
+- **Checked in Chrome** on a copy of glou-glou: ↓ between boxes, the colour panel, and Cards and Spectrum appearing on a sections slide and redrawing it. Not checked: image upload, tint.
+
+### 2026-11-19: toolbar decisions, `spectrum` (`editor`)
+
+- **Renamed:** the `colors` slide class is now `spectrum` (each section filled with the next theme colour). Code, docs, the longform prompt and glou-glou.
+- **Toolbar, decided:** layout (auto by default, split or prose); background colour (Default is the theme's own background, then the theme colours); background image (none by default, a URL or an upload into `assets/`). Controls appear only when they apply: tint only once there's an image (it does nothing without one), and Cards and Spectrum only on a slide with sections, as two on/off toggles, since both can be on at once (glou-glou has two such slides).
 
 ### 2026-11-19: editor layout (`editor`)
 

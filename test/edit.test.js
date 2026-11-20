@@ -71,6 +71,18 @@ test('a file changed on disk is not overwritten', () => withServer('# One\n', as
   assert.equal(fs.readFileSync(file, 'utf8'), '# Changed elsewhere\n');
 }));
 
+test('uploads go into assets/ beside the deck, without overwriting', () => withServer('# One\n', async ({url, file}) => {
+  const upload = (name, body) => fetch(`${url}/_/asset?deck=deck%2Ftalk.md&name=${encodeURIComponent(name)}`, {method: 'POST', body});
+  const first = await upload('My Photo.JPG', 'a');
+  assert.equal(first.status, 201);
+  assert.equal(await first.text(), 'assets/My-Photo.jpg');
+  assert.equal(await (await upload('My Photo.JPG', 'a')).text(), 'assets/My-Photo.jpg');
+  assert.equal(await (await upload('My Photo.JPG', 'b')).text(), 'assets/My-Photo-2.jpg');
+  assert.equal(fs.readFileSync(path.join(path.dirname(file), 'assets', 'My-Photo.jpg'), 'utf8'), 'a');
+  assert.equal((await upload('notes.txt', 'x')).status, 415);
+  assert.equal((await fetch(`${url}/_/asset?deck=..%2Foutside.md&name=a.png`, {method: 'POST', body: 'x'})).status, 403);
+}));
+
 test('paths outside the library folder are refused', () => withServer('# One\n', async ({url}) => {
   // Plain ".." is collapsed by URL parsing; an encoded slash is not.
   assert.equal(await statusOf(url, '/../outside.md'), 404);
