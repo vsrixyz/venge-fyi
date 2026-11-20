@@ -6,7 +6,7 @@
 - [ ] **Delete a slide quickly in the editor.** Today it means selecting its markdown and its `---` by hand. How (a key, the slide strip) is not decided.
 - [ ] **"Changed on disk" loses the box's text.** The editor says to reload, but reloading replaces the box with the file, and there's no draft kept, so unsaved typing is gone. Proposed fix: the editor follows the file, loading changes from disk whenever the box has nothing unsaved. Add a way to collapse the editor: collapsed, it saves first and the disk wins; open, unsaved typing wins. Not decided: whether an open box with nothing unsaved still loads from disk (proposed: yes, or a keystroke saves stale text over the change).
 - [ ] **Add Reveal's speaker view.** `Note:` text is parsed but never shown. Vendor the notes plugin at Reveal 5.2.0, record its license, turn it on in `src/deck-start.js`, and document the `S` key in `docs/reference.md`.
-- [ ] **Delete old branches.** `grid-v1` and `new-slide-model` are merged into `main`. `claude/grid-design-2afdd8` has five design-note commits that never reached `main`; check them against `notes/grid-design.md` first.
+- [ ] **Delete old branches.** `grid-v1` and `new-slide-model` are merged into `main`. The remote branches `package-setup`, `simplify-base-css`, `site-options` and `slide-review-fixes` are fully in `main` too. `claude/grid-design-2afdd8` has 14 commits that never reached `main` (design notes, plus prototypes: the stack arrangement, shapes for 5, 7 and past 9, the petrus deck); check them against `notes/grid-design.md` first.
 
 ## Layout QA
 
@@ -58,13 +58,24 @@ Fixed: a finding written as a `>` quote ("No top or recent title in the scan men
 
 Newest first. What changed and why, one entry per working session.
 
+### 2026-11-19: substack-landscape edits (`editor`, `df79bc4`)
+
+- **By hand, not by the prompt:** the Free / Paid slide now has a `#` headline ("Gating content") and is no longer a split; "Six topics" is a `cards` list with all six topics; the "opportunity" slides were reworded. The prompt itself is unchanged, so the Prompt QA items stay open. The "Six topics" note still starts with a stub ("Sixth topic: st").
+
 ### 2026-11-19: cards from a list (`editor`)
 
 - **`cards` on a list:** a `cards` slide with no repeated headings had nothing to turn into cards, so a plain bulleted list stayed a list. Now a list that ends the slide becomes the clusters, one card per item, with anything above it as the title. A `.element` comment on an item (a fill, `card`, `fragment`) goes to its card. Two ways to write clusters is on purpose: a simple list should be enough.
 - **Not extended:** `colors` still needs headings. Checked in the browser by V, not by Claude.
 - **Long lone `#`:** a slide with only headings put its `#` at title size, however long. An 82-character sentence ran six lines at 200px, and the tight title leading made the lines collide. Now title size is only for a `#` of 30 characters or fewer; longer ones keep the headline size and leading. Chose length over measuring lines: predictable, and print matches the screen. The cutoff is a guess; `#` of 25–30 characters still get title size.
 
-### 2026-11-17: content framework example (`main`, uncommitted)
+### 2026-11-19: slide strip, longform prompt, two example decks (`editor`, `8caeb6f`)
+
+- **Slide strip:** the editor has a horizontal strip of slides (`src/editor/`).
+- **Longform prompt:** `docs/longform-prompt.md`, first tested on `examples/substack-landscape/`; see Prompt QA.
+- **New deck:** `examples/3c-motion/`, "The three sees of design": slides written as positioned HTML with its own `3c.css` theme and GIF backgrounds. Not checked by Claude.
+- **TODO:** the grid-v1 QA list became Layout QA, and the long-form prompt idea became the Prompt QA section.
+
+### 2026-11-17: content framework example (`main`, `8a3e5d6`, `a699bfb`)
 
 - **New deck:** `examples/content-framework/content-framework.md`, the Inter core messaging framework (v2), copied unchanged from `inter.md`.
 - **Images:** the original image names weren't available, so each image slide got a random photo from the ones added to `inter-content/assets` (copied over; the originals stay). There were 10 photos for 11 slides, so `pexels-ktccphotography` is used twice. The deck builds with no missing-file warnings. Not looked at in the editor.
@@ -80,6 +91,7 @@ Went through every concept in the docs and the code looking for collisions and f
 - **Eyebrow:** only a line you mark `eyebrow`. The front matter `eyebrow` and `hide-eyebrow` are removed.
 - **Card and fill:** separate. A card is an outline with padding and rounded corners (`card`, or `cards` on a slide for every cluster). A fill is `data-background-color`, always with padding (`colors` on a slide fills every cluster). Both work on a cluster or one element. `cards` no longer fills, so those decks look lighter.
 - **Docs:** `docs/slide-types.md` is now `docs/concepts.md`, a glossary for writers. `docs/reference.md` matches.
+- **Headline quotes** (`ed7dbb3`): larger, and in the display weight, leading and tracking.
 - **Decided, not built:** the four new items under Later (light/dark, prose that grows, the M panel matching the editor, layout name clashes). Modifiers and accent keep their names for now.
 
 ### 2026-11-17: renamed to vengeslides (`main`, `8d0fde1`)
