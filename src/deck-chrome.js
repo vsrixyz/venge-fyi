@@ -618,21 +618,23 @@
   // the part's height: the text takes whatever the part has left.
   const PROBE = 100;
 
+  function fitBox(text) {
+    const part = text.parentElement;
+    if (!part.clientHeight) return;
+    const style = getComputedStyle(part);
+    const px = name => parseFloat(style[name]) || 0;
+    const width = part.clientWidth - px('paddingLeft') - px('paddingRight');
+    const height = part.clientHeight - px('paddingTop') - px('paddingBottom');
+    const others = Array.from(part.children).filter(kid => kid !== text);
+    const used = others.reduce((sum, kid) => sum + kid.offsetHeight + px('rowGap'), 0);
+    text.style.fontSize = PROBE + 'px';
+    const scale = Math.min(width / text.offsetWidth, (height - used) / text.offsetHeight);
+    text.style.fontSize = Math.max(0, Math.floor(PROBE * scale)) + 'px';
+  }
+
   function fitBoxes(section) {
     if (!section) return;
-    section.querySelectorAll('.deck-section > .r-fit-text').forEach(text => {
-      const part = text.parentElement;
-      if (!part.clientHeight) return;
-      const style = getComputedStyle(part);
-      const px = name => parseFloat(style[name]) || 0;
-      const width = part.clientWidth - px('paddingLeft') - px('paddingRight');
-      const height = part.clientHeight - px('paddingTop') - px('paddingBottom');
-      const others = Array.from(part.children).filter(kid => kid !== text);
-      const used = others.reduce((sum, kid) => sum + kid.offsetHeight + px('rowGap'), 0);
-      text.style.fontSize = PROBE + 'px';
-      const scale = Math.min(width / text.offsetWidth, (height - used) / text.offsetHeight);
-      text.style.fontSize = Math.max(0, Math.floor(PROBE * scale)) + 'px';
-    });
+    section.querySelectorAll('.deck-section > .r-fit-text').forEach(fitBox);
   }
 
   // After Reveal has sized r-fit-text (a frame after the slide loads).
@@ -726,6 +728,10 @@
       afterReveal(() => fitBoxes(event.currentSlide));
     });
     reveal.on('overviewshown', () => afterReveal(() => leafSlides(root).forEach(fitBoxes)));
+    // Reveal refits r-fit-text on sync and load, width only: size it again after.
+    root.addEventListener('fit', event => {
+      if (event.target.matches('.deck-section > .r-fit-text')) fitBox(event.target);
+    }, true);
     // A picture that loads later has a shape: arrange its group again.
     root.querySelectorAll('.deck-cell.deck-pictures img').forEach(img => {
       if (img.complete) return;
