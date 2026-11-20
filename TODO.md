@@ -3,6 +3,8 @@
 ## Next
 
 - [ ] **Finish the editor.** Built so far: `npm run venge` (library) and `npm run edit`, markdown with the current slide boxed, live preview drawn in the browser, saved as you type, and a horizontal slide strip. Still to do: the deck settings pane, Add slide picker, then a version with no install. Plan: `notes/editor-design.md`.
+- [ ] **Delete a slide quickly in the editor.** Today it means selecting its markdown and its `---` by hand. How (a key, the slide strip) is not decided.
+- [ ] **"Changed on disk" loses the box's text.** The editor says to reload, but reloading replaces the box with the file, and there's no draft kept, so unsaved typing is gone. Proposed fix: the editor follows the file, loading changes from disk whenever the box has nothing unsaved. Add a way to collapse the editor: collapsed, it saves first and the disk wins; open, unsaved typing wins. Not decided: whether an open box with nothing unsaved still loads from disk (proposed: yes, or a keystroke saves stale text over the change).
 - [ ] **Add Reveal's speaker view.** `Note:` text is parsed but never shown. Vendor the notes plugin at Reveal 5.2.0, record its license, turn it on in `src/deck-start.js`, and document the `S` key in `docs/reference.md`.
 - [ ] **Delete old branches.** `grid-v1` and `new-slide-model` are merged into `main`. `claude/grid-design-2afdd8` has five design-note commits that never reached `main`; check them against `notes/grid-design.md` first.
 

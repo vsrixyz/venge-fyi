@@ -18,7 +18,8 @@ Note: Source: "Midlife Health on Substack" landscape scan, draft v1. 16 publicat
 
 ---
 
-# What resonates, what doesn't, and where Inter's blog has room
+## What resonates, what doesn't
+# The opportunity for Inter
 
 Note: I reviewed 16 publications on Substack in the health and wellness space to see what storylines resonate, what does not, and what opportunities there are for Inter's blog. A follow-up added 7 publications the original list missed.
 
@@ -64,9 +65,9 @@ Note: All four lead with a named clinician and a face: Dr. Jen Gunter, Dr. Gator
 
 "40 Lessons at 40"
 
-## Nobody owns 44
+## Opportunity: Nobody owns 44
 
-Inter's turning point at 44 is a natural fit for this pattern.
+Inter's turning point at 44 is a natural fit for this pattern. It's a specific number and no one else is talking about it.
 
 Note: Other examples: "The Most Overlooked Medical Intervention After 50", "The One Workout That Changed My Body At 48". "Your evolutionary warranty expires at 44" fits a proven pattern in an empty slot.
 
@@ -80,13 +81,15 @@ Note: Other examples: "The Most Overlooked Medical Intervention After 50", "The 
 
 "Neurodivergent Burnout Isn't Psychological. It's Cellular."
 
-## Inter already makes this move
+"Your Bones Remember Everything."
 
-"Normal isn't the same as healthy."
+## Opportunity: Inter's core ideas already circle this. 
 
-"Health is a rate, not a state."
+"Normal isn't the same as **resilient**."
 
-Note: Another example from the scan: "Your Bones Remember Everything." Reframe headlines follow the shape "It isn't X. It's Y."
+"**Healthspan** not lifespan." (not original, but still interesting)
+
+"Your body has an **event horizon**."
 
 ---
 
@@ -100,7 +103,7 @@ Note: "Per month" is total subscribers divided by months since the publication w
 
 <!-- .slide: class="cards" -->
 
-## Four formats convert readers
+## Four formats that tend to convert
 
 ### First-person protocol
 
@@ -122,17 +125,18 @@ Note: Taylor, as a pathologist, could write "What I'd do at 44" pieces. Other ri
 
 ---
 
-<!-- .slide: class="split" -->
+<!-- .slide: class="" -->
 
-## Free
+# Gating content
+Top-earning publications give away broad, shareable list posts and charge for protocols, series and rituals. 
 
-Broad, shareable list posts. Habit Healers' biggest post (♥7,452) is free.
+## Free posts
 
-## Paid
+Broad, shareable list posts. "10 Powerful Habits of People Who Age Well" (♥7,452, 💬355, free) is by far the largest single post in the scan. 
 
-Protocols, series and rituals.
+## Paid posts
 
-Note: The top-earning publications keep the broad, shareable list posts free and charge for protocols, series and rituals. "10 Powerful Habits of People Who Age Well" (♥7,452, 💬355, free) is by far the largest single post in the scan. Dr. Gordon's paywalled, case-based GLP-1 voice reached 1,000+ paid in about 8 months, the fastest in the scan.
+Protocols, series and rituals. Dr. Gordon's paywalled, case-based GLP-1 voice reached 1,000+ paid in about 8 months
 
 ---
 
@@ -144,25 +148,31 @@ Part 2 <!-- .element: class="eyebrow" -->
 
 ---
 
-## Six topics perform well, and have a lot of competition
+
+
+<!-- .slide: class="cards" -->
+# Six topics perform well, and have a lot of competition
 
 - Habits-of-people-who-age-well listicles
 - Superagers and centenarians
 - Brain health and Alzheimer's
 - Perimenopause and menopause hormone therapy
 - Supplement and peptide debunking
+- Strength and VO2 max for over-50s
 
-Note: Sixth topic: strength and VO2 max for over-50s (AGING with STRENGTH, Two Percent, Habit Healers). Inter lines at risk: "Boring works" and "grandma was right" can stay, but need Inter's measurement twist. "Perimenopause isn't just your ovaries; it's your liver" is still distinct, because nobody covers the liver. Nervous system, burnout and rest are crowded in language, open in measurement. GLP-1s: Two Percent covers side effects; the off-ramp angle is still open.
+Note: Sixth topic: st (AGING with STRENGTH, Two Percent, Habit Healers). Inter lines at risk: "Boring works" and "grandma was right" can stay, but need Inter's measurement twist. "Perimenopause isn't just your ovaries; it's your liver" is still distinct, because nobody covers the liver. Nervous system, burnout and rest are crowded in language, open in measurement. GLP-1s: Two Percent covers side effects; the off-ramp angle is still open.
 
 ---
 
 <!-- .slide: class="split" -->
 
-## The "suppressed remedies" lane is the anti-model
+## There is a "suppressed remedies" lane that is catchy
 
 Holistic Healing: "Why Big Pharma Wants Borax's Benefits Suppressed?"
 
-## The need behind it is real
+What they are not telling you about vaccines
+
+## Opportunity: Real talk without the conspiracy angle
 
 Inter's "your body is enough" and "grandma was right" answer it without the misinformation.
 
@@ -170,9 +180,18 @@ Note: The hunger for agency and distrust of the system are real, and this lane c
 
 ---
 
-## The "payoff for others" corner is nearly empty
 
-Almost everyone promises a payoff for yourself. Only Dr. Gator and The Quiet Life speak to the people who depend on you.
+<!-- .slide: class="split" -->
+
+# The "payoff for others" corner is nearly empty
+- Only Dr. Gator and The Quiet Life speak to the people who depend on you.
+
+# Opportunity: Always mention the people you can help
+
+- Inter helps "sandwich parents" take care of the the people they love
+- Inter helps the helpers
+
+
 
 Note: Two lines separate the field. Horizontal: evidence-first, or selling distrust ("they're hiding this from you")? Vertical: a payoff for yourself, or for the people who depend on you? The evidence-first, payoff-for-yourself quadrant is crowded, split by audience: women 35–60; men and performance; readers over 65 and caregivers. Open space for Inter: the parent's own health, so they can carry their family. Visual idea: the two-by-two map with each publication placed in its quadrant.
 
@@ -186,7 +205,8 @@ Part 3 <!-- .element: class="eyebrow" -->
 
 ---
 
-# No top or recent title in the scan mentions recovery, resilience, HRV or wearables
+Opportunity 
+# No top or recent title in the scan mentioned recovery, resilience, HRV or wearables.
 
 Note: The closest is The Habit Healers' "The Stiffness You Feel Every Morning Isn't Aging, It Has a Name." Inter's "Health is a rate, not a state" and "Why a cold takes a week now" are unclaimed here. Judged from top and recent post titles and each welcome page; paywalled posts were not read.
 
@@ -194,61 +214,63 @@ Note: The closest is The Habit Healers' "The Stiffness You Feel Every Morning Is
 
 <!-- .slide: class="cards" -->
 
-## Seven openings nobody covers
+# Seven ideas nobody covers
 
 ### Measurable recovery
+No one talks about resilience as a project
 
-### The parent's own health
+### Being a healthy parent for the child
+Most things focus on the child
 
-### Midlife men, not optimizers
+### Midlife men that are not optimizers
+Who are the men without a stack
 
 ### The 44 turning point
+This is a ownable age
 
-### The liver
+### The liver 
+Literally no one is talking about it
 
 ### The sandwich parent
+Balancing eldercare with childcare
 
-### Using the data you already have
+### Making moves
+Using data you already have to make the next move
 
 Note: Parent's own health: Dr. Gator covers the child; nobody writes about a pregnant woman's or new parent's own body, recovery and resilience. Midlife men are served by discomfort and performance, strength, or hormone pharmacology; nobody writes about the 44-year-old dad's liver, recovery and energy for his family. Sandwich parent: caregiving appears only from the eldercare side; "carry the people you love" has no competitor. Data you already have: several publications attack overtesting, but none helps readers use their Oura or WHOOP data. "You don't need more data, you need your next move" is open, framed calmly and not as a gadget pitch.
 
----
 
-<!-- .slide: class="split" -->
 
-## The liver appears in no title in the scan
 
-## Liver health is going mainstream
-
-The Vitamin Shoppe's 2026 trend report: consumers are moving "beyond occasional detoxes."
-
-Note: Combined with the absence of the liver from every Substack title in the scan, this is the strongest single topic opening found. The "detox" framing around it is the thing to avoid. "The liver shifts in the mid-40s in men and women alike" lets Inter join the women's-longevity conversation without being one more menopause newsletter.
 
 ---
 
 <!-- .slide: class="cards" -->
 
-## The follow-up narrows two gaps
+## Voices that are similar
 
 ### Howard Luks, MD
 
-Closest thesis to Inter's: "midlife health, movement, and resilience." For 50–60+. The space at 44 is still open.
+"Midlife health, movement, and resilience." For 50–60+. The space at 44 is still open.
 
 ### Dr. Gordon
 
-1,000+ paid in about 8 months on GLP-1 maintenance. Inter is no longer alone on the off-ramp.
+1,000+ paid in about 8 months on GLP-1 maintenance. 
 
-Note: Built to Move, Born to Heal: 28,000+ subscribers, 1,000+ paid. "I Did Almost Everything Right. I Still Have Coronary Artery…" and "Your Body Can Still Adapt…" are Inter's resilience thesis in use. Dr. Gordon | Obesity Medicine: 22,000+ subscribers, created March 2026; minimal monogram branding, no face. The blueprint already flags the GLP-1 off-ramp as risky to say publicly; that caution still stands.
+### Build to move, Born to Heal
+"I Did Almost Everything Right. I Still Have Coronary Artery…"
+
+
 
 ---
 
 <!-- .slide: class="split" -->
 
-## To mothers, "carry the people you love" can read as one more job
+## Mothers have a lot of emotion around this work
 
-Liberating Motherhood (37,000+) runs on anger about the mental load.
+Liberating Motherhood (37,000+) talks a lot about mental load.
 
-## Address dads directly
+## Opportunity: Address dads and "parents"
 
 As an equal share of the work. Don't assume mom is the family's health manager.
 
@@ -268,7 +290,8 @@ Note: ParentData (Emily Oster, off Substack): 250,000+ per a 2025 press release;
 
 Part 4 <!-- .element: class="eyebrow" -->
 
-# The biggest risk: the backlash against over-optimization
+## Risk
+# The backlash against over-optimization
 
 Note: Moms are publicly taking off their Oura rings, and that pushes against Inter's measurement pillar. The Global Wellness Summit named the "over-optimization backlash" a defining trend of 2026. Sleep anxiety from wearables now has a clinical name, orthosomnia: a 2026 survey found more than 30% of adults who track their sleep reported its symptoms. Trend figures are as reported in industry sources, not verified.
 
@@ -280,19 +303,13 @@ Note: Moms are publicly taking off their Oura rings, and that pushes against Int
 
 Puts the brand on the wrong side. For parents, more numbers can read as one more thing to fail at.
 
-## One number, read rarely
+## Opporunity: Less data, more inference
 
-Tells you whether you're bouncing back. Calm measurement.
+Tells you whether you're bouncing back. Tells you your next move. Calm measurement.
 
 Note: Inter's existing lines already point this way: "You don't need more data. You need your next move." "100 biomarkers and no plan." Other rising themes: women's longevity going mainstream; perimenopause "starts earlier than you think"; "maxxing" culture (fiber and protein fit "boring works"); creatine and magnesium for women's hormones; matrescence, which critics say is being turned into an optimization project.
 
----
 
-## Health politics: silence is a position too
-
-"Evidence-first" will be read against a vaccine-skeptic, anti-establishment backdrop. Decide early how Inter talks about vaccines and fluoride.
-
-Note: Substack's Health Politics board is dominated by vaccine-skeptic and anti-establishment publications. Dr. Gator's recent posts are mostly about vaccine policy. Holistic Healing and Ancestral Healing are rising on the general board. Also on the Rising board: Jamal Dinkoui at #3, part of "the testosterone moment" for men, the bro-optimizer lane to lean away from.
 
 ---
 
@@ -324,44 +341,23 @@ Note: None of the larger publications use a dark, techy look. Dark, gradient and
 
 ---
 
-## Lead with a face: Taylor and Sandeep together
+## Lead with a face
 
-Most large publications show the author. Pair it with one plain sentence of promise.
+Most large publications show the author.
 
 Note: Faces: Dr. Sara Szal, Dr. Gator, Susan Cain, AGING with STRENGTH. Logo-only welcome pages (Human health, The Habit Healers) are the exception. Promise examples: "Medical Facts, Feminism, and Fire." "Useful information 3x a week…" Testimonials from other Substack writers work (The Female Edge, The Quiet Life, The Vajenda), but Inter can't do this until it has peers to ask.
 
 ---
 
-<!-- .slide: class="cards" -->
+<!-- .slide: class="" -->
 
 ## Open questions
 
-### Measurement
-
-How do we talk about it while readers turn against tracking?
-
-### Voice
-
-Lead with Taylor's face and first-person voice?
-
-### Audience
-
-Is the parents audience big enough to lead with?
-
-### Ritual
-
-Which ritual could Inter own?
-
-### 44
-
-How hard to lean on it, without excluding 35–42 parents?
+- Measurement: How do we talk about it while readers turn against tracking?
+- Voice: How should we convey this first-person voice?
+- Audience: Is the parents audience big enough to lead with?
+- Ritual: Which ritual could Inter own?
+- 44: How do we approach it? There's good content opportunities on both side of it.
 
 Note: Ritual examples: a weekly "next move," or a monthly "what moved in my numbers." ParentData shows the demand from parents exists, and that the "calm data for parents" seat is taken. Method limits: subscriber counts are Substack's displayed floors and include free subscribers; "per month" is a proxy, not a growth rate; paywalled posts weren't read beyond titles.
 
----
-
-<!-- .slide: class="dark" -->
-
-# Nobody owns 44, or recovery you can measure
-
-## One number, read rarely, for people who carry the people they love
