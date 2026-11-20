@@ -32,6 +32,8 @@ Part 1 <!-- .element: class="eyebrow" -->
 
 ---
 
+<!-- .slide: data-background-color="theme-4" class="spectrum" -->
+
 ## A physician talking in the first person is the strongest POV
 
 ### The Vajenda
@@ -100,7 +102,7 @@ Note: "Per month" is total subscribers divided by months since the publication w
 
 ---
 
-<!-- .slide: class="cards" -->
+<!-- .slide: class="cards spectrum" -->
 
 ## Four formats that tend to convert
 

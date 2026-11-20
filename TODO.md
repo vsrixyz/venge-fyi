@@ -59,6 +59,12 @@ Fixed: a finding written as a `>` quote ("No top or recent title in the scan men
 
 Newest first. What changed and why, one entry per working session.
 
+### 2026-11-19: fitted numbers overflowing their boxes (`editor`, `8ec9793`)
+
+- **Why:** after any re-render in the editor (Spectrum, Cards, a colour, typing), `r-fit-text` in a section grew to 864px and ran off the slide. Not caused by `spectrum`. Reveal resizes `r-fit-text` by width only, on every sync and slide load, and that ran after our height-aware size; mid-load it measured nothing and hit its cap (0.8 × slide height).
+- **Now:** Reveal's resize fires a `fit` event; `deck-chrome.js` sizes the text to its box again on each one.
+- **Checked in Chrome** on `substack-landscape` slide 4: right size on load, after `Reveal.sync()`, and after toggling Spectrum. Not checked: exported decks and print.
+
 ### 2026-11-19: tint has its own colour (`editor`)
 
 - **Why:** the `tint` class blended the photo into the slide's background colour, so with the default background it did nothing, and the toolbar's Colour and Tint fought over one colour.
