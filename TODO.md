@@ -2,8 +2,7 @@
 
 ## Next
 
-- [ ] **Finish the editor.** Built so far: `npm run venge` (library) and `npm run edit`, markdown with the current slide boxed, live preview drawn in the browser, saved as you type, and a horizontal slide strip. Still to do: the deck settings pane, Add slide picker, then a version with no install. Plan: `notes/editor-design.md`.
-- [ ] **Delete a slide quickly in the editor.** Today it means selecting its markdown and its `---` by hand. How (a key, the slide strip) is not decided.
+- [ ] **Finish the editor.** Built so far: `npm run venge` (library) and `npm run edit`, markdown with the current slide boxed, live preview drawn in the browser, saved as you type. Still to do: a toolbar under the preview for slide options (layout, cards, a background colour from the theme, a background image by URL or upload), the deck settings pane, Add slide picker, then a version with no install. Plan: `notes/editor-design.md`.
 - [ ] **"Changed on disk" loses the box's text.** The editor says to reload, but reloading replaces the box with the file, and there's no draft kept, so unsaved typing is gone. Proposed fix: the editor follows the file, loading changes from disk whenever the box has nothing unsaved. Add a way to collapse the editor: collapsed, it saves first and the disk wins; open, unsaved typing wins. Not decided: whether an open box with nothing unsaved still loads from disk (proposed: yes, or a keystroke saves stale text over the change).
 - [ ] **Add Reveal's speaker view.** `Note:` text is parsed but never shown. Vendor the notes plugin at Reveal 5.2.0, record its license, turn it on in `src/deck-start.js`, and document the `S` key in `docs/reference.md`.
 - [ ] **Delete old branches.** `grid-v1` and `new-slide-model` are merged into `main`. The remote branches `package-setup`, `simplify-base-css`, `site-options` and `slide-review-fixes` are fully in `main` too. `claude/grid-design-2afdd8` has 14 commits that never reached `main` (design notes, plus prototypes: the stack arrangement, shapes for 5, 7 and past 9, the petrus deck); check them against `notes/grid-design.md` first.
@@ -48,7 +47,6 @@ Fixed: a finding written as a `>` quote ("No top or recent title in the scan men
 - [ ] **Go through `notes/slide-layout-lessons.md`.** Check which "Copy" lessons the CSS already follows, then pick which of the rest to do.
 - [ ] **Audit the base CSS and tokens for excess.** Do this before writing more themes.
 - [ ] **Detailed theming.** Two themes so far: `dark` and `signal`.
-- [ ] **Editor: the markdown source (M) should look like the editor.** Today the panel and the editor show the markdown differently.
 - [ ] **Editor: make slide and cluster options easier to add.** They are HTML comments (`<!-- .slide: class="dark" -->`, `<!-- .cluster: class="stack" -->`), and one slip, such as a missing colon, quietly does nothing. How is not decided.
 - [ ] **Editor: some WYSIWYG editing.**
 - [ ] **Charts: replay the animation.** Charts animate once, the first time their slide comes into view (`src/deck-charts.js`). Replay it each time the slide is shown.
@@ -57,6 +55,17 @@ Fixed: a finding written as a `>` quote ("No top or recent title in the scan men
 ## Log
 
 Newest first. What changed and why, one entry per working session.
+
+### 2026-11-19: editor layout (`editor`)
+
+- **Slide strip removed:** its thumbnails were unstyled (Reveal draws backgrounds on a layer outside the slide, so a copied slide lost them). ← → and Esc already move through the deck, so the strip went rather than being fixed. Outside the text, those keys now reach the preview.
+- **Markdown on the right,** preview on the left, to try it.
+- **Decided, not built:** slide options move to a toolbar under the preview; the markdown keeps showing every line, `.slide:` comment included. The toolbar won't offer `dark`/`light` (to be rethought as one toggle for the theme's dark version) or motion. A background image can be a URL or an upload into `assets/`.
+- **`big`:** removed in `31fbdaf`; dropped a leftover from `content-framework`.
+- **Old markdown panel removed:** `src/deck-source.js`, its CSS, the `source` front matter option and its classes. M now belongs to the editor, where it slides the markdown pane out and back. The dotted red line for sections past ten went with the panel. `deckSlideType()` (the editor's slide label) moved to `deck-chrome.js`.
+- **One box per slide:** each slide is its own text field, so the cursor can't land between slides, and changing slide jumps straight to its box (no glide). Typing a `---` line splits a box. Each box has delete and a + to add a slide after it; delete has no undo. Scrolling the pane no longer changes slide. The "Slide n of N" count moved to the bar above the preview.
+- **Bug fixed:** removing the panel's CSS also removed the rule that sized `.reveal` to the window, so every deck drew at zero height. `deck-page.css` sizes it again. The snapshot test didn't catch it (it checks HTML only).
+- **Front matter box:** the front matter folds open above the slides in its own box and is joined back on save, `---` lines unchanged (checked on LF, CRLF, empty and front-matter-only files).
 
 ### 2026-11-19: substack-landscape edits (`editor`, `df79bc4`)
 

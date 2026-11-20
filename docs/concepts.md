@@ -274,8 +274,4 @@ Five colours, `theme-1` to `theme-5`, used for links, charts, `colors` and backg
 ### Accent
 `accent` in the front matter sets `theme-1` for one deck, without writing a theme.
 
-## Markdown source
-
-Press M to show each slide's markdown beside it. Set `source: true` in the front matter to start with it open.
-
 The full list of options is in the [reference](reference.md).

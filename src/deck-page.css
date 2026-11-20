@@ -1,4 +1,13 @@
-/* Page around the deck: load fade, overview, Markdown panel, errors. */
+/* Page around the deck: size, load fade, overview, errors. */
+
+/* The deck fills the window (Reveal runs embedded). */
+body { margin: 0; }
+.reveal {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: auto;
+}
 
 /* Hide slides until deck-chrome.js has built them. */
 .reveal .slides {
@@ -98,82 +107,6 @@ body {
   }
 }
 
-/* Markdown panel. M toggles it; source: true starts it open. */
-body.has-source {
-  --source-width: clamp(360px, 34vw, 640px);
-  margin: 0;
-  background: var(--deck-code-background);
-}
-body.has-source .reveal {
-  position: fixed;
-  inset: 0 var(--source-width) 0 0;
-  width: auto;
-  height: auto;
-}
-body.has-source.source-hidden .reveal { inset-inline-end: 0; }
-
-.deck-source {
-  position: fixed;
-  inset: 0 0 0 auto;
-  z-index: 50;
-  box-sizing: border-box;
-  width: var(--source-width);
-  overflow-y: auto;
-  padding: 1.25rem 1.25rem 2rem;
-  background: var(--deck-code-background);
-  color: var(--deck-code-ink);
-  font-family: var(--deck-font-base);
-  font-size: 0.9rem;
-}
-body.source-hidden .deck-source { display: none; }
-
-.deck-source__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.4rem 0.9rem;
-  margin-block-end: 1rem;
-}
-.deck-source__count {
-  font-family: var(--deck-font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--deck-code-comment);
-}
-.deck-source__type {
-  font-family: var(--deck-font-mono);
-  font-size: 0.85rem;
-  color: var(--deck-code-number);
-}
-.deck-source button {
-  margin-inline-start: auto;
-  font: inherit;
-  font-size: 0.75rem;
-  color: var(--deck-code-ink);
-  background: none;
-  border: 1px solid var(--deck-code-comment);
-  border-radius: 4px;
-  padding: 0.25rem 0.6rem;
-  cursor: pointer;
-}
-.deck-source__code {
-  margin: 0;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  font-family: var(--deck-font-mono);
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: var(--deck-code-ink);
-}
-
-@media (max-width: 900px) {
-  body.has-source { --source-width: 0px; }
-  body.has-source .reveal { inset: 0 0 45vh 0; }
-  .deck-source { inset: auto 0 0 0; width: auto; height: 45vh; }
-  body.source-hidden .reveal { inset: 0; }
-}
-
 /* Load or parse failure (deck-start.js). */
 .deck-error {
   position: fixed;
@@ -208,17 +141,4 @@ body.source-hidden .deck-source { display: none; }
 
 .reveal .slide-number.is-first {
   visibility: hidden;
-}
-
-/* Sections past the tenth don't show. While the markdown panel is open, a
-   dotted red line marks a slide with content that isn't showing. Never printed. */
-body.has-source:not(.source-hidden) .reveal .slides section:has(> .deck-stage > .deck-section[hidden]) {
-  outline: 6px dotted #e5484d;
-  outline-offset: -12px;
-}
-
-@media print {
-  .reveal .slides section {
-    outline: none !important;
-  }
 }

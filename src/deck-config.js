@@ -108,11 +108,10 @@
       charts = [...charts, 'chartjs'];
     }
 
-    ['source', 'page-numbering'].forEach(key => {
-      if (data[key] !== undefined && data[key] !== null && typeof data[key] !== 'boolean') {
-        throw new Error(`Front matter ${key}: expected true or false`);
-      }
-    });
+    const numbering = data['page-numbering'];
+    if (numbering !== undefined && numbering !== null && typeof numbering !== 'boolean') {
+      throw new Error('Front matter page-numbering: expected true or false');
+    }
 
     return {
       title: text(data, 'title'),
@@ -120,19 +119,10 @@
       accent,
       theme: text(data, 'theme'),
       charts,
-      source: data.source === true,
       pageNumbering: data['page-numbering'] === true,
       markdown
     };
   }
 
-  // Slides as [horizontal][vertical] text, split like Reveal's markdown plugin.
-  function deckSlides(markdown) {
-    return String(markdown)
-      .split(/\r?\n---\r?\n/)
-      .map(chunk => chunk.split(/\r?\n--\r?\n/).map(part => part.trim()));
-  }
-
   global.deckConfig = deckConfig;
-  global.deckSlides = deckSlides;
 })(globalThis);

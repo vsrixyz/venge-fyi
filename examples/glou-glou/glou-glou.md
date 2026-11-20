@@ -18,9 +18,6 @@ theme:
 
 # Chart libraries, for charts written as JSON: chartjs, echarts. CSV charts don't need this.
 charts: ["chartjs"]
-
-# Start with each slide's Markdown in a panel beside it. M shows or hides it on any deck.
-source: true
 ---
 
 #### Venge-FYI <!-- .element: class="eyebrow" -->
@@ -100,7 +97,7 @@ If you need more than that, use a prose slide instead. A slide with only text is
 
 > Write the words first. Then add the pictures they need.
 
-Sample quote
+Sample quote from a guy
 
 ---
 

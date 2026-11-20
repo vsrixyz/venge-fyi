@@ -6,6 +6,7 @@
 
   // A slide with no type is grid: it finds its own cells.
   const LAYOUTS = ['grid', 'prose', 'split'];
+  const MODIFIERS = ['dark', 'light', 'tint', 'cards', 'colors'];
 
   const MEDIA =
     'img, picture, video, svg, iframe, canvas, [data-chart], ' +
@@ -13,6 +14,14 @@
 
   function layoutOf(section) {
     return LAYOUTS.find(name => section.classList.contains(name)) || 'grid';
+  }
+
+  // The editor's label for a slide: its layout (a grid slide's shape) and modifiers.
+  function slideType(section) {
+    let type = layoutOf(section);
+    const stage = section.querySelector(':scope > .deck-stage');
+    if (type === 'grid' && stage && stage.dataset.shape) type = stage.dataset.shape;
+    return [type, ...MODIFIERS.filter(name => section.classList.contains(name))].join(' · ');
   }
 
   // Puts the type name on the section, so CSS only needs these names.
@@ -826,4 +835,5 @@
   }
 
   global.deckChrome = deckChrome;
+  global.deckSlideType = slideType;
 })(window);

@@ -5,7 +5,6 @@ date-modified: 2026-11-19T11:53
 charts: [chartjs]
 description: What 23 health and wellness Substacks show about where Inter's blog can stand out, and what to avoid.
 ---
-
 <!-- .slide: class="dark" -->
 
 19 November 2026 <!-- .element: class="eyebrow" -->

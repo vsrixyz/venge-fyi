@@ -43,7 +43,6 @@
     if (deck.accent) {
       document.documentElement.style.setProperty('--deck-theme-1', deck.accent);
     }
-    if (deck.source) root.setAttribute('data-source', '');
     if (deck.pageNumbering) root.setAttribute('data-page-numbering', '');
 
     const template = document.createElement('script');
@@ -67,13 +66,6 @@
     await Promise.all(waits);
   }
 
-  function markdownOf(root) {
-    const template = root.querySelector('[data-markdown] > script[type="text/template"]');
-    return template
-      ? template.textContent.replace(/__SCRIPT_END__/g, '</script>').trim()
-      : '';
-  }
-
   function showError(root, error) {
     console.error('[deck]', error);
     const note = document.createElement('pre');
@@ -90,11 +82,6 @@
     try {
       const file = root.getAttribute('data-deck');
       if (file) await fetchDeck(root, new URL(file, location.href).href);
-
-      // Every deck has the panel; it starts hidden unless source: true.
-      const markdown = markdownOf(root);
-      document.body.classList.add('has-source');
-      if (!root.hasAttribute('data-source')) document.body.classList.add('source-hidden');
 
       await global.Reveal.initialize({
         plugins: [global.RevealMarkdown, global.RevealHighlight],
@@ -120,7 +107,6 @@
 
       global.deckChrome(global.Reveal);
       global.deckCharts();
-      global.deckSource(global.Reveal, markdown);
     } catch (error) {
       showError(root, error);
     }

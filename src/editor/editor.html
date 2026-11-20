@@ -11,24 +11,23 @@
 <nav class="rail">
   <a class="back" href="/" title="Library" aria-label="Library">&lt;</a>
 </nav>
-<section class="source">
-  <header class="source-head">
-    <span class="count"></span>
-    <span class="type"></span>
-  </header>
-  <div class="field">
-    <div class="backdrop" aria-hidden="true"></div>
-    <textarea class="text" spellcheck="false" aria-label="Markdown"></textarea>
-  </div>
-</section>
 <main class="view">
   <header class="bar">
     <span class="path"></span>
     <span class="note" role="status"></span>
+    <span class="count"></span>
   </header>
   <div class="stage"></div>
-  <nav class="strip" aria-label="Slides"></nav>
 </main>
+<section class="source" aria-label="Markdown">
+  <div class="source-scroll">
+    <details class="card front">
+      <summary><span>Deck</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></summary>
+      <textarea class="front-text" spellcheck="false" aria-label="Front matter"></textarea>
+    </details>
+    <div class="slides-list"></div>
+  </div>
+</section>
 <script src="../deck-config.js"></script>
 <script type="module" src="editor.js"></script>
 </body>

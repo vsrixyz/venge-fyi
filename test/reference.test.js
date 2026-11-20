@@ -17,6 +17,6 @@ test('reference documents every token', () => {
 
 test('reference documents every slide type and modifier', () => {
   const list = (file, name) => read(file).match(new RegExp(`const ${name} = \\[([^\\]]+)\\]`))[1].match(/'[\w-]+'/g).map(s => s.slice(1, -1));
-  const missing = [...list('src/deck-chrome.js', 'LAYOUTS'), ...list('src/deck-source.js', 'MODIFIERS')].filter(name => !readme.includes('`' + name + '`'));
+  const missing = [...list('src/deck-chrome.js', 'LAYOUTS'), ...list('src/deck-chrome.js', 'MODIFIERS')].filter(name => !readme.includes('`' + name + '`'));
   assert.deepEqual(missing, []);
 });

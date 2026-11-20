@@ -9,7 +9,6 @@ title: "A: deck"
 accent: '#12467A'
 theme: dark # trailing comment
 charts: ["echarts"]
-source: true
 page-numbering: true
 order: 3
 ---
@@ -20,7 +19,6 @@ order: 3
   assert.equal(deck.accent, '#12467A');
   assert.equal(deck.theme, 'dark');
   assert.deepEqual([...deck.charts], ['echarts']);
-  assert.equal(deck.source, true);
   assert.equal(deck.pageNumbering, true);
   assert.equal(deck.markdown, '# Hello');
 });
@@ -30,7 +28,6 @@ test('blank values use defaults; unquoted # is a comment', () => {
   assert.equal(deck.accent, null);
   assert.equal(deck.theme, null);
   assert.deepEqual([...deck.charts], []);
-  assert.equal(deck.source, false);
 });
 
 test('no front matter', () => {
@@ -46,7 +43,7 @@ test('a CSV link adds chartjs', () => {
 test('unsupported YAML is an error, not a guess', () => {
   assert.throws(() => deckConfig('---\ntitle:\n  nested: 1\n---\n'), /line 3/);
   assert.throws(() => deckConfig('---\ncharts: [d3]\n---\n'), /unknown library/);
-  assert.throws(() => deckConfig('---\nsource: yes\n---\n'), /true or false/);
+  assert.throws(() => deckConfig('---\npage-numbering: yes\n---\n'), /true or false/);
   assert.throws(() => deckConfig('---\npage-numbering: yes\n---\n'), /page-numbering: expected true or false/);
   assert.throws(() => deckConfig('---\naccent: "red;}"\n---\n'), /not a colour/);
 });

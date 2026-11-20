@@ -136,11 +136,10 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       charts = [...charts, 'chartjs'];
     }
 
-    ['source', 'page-numbering'].forEach(key => {
-      if (data[key] !== undefined && data[key] !== null && typeof data[key] !== 'boolean') {
-        throw new Error(`Front matter ${key}: expected true or false`);
-      }
-    });
+    const numbering = data['page-numbering'];
+    if (numbering !== undefined && numbering !== null && typeof numbering !== 'boolean') {
+      throw new Error('Front matter page-numbering: expected true or false');
+    }
 
     return {
       title: text(data, 'title'),
@@ -148,21 +147,12 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
       accent,
       theme: text(data, 'theme'),
       charts,
-      source: data.source === true,
       pageNumbering: data['page-numbering'] === true,
       markdown
     };
   }
 
-  // Slides as [horizontal][vertical] text, split like Reveal's markdown plugin.
-  function deckSlides(markdown) {
-    return String(markdown)
-      .split(/\r?\n---\r?\n/)
-      .map(chunk => chunk.split(/\r?\n--\r?\n/).map(part => part.trim()));
-  }
-
   global.deckConfig = deckConfig;
-  global.deckSlides = deckSlides;
 })(globalThis);
 
 /* ---- src/deck-chrome.js ---- */
@@ -174,6 +164,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 
   // A slide with no type is grid: it finds its own cells.
   const LAYOUTS = ['grid', 'prose', 'split'];
+  const MODIFIERS = ['dark', 'light', 'tint', 'cards', 'colors'];
 
   const MEDIA =
     'img, picture, video, svg, iframe, canvas, [data-chart], ' +
@@ -181,6 +172,14 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 
   function layoutOf(section) {
     return LAYOUTS.find(name => section.classList.contains(name)) || 'grid';
+  }
+
+  // The editor's label for a slide: its layout (a grid slide's shape) and modifiers.
+  function slideType(section) {
+    let type = layoutOf(section);
+    const stage = section.querySelector(':scope > .deck-stage');
+    if (type === 'grid' && stage && stage.dataset.shape) type = stage.dataset.shape;
+    return [type, ...MODIFIERS.filter(name => section.classList.contains(name))].join(' · ');
   }
 
   // Puts the type name on the section, so CSS only needs these names.
@@ -994,6 +993,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
   }
 
   global.deckChrome = deckChrome;
+  global.deckSlideType = slideType;
 })(window);
 
 /* ---- src/deck-charts.js ---- */
@@ -1264,81 +1264,6 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
   global.deckCharts = deckCharts;
 })(window);
 
-/* ---- src/deck-source.js ---- */
-/* Markdown panel. M toggles it; it starts open with source: true.
-   Call deckSource(Reveal, markdown) after Reveal.initialize() resolves. */
-
-(function (global) {
-  'use strict';
-
-  const MODIFIERS = ['dark', 'light', 'tint', 'cards', 'colors'];
-
-  function typeOf(section) {
-    const types = ['grid', 'prose', 'split'];
-    let type = types.find(name => section.classList.contains(name)) || 'grid';
-    // A grid slide shows the layout it found: headline, figure or image.
-    const stage = section.querySelector(':scope > .deck-stage');
-    if (type === 'grid' && stage && stage.dataset.shape) type = stage.dataset.shape;
-    const extras = MODIFIERS.filter(name =>
-      section.classList.contains(name)
-    );
-    return [type, ...extras].join(' · ');
-  }
-
-  function buildPanel() {
-    const panel = document.createElement('aside');
-    panel.className = 'deck-source';
-    panel.setAttribute('aria-label', 'Markdown for this slide');
-    panel.innerHTML =
-      '<div class="deck-source__head">' +
-      '<span class="deck-source__count"></span>' +
-      '<span class="deck-source__type"></span>' +
-      '<button type="button" data-source-toggle>Hide (M)</button>' +
-      '</div>' +
-      '<pre class="deck-source__code"></pre>';
-    document.body.appendChild(panel);
-    return panel;
-  }
-
-  function deckSource(reveal, markdown) {
-    const panel = buildPanel();
-    const slides = global.deckSlides(markdown || '');
-
-    const total = reveal.getTotalSlides();
-    const count = panel.querySelector('.deck-source__count');
-    const type = panel.querySelector('.deck-source__type');
-    const code = panel.querySelector('.deck-source__code');
-
-    const update = () => {
-      const {h, v} = reveal.getIndices();
-      const section = reveal.getCurrentSlide();
-      const text = (slides[h] && slides[h][v || 0]) || '';
-      const number = reveal.getSlidePastCount() + 1;
-
-      count.textContent = `Slide ${number} of ${total}`;
-      type.textContent = section ? typeOf(section) : '';
-      code.textContent = text;
-      panel.scrollTop = 0;
-    };
-
-    const toggle = () => {
-      document.body.classList.toggle('source-hidden');
-      requestAnimationFrame(() => reveal.layout());
-    };
-
-    document.querySelectorAll('[data-source-toggle]').forEach(button =>
-      button.addEventListener('click', toggle)
-    );
-    reveal.addKeyBinding({keyCode: 77, key: 'M', description: 'Show or hide the Markdown'}, toggle);
-
-    reveal.on('slidechanged', update);
-    update();
-  }
-
-  global.deckSource = deckSource;
-  global.deckSlideType = typeOf;
-})(window);
-
 /* ---- src/deck-start.js ---- */
 /* Starts the deck on page load. The markdown is inline (built by the CLI)
    or fetched from <div class="reveal" data-deck="deck.md">. */
@@ -1385,7 +1310,6 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     if (deck.accent) {
       document.documentElement.style.setProperty('--deck-theme-1', deck.accent);
     }
-    if (deck.source) root.setAttribute('data-source', '');
     if (deck.pageNumbering) root.setAttribute('data-page-numbering', '');
 
     const template = document.createElement('script');
@@ -1409,13 +1333,6 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     await Promise.all(waits);
   }
 
-  function markdownOf(root) {
-    const template = root.querySelector('[data-markdown] > script[type="text/template"]');
-    return template
-      ? template.textContent.replace(/__SCRIPT_END__/g, '</script>').trim()
-      : '';
-  }
-
   function showError(root, error) {
     console.error('[deck]', error);
     const note = document.createElement('pre');
@@ -1432,11 +1349,6 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     try {
       const file = root.getAttribute('data-deck');
       if (file) await fetchDeck(root, new URL(file, location.href).href);
-
-      // Every deck has the panel; it starts hidden unless source: true.
-      const markdown = markdownOf(root);
-      document.body.classList.add('has-source');
-      if (!root.hasAttribute('data-source')) document.body.classList.add('source-hidden');
 
       await global.Reveal.initialize({
         plugins: [global.RevealMarkdown, global.RevealHighlight],
@@ -1462,7 +1374,6 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 
       global.deckChrome(global.Reveal);
       global.deckCharts();
-      global.deckSource(global.Reveal, markdown);
     } catch (error) {
       showError(root, error);
     }

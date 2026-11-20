@@ -71,7 +71,7 @@ npx vengeslides edit deck.md
 
 Opens `deck.md` straight in the editor; the address to open is printed. The deck must be in the folder you run it in, or beneath it.
 
-The editor has the markdown on the left and the deck on the right, with a rail on the far left whose `<` goes back to the library. The slide you're on sits in a box at the top of the markdown; click, scroll or change slide in the preview to move it. Your typing is saved to `deck.md` about 300 ms after you stop. If the file changes on disk in the meantime, the editor doesn't overwrite it: it says so, and you reload the page. Set `PORT` to use another port.
+The editor has the deck on the left and the markdown on the right, with a rail on the far left whose `<` goes back to the library. The front matter folds open in a Deck box above the slides, and each slide has its own box: click into one to show that slide, or change slide in the preview to bring its box into view. Typing a `---` line in a box splits it in two. Hover a box for its delete button and, on its lower edge, a + that adds a slide after it. Outside a text box (Esc leaves one), M slides the markdown out and back, ← → ↑ ↓ change slide and Esc shows every slide. Your typing is saved to `deck.md` about 300 ms after you stop. If the file changes on disk in the meantime, the editor doesn't overwrite it: it says so, and you reload the page. Set `PORT` to use another port.
 
 ### 3. From code
 
@@ -124,7 +124,6 @@ All options are optional.
 | `accent` | the theme's | The colour for links, the quote mark and charts. Sets `--deck-theme-1`. Quote it: `accent: '#12467A'` (an unquoted `#` starts a comment). |
 | `theme` | none | A built-in theme name (`dark`, `signal`) or a path to your own CSS file, relative to the deck file. |
 | `charts` | `[]` | Chart libraries for charts written as JSON: `chartjs`, `echarts`. A deck that links a `.csv` file gets `chartjs` on its own. |
-| `source` | `false` | Opens the markdown panel at the start. On every deck, M shows or hides each slide's markdown in a panel beside it. |
 | `page-numbering` | `false` | Shows Reveal's slide number in the bottom right corner of the window. The first slide has none. |
 
 Other keys are ignored. Front matter is a small part of YAML: one `key: value` per line, with text, numbers, `true`/`false` and `[lists]`. Anything else (nesting, multi-line values) stops with an error that names the line.
@@ -159,7 +158,6 @@ Reveal's keys work: arrows or space to move, F for full screen. Also:
 | --- | --- |
 | Esc | The overview: every slide, each with its number. Swipe sideways or scroll to move through them; click one to open it. |
 | G | Reveal's jump box: type a slide number, then Enter, to go to it |
-| M | Shows or hides each slide's markdown in a panel beside it |
 
 ## Slide types
 
@@ -199,7 +197,7 @@ When the same heading size appears two or more times, each of those headings sta
 | `#`, `#` | none | one per `#` |
 | `#`, `##`, then text | none | none: a headline |
 
-Sections sit side by side in the same shapes as pictures, each with a line above it. The title and sections sit together in the middle of the slide. With 9 or 10 sections the text is 20% smaller. Ten is the most that show; later sections stay in the markdown but not on the slide, and while the markdown panel (M) is open a dotted red line marks the slide.
+Sections sit side by side in the same shapes as pictures, each with a line above it. The title and sections sit together in the middle of the slide. With 9 or 10 sections the text is 20% smaller. Ten is the most that show; later sections stay in the markdown but not on the slide.
 
 A fragment on a section's heading brings in only the heading. To bring in the whole section, put `<!-- .cluster: class="fragment" -->` on the line above its heading.
 
@@ -430,11 +428,11 @@ All sizes are px on the fixed 1920×1080 frame; don't use `vw` or `vh`. Defaults
 | `--deck-dark-theme-4` | theme 4, 40% toward white | `--deck-theme-4` on dark slides |
 | `--deck-dark-theme-5` | theme 5, 40% toward white | `--deck-theme-5` on dark slides |
 
-**Code blocks.** The markdown panel (M) uses these too.
+**Code blocks.** The editor's markdown pane uses these too.
 
 | Token | Default | Used for |
 | --- | --- | --- |
-| `--deck-code-background` | `#22201d` | Code blocks; the markdown panel's background |
+| `--deck-code-background` | `#22201d` | Code blocks; the editor's markdown pane background |
 | `--deck-code-ink` | `#ece8e1` | Code block text, titles; the panel's text |
 | `--deck-code-comment` | `#8f887e` | Comments; the panel's slide count and button border |
 | `--deck-code-keyword` | `#e8859b` | Keywords, tags |
@@ -512,8 +510,6 @@ These are public: themes and your own CSS can rely on them.
 | --- | --- | --- |
 | `deck-ready` | `.reveal` | Slides are built. Slides are hidden until then. |
 | `is-first` | Reveal's `.slide-number` | Hides the number on the first slide |
-| `has-source`, `source-hidden` | `body` | The page has the markdown panel (always), and it is hidden |
-| `deck-source` | `aside` | The markdown panel. Children: `deck-source__head`, `deck-source__count`, `deck-source__type`, `deck-source__code`. |
 | `deck-error` | `pre` | The deck failed to load |
 
 ## Working on this package
@@ -550,7 +546,7 @@ Rebuilds `dist/` from `src/` and `vendor/`. `deck.js` and `deck.css` are the fil
 
 | Folder | Holds |
 | --- | --- |
-| `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides), `deck-charts.js`, `deck-source.js` (markdown panel), `deck-start.js` (starts it all). CSS: `deck-tokens.css` (the base theme), `deck-layouts.css` (where cells and blocks go on each slide type), `deck-elements.css` (how text, lists, code and tables look), `deck-page.css` (the panel, overview, load errors) |
+| `src/` | The runtime: `deck-config.js` (front matter), `deck-chrome.js` (builds slides), `deck-charts.js`, `deck-start.js` (starts it all). CSS: `deck-tokens.css` (the base theme), `deck-layouts.css` (where cells and blocks go on each slide type), `deck-elements.css` (how text, lists, code and tables look), `deck-page.css` (overview, load errors) |
 | `src/themes/` | Built-in themes: `dark`, `signal` |
 | `src/editor/` | The editor page, served by `vengeslides` (`lib/edit.js`, with the library in `lib/library.js`) |
 | `lib/`, `bin/` | The CLI and the dev server's renderer |

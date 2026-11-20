@@ -100,7 +100,7 @@ shift: is defining the journey from a B
 
 ---
 
-<!-- .slide: class="big dark" data-background-color="#b9822e" -->
+<!-- .slide: class="dark" data-background-color="#b9822e" -->
 
 # Mission <!-- .element: class="eyebrow" -->
 

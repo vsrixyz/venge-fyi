@@ -1,13 +1,11 @@
-// Text box beside a live preview. The preview is drawn here in the browser.
+// One text box per slide beside a live preview. The preview is drawn here in the browser.
 import {renderDeck} from '../../lib/page.js';
 
-const text = document.querySelector('.text');
-const backdrop = document.querySelector('.backdrop');
+const list = document.querySelector('.slides-list');
+const front = document.querySelector('.front-text');
 const stage = document.querySelector('.stage');
-const strip = document.querySelector('.strip');
 const note = document.querySelector('.note');
 const count = document.querySelector('.count');
-const type = document.querySelector('.type');
 
 // Served by `vengeslides`: the library folder at /, our files under /_/, the deck named in ?deck=.
 const deckPath = new URLSearchParams(location.search).get('deck') || '';
@@ -18,256 +16,222 @@ const base = new URL(folder ? `/${folder}/` : '/', location.origin).href;
 
 let preview = null;
 let timer = null;
-let groups = [];
-let current = null;
-let stripItems = [];
-let wheeling = false;
 let etag = null;
 let saving = false;
 let unsaved = false;
+// The front matter's own --- lines, kept as they were (null: the file had none).
+let fence = null;
+// Each slide: {pre, body, post} (blank lines around it stay out of its box), and the separators between.
+let slides = [];
+let seps = [];
+let current = 0;
 const problems = {deck: '', save: ''};
+
+const SEP = /^(---|--)(?=\r?$)/m;
 
 function showProblem(kind, message) {
   problems[kind] = message;
   note.textContent = problems.save || problems.deck;
 }
 
-// Runs of lines that belong to one slide, or to a separator between slides.
-// Same separators as the deck: a line of --- or --. Front matter counts as the first slide.
-function groupLines(source) {
+// The file is front matter (its own box) and slides.
+function splitFile(source) {
   const lines = source.split('\n');
-  const out = [];
-  let offset = 0;
-  let front = -1;
-  if (/^---\r?$/.test(lines[0])) {
-    front = lines.findIndex((line, i) => i > 0 && /^---[ \t]*\r?$/.test(line));
-  }
+  const end = /^---\r?$/.test(lines[0])
+    ? lines.findIndex((line, i) => i > 0 && /^---[ \t]*\r?$/.test(line))
+    : -1;
+  if (end === -1) return {fence: null, front: '', body: source};
+  return {
+    fence: {open: lines[0], close: lines[end], rest: end < lines.length - 1},
+    front: lines.slice(1, end).join('\n'),
+    body: lines.slice(end + 1).join('\n')
+  };
+}
+
+// Same separators as the deck: a line of --- or --. Joining the parts gives back the text exactly.
+function splitSlides(body) {
+  const parts = body.split(new RegExp(SEP.source, 'gm'));
+  const out = {slides: [], seps: []};
+  parts.forEach((part, i) => {
+    if (i % 2) return out.seps.push(part);
+    const pre = part.match(/^(?:[ \t]*\r?\n)*/)[0];
+    const rest = part.slice(pre.length);
+    const post = rest.match(/(?:\r?\n[ \t]*)*$/)[0];
+    out.slides.push({pre, body: rest.slice(0, rest.length - post.length), post});
+  });
+  return out;
+}
+
+function bodyText() {
+  return slides.map((s, i) => s.pre + s.body + s.post + (i < seps.length ? seps[i] : '')).join('');
+}
+
+function fileText() {
+  const body = bodyText();
+  if (!fence && !front.value.trim()) return body;
+  const {open, close, rest} = fence || {open: '---', close: '---', rest: true};
+  const after = rest || body ? `\n${body}` : '';
+  return `${open}\n${front.value ? front.value + '\n' : ''}${close}${after}`;
+}
+
+// Reveal's index for each slide: --- starts a new column, -- goes below.
+function indices() {
   let h = 0;
   let v = 0;
-  lines.forEach((line, i) => {
-    const bare = line.replace(/\r$/, '');
-    let kind = 'slide';
-    let key;
-    if (i <= front) {
-      key = 'front';
-    } else if (bare === '---' || bare === '--') {
-      kind = 'sep';
-      if (bare === '---') { h += 1; v = 0; } else { v += 1; }
-      key = `sep${h}.${v}`;
-    } else {
-      key = `${h}.${v}`;
+  return slides.map((_, i) => {
+    if (i > 0) {
+      if (seps[i - 1] === '---') { h += 1; v = 0; } else { v += 1; }
     }
-    const last = out[out.length - 1];
-    if (last && last.key === key) {
-      last.lines.push(line);
-    } else {
-      out.push({key, kind, h: key === 'front' ? 0 : h, v: key === 'front' ? 0 : v, start: offset, lines: [line]});
-    }
-    offset += line.length + 1;
+    return {h, v};
   });
-  // Blank lines at a slide's edges sit outside its box but still belong to it.
-  const tight = [];
-  out.forEach(g => {
-    if (g.kind !== 'slide') {
-      g.owner = tight.findLast(t => t.kind === 'slide');
-      tight.push(g);
-      return;
-    }
-    let a = 0;
-    let b = g.lines.length;
-    while (a < b && !g.lines[a].trim()) a++;
-    while (b > a && !g.lines[b - 1].trim()) b--;
-    const part = (from, to, kind) => {
-      if (from >= to) return null;
-      const before = g.lines.slice(0, from).join('\n').length + (from ? 1 : 0);
-      return {...g, kind, start: g.start + before, lines: g.lines.slice(from, to)};
-    };
-    const body = part(a, b, 'slide') || {...g};
-    [part(0, a, 'gap'), body, part(b, g.lines.length, 'gap')].forEach(p => {
-      if (!p) return;
-      if (p.kind === 'gap') p.owner = body;
-      tight.push(p);
-    });
-  });
-  tight.forEach(g => { g.end = g.start + g.lines.join('\n').length; });
-  return tight;
 }
 
-function drawBackdrop() {
-  groups = groupLines(text.value);
-  backdrop.replaceChildren(...groups.map(g => {
-    const div = document.createElement('div');
-    div.className = g.kind;
-    if (g.kind === 'slide' && g.key === current) div.classList.add('current');
-    // The zero-width space keeps a trailing empty line from collapsing.
-    div.textContent = g.lines.join('\n') + '​';
-    g.el = div;
-    return div;
+function boxes() {
+  return [...list.querySelectorAll('.slide-box')];
+}
+
+function drawSlides(focusAt) {
+  const at = indices();
+  list.replaceChildren(...slides.map((slide, i) => {
+    const box = document.createElement('section');
+    box.className = 'slide-box';
+    box.classList.toggle('current', i === current);
+    box.dataset.h = at[i].h;
+    box.dataset.v = at[i].v;
+    const head = document.createElement('header');
+    const number = document.createElement('span');
+    number.className = 'number';
+    number.textContent = i + 1;
+    const type = document.createElement('span');
+    type.className = 'type';
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'remove';
+    remove.title = 'Delete this slide';
+    remove.setAttribute('aria-label', `Delete slide ${i + 1}`);
+    remove.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5"/></svg>';
+    remove.addEventListener('click', () => removeSlide(i));
+    head.append(number, type, remove);
+    const area = document.createElement('textarea');
+    area.spellcheck = false;
+    area.value = slide.body;
+    area.setAttribute('aria-label', `Slide ${i + 1}`);
+    area.addEventListener('focus', () => setCurrent(i));
+    area.addEventListener('input', () => edited(i, area));
+    const add = document.createElement('button');
+    add.type = 'button';
+    add.className = 'add';
+    add.textContent = '+';
+    add.title = 'Add a slide here';
+    add.setAttribute('aria-label', `Add a slide after slide ${i + 1}`);
+    add.addEventListener('click', () => addSlide(i));
+    box.append(head, area, add);
+    return box;
   }));
-  backdrop.scrollTop = text.scrollTop;
-}
-
-function caretGroup() {
-  const at = text.selectionStart;
-  const i = groups.findIndex(g => at >= g.start && at <= g.end);
-  if (i === -1) return groups[groups.length - 1];
-  if (groups[i].kind === 'slide') return groups[i];
-  return groups[i].owner || groups.find(g => g.kind === 'slide') || groups[i];
-}
-
-// Gap between the top of the field and the top of the box.
-function topGap() {
-  return parseFloat(getComputedStyle(text).paddingTop);
-}
-
-// Typing during a glide stops it, so input resumes it until it lands.
-let gliding = null;
-
-function glide(group) {
-  gliding = group.key;
-  text.scrollTo({top: group.el.offsetTop - topGap(), behavior: 'smooth'});
-}
-
-function showHeader() {
-  if (!preview) return;
-  count.textContent = `Slide ${preview.getSlidePastCount() + 1} of ${preview.getTotalSlides()}`;
-  const group = groups.find(g => g.kind === 'slide' && g.key === current);
-  const win = stage.querySelector('iframe:not(.loading)').contentWindow;
-  type.textContent = group && group.key === 'front'
-    ? 'front matter'
-    : win.deckSlideType ? win.deckSlideType(preview.getCurrentSlide()) : '';
-}
-
-function markStripSlide(h, v) {
-  let selected = null;
-  stripItems.forEach(item => {
-    const active = item.h === h && item.v === (v || 0);
-    item.button.classList.toggle('current', active);
-    if (active) {
-      item.button.setAttribute('aria-current', 'true');
-      selected = item.button;
-    } else {
-      item.button.removeAttribute('aria-current');
+  showTypes();
+  if (focusAt) {
+    const area = boxes()[focusAt.index]?.querySelector('textarea');
+    if (area) {
+      area.focus({preventScroll: true});
+      area.setSelectionRange(focusAt.caret, focusAt.caret);
     }
-  });
-  if (!selected) return;
-  const itemRect = selected.getBoundingClientRect();
-  const stripRect = strip.getBoundingClientRect();
-  if (itemRect.left < stripRect.left) {
-    strip.scrollLeft += itemRect.left - stripRect.left;
-  } else if (itemRect.right > stripRect.right) {
-    strip.scrollLeft += itemRect.right - stripRect.right;
   }
 }
 
-function fillThumbnail(frame, slide) {
-  const sourceDoc = stage.querySelector('iframe:not(.loading)').contentDocument;
-  const doc = frame.contentDocument;
-  doc.open();
-  doc.write('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body></body></html>');
-  doc.close();
-
-  const baseTag = doc.createElement('base');
-  baseTag.href = sourceDoc.querySelector('base')?.href || base;
-  doc.head.append(baseTag);
-  sourceDoc.head.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
-    doc.head.append(node.cloneNode(true));
-  });
-  const styles = doc.createElement('style');
-  styles.textContent = `
-    html, body { width: 1920px !important; height: 1080px !important; margin: 0 !important; overflow: hidden !important; }
-    body { background: var(--deck-background) !important; }
-    .reveal { position: relative !important; inset: auto !important; width: 1920px !important; height: 1080px !important; margin: 0 !important; overflow: hidden !important; }
-    .reveal .slides { position: relative !important; inset: auto !important; width: 1920px !important; height: 1080px !important; transform: none !important; overflow: hidden !important; }
-    .reveal .slides section { display: block !important; position: absolute !important; inset: 0 !important; width: 1920px !important; height: 1080px !important; opacity: 1 !important; visibility: visible !important; transform: none !important; }
-  `;
-  doc.head.append(styles);
-
-  const root = doc.createElement('div');
-  root.className = 'reveal deck-ready';
-  const slides = doc.createElement('div');
-  slides.className = 'slides';
-  root.append(slides);
-  doc.body.append(root);
-
-  const clone = slide.cloneNode(true);
-  clone.classList.remove('past', 'present', 'future', 'stack');
-  clone.style.cssText = '';
-  clone.removeAttribute('data-index-h');
-  clone.removeAttribute('data-index-v');
-  clone.removeAttribute('data-index');
-  const canvases = slide.querySelectorAll('canvas');
-  clone.querySelectorAll('canvas').forEach((canvas, index) => {
-    const image = doc.createElement('img');
-    try {
-      image.src = canvases[index].toDataURL();
-    } catch (error) {
-      console.error('Could not copy a chart into its slide thumbnail.', error);
-      return;
-    }
-    image.width = canvases[index].width;
-    image.height = canvases[index].height;
-    image.style.cssText = canvases[index].style.cssText;
-    canvas.replaceWith(image);
-  });
-  slides.append(clone);
+function showCount() {
+  if (preview) count.textContent = `${preview.getSlidePastCount() + 1} of ${preview.getTotalSlides()}`;
 }
 
-function drawStrip(reveal) {
-  stripItems = reveal.getSlides().map((slide, index) => {
-    const {h, v = 0} = reveal.getIndices(slide);
-    const button = document.createElement('button');
-    button.className = 'slide-thumb';
-    button.type = 'button';
-    button.setAttribute('aria-label', `Go to slide ${index + 1}`);
-
-    const viewport = document.createElement('span');
-    viewport.className = 'thumb-viewport';
-    const frame = document.createElement('iframe');
-    frame.title = '';
-    frame.tabIndex = -1;
-    frame.setAttribute('aria-hidden', 'true');
-    viewport.append(frame);
-    const label = document.createElement('span');
-    label.className = 'thumb-label';
-    label.textContent = `Slide ${index + 1}`;
-    button.append(viewport, label);
-    button.addEventListener('click', () => {
-      reveal.slide(h, v);
-      followPreview(reveal);
-    });
-    strip.append(button);
-    fillThumbnail(frame, slide);
-    return {h, v, button};
+function showTypes() {
+  const win = preview && stage.querySelector('iframe:not(.loading)')?.contentWindow;
+  boxes().forEach(box => {
+    const section = preview && preview.getSlide(Number(box.dataset.h), Number(box.dataset.v));
+    box.querySelector('.type').textContent = section && win?.deckSlideType ? win.deckSlideType(section) : '';
   });
-  const indices = reveal.getIndices();
-  markStripSlide(indices.h, indices.v);
+  showCount();
 }
 
-function setCurrent(group, move) {
-  if (!group) return;
-  const changed = group.key !== current;
-  current = group.key;
-  groups.forEach(g => g.el.classList.toggle('current', g.kind === 'slide' && g.key === current));
+function setCurrent(i, scroll) {
+  const all = boxes();
+  if (!all[i]) return;
+  current = i;
+  all.forEach((box, n) => box.classList.toggle('current', n === i));
   if (preview) {
+    const h = Number(all[i].dataset.h);
+    const v = Number(all[i].dataset.v);
     const now = preview.getIndices();
-    if (now.h !== group.h || (now.v || 0) !== group.v) preview.slide(group.h, group.v);
-    markStripSlide(group.h, group.v);
+    if (now.h !== h || (now.v || 0) !== v) preview.slide(h, v);
   }
-  showHeader();
-  if (changed && move) glide(group);
+  showCount();
+  if (scroll) all[i].scrollIntoView({block: 'start'});
 }
 
-// Changing slide in the preview glides its text into the box and puts the cursor there.
+// Typing a --- or -- line in a box splits it into slides there and then.
+function edited(i, area) {
+  slides[i].body = area.value;
+  if (SEP.test(area.value)) {
+    const before = slides.slice(0, i).map((s, n) => s.pre + s.body + s.post + seps[n]).join('') + slides[i].pre;
+    const caret = before.length + area.selectionStart;
+    ({slides, seps} = splitSlides(bodyText()));
+    let start = 0;
+    let index = slides.length - 1;
+    let inBox = slides[index].body.length;
+    for (let n = 0; n < slides.length; n++) {
+      const bodyStart = start + slides[n].pre.length;
+      const end = bodyStart + slides[n].body.length + slides[n].post.length + (seps[n] || '').length;
+      if (caret <= end) {
+        index = n;
+        inBox = Math.max(0, Math.min(caret - bodyStart, slides[n].body.length));
+        break;
+      }
+      start = end;
+    }
+    current = index;
+    drawSlides({index, caret: inBox});
+    setCurrent(index);
+  }
+  changed();
+}
+
+function addSlide(i) {
+  const last = i === slides.length - 1;
+  const added = {pre: '\n\n', body: '', post: last ? slides[i].post || '\n' : '\n\n'};
+  slides[i].post = '\n\n';
+  slides.splice(i + 1, 0, added);
+  seps.splice(i, 0, '---');
+  current = i + 1;
+  drawSlides({index: i + 1, caret: 0});
+  setCurrent(i + 1);
+  changed();
+}
+
+// The only slide is emptied instead. A column's first slide passes its --- to the next.
+function removeSlide(i) {
+  if (slides.length === 1) {
+    slides[0].body = '';
+  } else if (i === 0) {
+    slides[1].pre = slides[0].pre;
+    slides.splice(0, 1);
+    seps.splice(0, 1);
+  } else {
+    if (i === slides.length - 1) slides[i - 1].post = slides[i].post;
+    if (seps[i - 1] === '---' && seps[i] === '--') seps[i] = '---';
+    slides.splice(i, 1);
+    seps.splice(i - 1, 1);
+  }
+  current = Math.min(i, slides.length - 1);
+  drawSlides();
+  setCurrent(current, true);
+  changed();
+}
+
+// Changing slide in the preview brings its box into view at once.
 function followPreview(reveal) {
   if (reveal !== preview) return;
   const {h, v = 0} = reveal.getIndices();
-  const now = groups.find(g => g.kind === 'slide' && g.key === current);
-  if (now && now.h === h && now.v === v) return showHeader();
-  const group = groups.find(g => g.kind === 'slide' && g.key === `${h}.${v}`);
-  if (!group) return showHeader();
-  text.setSelectionRange(group.start, group.start);
-  setCurrent(group, true);
+  const i = boxes().findIndex(box => Number(box.dataset.h) === h && Number(box.dataset.v) === v);
+  if (i !== -1 && i !== current) setCurrent(i, true);
+  else showCount();
 }
 
 function ready(win) {
@@ -286,14 +250,12 @@ function ready(win) {
 async function render() {
   let deck;
   try {
-    deck = deckConfig(text.value);
+    deck = deckConfig(fileText());
     showProblem('deck', '');
   } catch (error) {
     showProblem('deck', error.message);
     return;
   }
-  // The text box is the source, so the deck's own panel stays off.
-  deck.source = false;
   const html = renderDeck(deck, {runtime})
     .replace('<head>', `<head>\n<base href="${base}" />`);
 
@@ -306,6 +268,7 @@ async function render() {
   doc.write(html);
   doc.close();
 
+  frame.contentWindow.addEventListener('keydown', toggleKey);
   const reveal = await ready(frame.contentWindow);
   if (!frame.isConnected) return;
   // A newer render may have finished first; keep only the latest.
@@ -315,10 +278,9 @@ async function render() {
   frame.classList.remove('loading');
   preview = reveal;
   if (reveal) {
-    strip.replaceChildren();
-    drawStrip(reveal);
     reveal.on('slidechanged', () => followPreview(reveal));
-    setCurrent(groups.find(g => g.kind === 'slide' && g.key === current) || caretGroup(), false);
+    setCurrent(current);
+    showTypes();
   }
 }
 
@@ -331,11 +293,11 @@ async function open() {
   etag = response.headers.get('ETag');
   document.querySelector('.path').textContent = deckPath;
   document.title = `${deckPath.split('/').pop()} · Editor`;
-  text.value = await response.text();
-  text.setSelectionRange(0, 0);
-  text.focus();
-  drawBackdrop();
-  setCurrent(caretGroup(), false);
+  const file = splitFile(await response.text());
+  fence = file.fence;
+  front.value = file.front;
+  ({slides, seps} = splitSlides(file.body));
+  drawSlides({index: 0, caret: 0});
   render();
 }
 
@@ -347,7 +309,7 @@ async function save() {
     unsaved = false;
     let response;
     try {
-      response = await fetch(SOURCE, {method: 'PUT', headers: {'If-Match': etag}, body: text.value, keepalive: true});
+      response = await fetch(SOURCE, {method: 'PUT', headers: {'If-Match': etag}, body: fileText(), keepalive: true});
     } catch {
       showProblem('save', 'Not saved: the editor server is not running. Your text is still here.');
       break;
@@ -375,11 +337,7 @@ document.querySelector('.back').addEventListener('click', async event => {
   if (!problems.save) location.href = href;
 });
 
-text.addEventListener('input', () => {
-  drawBackdrop();
-  setCurrent(caretGroup(), true);
-  const target = gliding && groups.find(g => g.kind === 'slide' && g.key === gliding);
-  if (target) requestAnimationFrame(() => glide(target));
+function changed() {
   clearTimeout(timer);
   timer = setTimeout(() => {
     timer = null;
@@ -387,29 +345,32 @@ text.addEventListener('input', () => {
     save();
     render();
   }, 300);
+}
+
+front.addEventListener('input', changed);
+
+const typing = event => event.target.closest?.('textarea, input, summary, button') || event.metaKey || event.ctrlKey || event.altKey;
+
+// M shows or hides the markdown, from anywhere but a text box (the preview included).
+function toggleKey(event) {
+  if (event.key !== 'm' && event.key !== 'M' || typing(event)) return;
+  event.preventDefault();
+  document.body.classList.toggle('source-hidden');
+}
+document.addEventListener('keydown', toggleKey);
+
+// Outside the text, the arrows and Esc reach the preview, as they do inside it.
+const KEYS = {ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down', Escape: 'toggleOverview'};
+document.addEventListener('keydown', event => {
+  const action = KEYS[event.key];
+  if (!action || !preview || typing(event)) return;
+  event.preventDefault();
+  preview[action]();
 });
 
-document.addEventListener('selectionchange', () => {
-  if (document.activeElement === text && groups.length) setCurrent(caretGroup(), true);
-});
-
-text.addEventListener('scroll', () => {
-  backdrop.scrollTop = text.scrollTop;
-});
-
-// Scrolling by hand: the slide that comes to rest nearest the top becomes current.
-text.addEventListener('wheel', () => { wheeling = true; }, {passive: true});
-text.addEventListener('scrollend', () => {
-  const target = gliding && groups.find(g => g.kind === 'slide' && g.key === gliding);
-  if (target && Math.abs(text.scrollTop - (target.el.offsetTop - topGap())) < 2) gliding = null;
-  if (!wheeling) return;
-  wheeling = false;
-  const top = text.scrollTop + topGap();
-  const nearest = groups
-    .filter(g => g.kind === 'slide')
-    .reduce((best, g) => Math.abs(g.el.offsetTop - top) < Math.abs(best.el.offsetTop - top) ? g : best);
-  setCurrent(nearest, false);
-  glide(nearest);
+// Esc in a text box leaves it, so the keys above work again.
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && event.target.matches?.('textarea')) event.target.blur();
 });
 
 open();

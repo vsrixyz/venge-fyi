@@ -1,6 +1,6 @@
 # Editor design
 
-A local command that opens a deck in the browser: you type markdown on the left and see the slides on the right.
+A local command that opens a deck in the browser: you see the slides on the left and type markdown on the right.
 
 ```bash
 npm run edit examples/glou-glou/glou-glou.md
@@ -12,7 +12,7 @@ For people using the package: `npx vengeslides edit talk.md`. Both print the add
 
 - **Saving:** as you type. The file is written about 300 ms after you stop typing. The preview always shows the file as it is on disk, so it matches what `build` makes.
 - **Text box:** the browser's own. No editor library. The current slide's lines are marked with a bar beside them, not coloured text.
-- **First version:** text, preview and the slide strip.
+- **First version:** text and preview. No slide strip: ← → move through the deck and Esc shows every slide (Reveal's overview). Removed 2026-11-19.
 - **One deck per command.** The editor edits the file you name, nothing else.
 
 ## Not in the first version
@@ -22,17 +22,19 @@ The deck settings panel, the "Add slide" picker, slide-type buttons (dark, prose
 ## Layout
 
 ```
-┌──────────────┬──────────────────────────────┐
-│ markdown     │ path · slide 3 of 13         │
-│ (whole file) │ preview                      │
-│ ▌current     │                              │
-│ ▌slide       ├──────────────────────────────┤
-│              │ [1] [2] [3] [4] …  strip     │
-└──────────────┴──────────────────────────────┘
+┌──────────────────────────────┬──────────────┐
+│ path                         │ markdown     │
+│ preview                      │ (whole file) │
+│                              │ ▌current     │
+│                              │ ▌slide       │
+└──────────────────────────────┴──────────────┘
 ```
 
 - Moving the cursor goes to that slide. The front matter counts as slide 1.
-- Changing slide in the preview or the strip moves the cursor to the start of that slide's text.
+- Outside the text, ← → ↑ ↓ and Esc reach the preview, and M slides the markdown out and back.
+- The front matter folds open in a Deck box above the slides, and each slide is its own box (its own text field), so the cursor is always inside one slide. Separators and the blank lines around them live between boxes and are joined back exactly on save.
+- Each box has delete in its header and a + on its lower edge to add a slide after it.
+- Changing slide in the preview moves the cursor to the start of that slide's text.
 
 ## How it works
 
@@ -56,9 +58,7 @@ The file-serving and reload code in `scripts/dev.js` moves into a shared module 
 1. Load `/source` into the text box.
 2. On typing, wait 300 ms, then `PUT /source`.
 3. When `/events` says the file changed, reload the preview at the same slide (`/deck#/3`). The new preview loads hidden and replaces the old one once it's ready, so it doesn't flash.
-4. Find slides by splitting the text on the same separators as the deck. That splitting moves into one shared function, so the M panel and the editor can't disagree.
-
-**Slide strip:** small copies of the preview's slides, scaled down. Charts are drawn into canvases that don't copy, so they're copied as images.
+4. Find slides by splitting the text on the same separators as the deck. The front matter goes in its own box above the slides and is joined back, with its `---` lines as they were, when saving.
 
 ## When something goes wrong
 
