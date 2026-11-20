@@ -145,7 +145,7 @@ It has the energy left over to take on everything else.
 
 ---
 
-<!-- .slide: class="dark tint" data-background-image="assets/pexels-yelenaodintsova-15792421.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
+<!-- .slide: class="dark" data-background-image="assets/pexels-yelenaodintsova-15792421.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" data-tint="#1f4d36" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -155,7 +155,7 @@ A continuous read of your body's resilience replaces the yearly check.
 
 ---
 
-<!-- .slide: class="dark tint" data-background-image="assets/pexels-reneterp-9078659.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
+<!-- .slide: class="dark" data-background-image="assets/pexels-reneterp-9078659.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" data-tint="#1f4d36" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -165,7 +165,7 @@ Every home has imaging equipment in the bathroom. Inspecting your own liver is n
 
 ---
 
-<!-- .slide: class="dark tint" data-background-image="assets/pexels-lorenzo-castellino-61076802-12652792.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
+<!-- .slide: class="dark" data-background-image="assets/pexels-lorenzo-castellino-61076802-12652792.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" data-tint="#1f4d36" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -175,7 +175,7 @@ You anticipate the change and prepare for it.
 
 ---
 
-<!-- .slide: class="dark tint" data-background-image="assets/pexels-taiyesalawu-33491430.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
+<!-- .slide: class="dark" data-background-image="assets/pexels-taiyesalawu-33491430.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" data-tint="#1f4d36" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -185,7 +185,7 @@ Health is a set of personal, dynamic variables, not a snapshot in a range.
 
 ---
 
-<!-- .slide: class="dark tint" data-background-image="assets/pexels-matreding-33995259.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
+<!-- .slide: class="dark" data-background-image="assets/pexels-matreding-33995259.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" data-tint="#1f4d36" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -195,7 +195,7 @@ You understand how Wednesday's dinner impacts Thursday's run.
 
 ---
 
-<!-- .slide: class="dark tint" data-background-image="assets/pexels-ahsen-53440929-7762932.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
+<!-- .slide: class="dark" data-background-image="assets/pexels-ahsen-53440929-7762932.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" data-tint="#1f4d36" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -205,7 +205,7 @@ Employers and insurers pay to keep people resilient.
 
 ---
 
-<!-- .slide: class="dark tint" data-background-image="assets/pexels-pavel-danilyuk-8111316.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
+<!-- .slide: class="dark" data-background-image="assets/pexels-pavel-danilyuk-8111316.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" data-tint="#1f4d36" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -215,7 +215,7 @@ No one starts a GLP-1 or a statin without a behavior plan.
 
 ---
 
-<!-- .slide: class="dark tint" data-background-image="assets/pexels-helenalopes-27177205.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
+<!-- .slide: class="dark" data-background-image="assets/pexels-helenalopes-27177205.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" data-tint="#1f4d36" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -225,7 +225,7 @@ Studies that took a decade can run across a population in a season.
 
 ---
 
-<!-- .slide: class="dark tint" data-background-image="assets/pexels-ktccphotography-17270017.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
+<!-- .slide: class="dark" data-background-image="assets/pexels-ktccphotography-17270017.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" data-tint="#1f4d36" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -235,7 +235,7 @@ A loneliness score sits on your dashboard next to sleep and is treated like any 
 
 ---
 
-<!-- .slide: class="dark tint" data-background-image="assets/pexels-skylight-views-2151863365-35703187.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" -->
+<!-- .slide: class="dark" data-background-image="assets/pexels-skylight-views-2151863365-35703187.jpg" data-background-color="#1f4d36" data-background-opacity="0.45" data-tint="#1f4d36" -->
 
 #### The Vision <!-- .element: class="eyebrow" -->
 
@@ -253,7 +253,7 @@ It has the energy left over to take on everything else.
 
 ---
 
-<!-- .slide: class="dark split tint" data-background-image="assets/pexels-charlss-gonzhu-433318654-15277956.jpg" data-background-color="#7a1f1f" data-background-opacity="0.45" -->
+<!-- .slide: class="dark split" data-background-image="assets/pexels-charlss-gonzhu-433318654-15277956.jpg" data-background-color="#7a1f1f" data-background-opacity="0.45" data-tint="#7a1f1f" -->
 
 # Audience 1 <!-- .element: class="eyebrow" -->
 ## The data enthusiast
@@ -268,7 +268,7 @@ They manage other people's health, and want more for their own. They are curious
 
 ---
 
-<!-- .slide: class="dark split tint" data-background-image="assets/pexels-ktccphotography-17270017.jpg" data-background-color="#7a1f1f" data-background-opacity="0.45" -->
+<!-- .slide: class="dark split" data-background-image="assets/pexels-ktccphotography-17270017.jpg" data-background-color="#7a1f1f" data-background-opacity="0.45" data-tint="#7a1f1f" -->
 
 
 # Audience 2 <!-- .element: class="eyebrow" -->

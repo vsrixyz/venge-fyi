@@ -164,7 +164,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
 
   // A slide with no type is grid: it finds its own cells.
   const LAYOUTS = ['grid', 'prose', 'split'];
-  const MODIFIERS = ['dark', 'light', 'tint', 'cards', 'spectrum'];
+  const MODIFIERS = ['dark', 'light', 'cards', 'spectrum'];
 
   const MEDIA =
     'img, picture, video, svg, iframe, canvas, [data-chart], ' +
@@ -970,6 +970,20 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     }, {passive: false});
   }
 
+  // data-tint: the background photo in one colour, its own light and dark kept. Reveal draws
+  // backgrounds outside the slide, so the colour is read from the slide and set there.
+  function paintTint(reveal, section) {
+    const name = section.getAttribute('data-tint');
+    if (!name) return;
+    const content = reveal.getSlideBackground(section)?.querySelector('.slide-background-content');
+    if (!content) return;
+    const colour = COLOUR_NAMES[name]
+      ? getComputedStyle(section).getPropertyValue(COLOUR_NAMES[name]).trim()
+      : name;
+    content.style.backgroundColor = colour;
+    content.style.backgroundBlendMode = 'luminosity';
+  }
+
   function deckChrome(reveal) {
     const root = document.querySelector('.reveal');
     if (!root) return;
@@ -982,6 +996,7 @@ const Rs={id:"highlight",HIGHLIGHT_STEP_DELIMITER:"|",HIGHLIGHT_LINE_DELIMITER:"
     // Re-read fragments from the rebuilt DOM.
     reveal.sync();
     reveal.layout();
+    leafSlides(root).forEach(section => paintTint(reveal, section));
 
     // deck.njk hides slides until this class is set.
     root.classList.add('deck-ready');

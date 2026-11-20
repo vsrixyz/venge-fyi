@@ -384,6 +384,7 @@ function button(name, label, onClick) {
 function colourOf(name) {
   const win = stage.querySelector('iframe:not(.loading)')?.contentWindow;
   if (!win) return 'transparent';
+  if (name !== 'background' && !COLOURS.includes(name)) return name;
   const token = name === 'background' ? '--deck-background' : `--deck-${name}`;
   return win.getComputedStyle(win.document.documentElement).getPropertyValue(token).trim() || 'transparent';
 }
@@ -405,9 +406,11 @@ function closePanel() {
   if (panel.matches(':popover-open')) panel.hidePopover();
 }
 
-function colourPanel(anchor) {
+// Swatches for one attribute: the background colour, or the photo's tint. 0 takes it off.
+function colourPanel(anchor, name = 'data-background-color') {
+  const key = name;
   openPanel(anchor, panel => {
-    const now = attr(slideLine(slides[current].body).attrs, 'data-background-color');
+    const now = attr(slideLine(slides[current].body).attrs, key);
     ['', ...COLOURS].forEach(name => {
       const swatch = document.createElement('button');
       swatch.type = 'button';
@@ -415,9 +418,9 @@ function colourPanel(anchor) {
       swatch.classList.toggle('on', (now || '') === name);
       swatch.style.setProperty('--swatch', colourOf(name || 'background'));
       swatch.setAttribute('aria-label', name || 'Default');
-      swatch.innerHTML = `<span></span>${name ? name.replace('theme-', '') : 'Default'}`;
+      swatch.innerHTML = `<span></span>${name ? name.replace('theme-', '') : '0'}`;
       swatch.addEventListener('click', () => {
-        setSlideLine(attrs => setAttr(attrs, 'data-background-color', name || null));
+        setSlideLine(attrs => setAttr(attrs, key, name || null));
         closePanel();
       });
       panel.append(swatch);
@@ -467,7 +470,7 @@ function imagePanel(anchor) {
       remove.addEventListener('click', () => {
         setSlideLine(attrs => {
           setAttr(attrs, 'data-background-image', null);
-          setClasses(attrs, list => { const at = list.indexOf('tint'); if (at !== -1) list.splice(at, 1); });
+          setAttr(attrs, 'data-tint', null);
         });
         closePanel();
       });
@@ -482,16 +485,18 @@ function drawToolbar() {
   const layout = document.createElement('div');
   layout.className = 'group';
   [['auto', 'Auto', null], ['split', 'Split', 'split'], ['prose', 'Prose', 'prose']].forEach(([name, label, value]) => {
+    // Split and prose toggle: tapping the one that's on goes back to auto.
     layout.append(button(name, label, () => setSlideLine(attrs => setClasses(attrs, list => {
+      const on = value && list.includes(value);
       LAYOUTS.forEach(l => { const at = list.indexOf(l); if (at !== -1) list.splice(at, 1); });
-      if (value) list.unshift(value);
+      if (value && !on) list.unshift(value);
     }))));
   });
   const colour = button('colour', 'Colour', event => colourPanel(event.currentTarget));
   colour.querySelector('svg').outerHTML = '<span class="dot"></span>';
   const look = document.createElement('div');
   look.className = 'group';
-  look.append(colour, button('image', 'Image', event => imagePanel(event.currentTarget)), button('tint', 'Tint', () => toggleClass('tint')));
+  look.append(colour, button('image', 'Image', event => imagePanel(event.currentTarget)), button('tint', 'Tint', event => colourPanel(event.currentTarget, 'data-tint')));
   const sections = document.createElement('div');
   sections.className = 'group sections';
   sections.append(button('cards', 'Cards', () => toggleClass('cards')), button('spectrum', 'Spectrum', () => toggleClass('spectrum')));
@@ -512,7 +517,7 @@ function refreshToolbar() {
   const image = attr(attrs, 'data-background-image');
   tool('image').classList.toggle('on', !!image);
   tool('tint').hidden = !image;
-  tool('tint').classList.toggle('on', classes.includes('tint'));
+  tool('tint').classList.toggle('on', !!attr(attrs, 'data-tint'));
   const box = boxes()[current];
   const section = preview && box && preview.getSlide(Number(box.dataset.h), Number(box.dataset.v));
   const hasSections = !!section?.querySelector('[data-shape="sections"]') || classes.includes('cards') || classes.includes('spectrum');

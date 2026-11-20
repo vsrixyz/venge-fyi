@@ -73,7 +73,7 @@ Opens `deck.md` straight in the editor; the address to open is printed. The deck
 
 The editor has the deck on the left and the markdown on the right, with a sidebar on the far left: the VENGE mark, then a library tab that goes back to the library (saving first). The library page has the same sidebar. The front matter folds open in a Deck box above the slides, and each slide has its own box: click into one to show that slide, or change slide in the preview to bring its box into view. Typing a `---` line in a box splits it in two. Inside a box, ↓ at the very end goes to the next slide and ↑ at the very start to the one before, so the boxes read like one document. Hover a box for its delete button and, on its lower edge, a + that adds a slide after it. The pane's header stays at the top, with Top to scroll back up.
 
-The toolbar under the preview sets the current slide's options by writing its `<!-- .slide: -->` line, which stays in the box: Auto, Split or Prose; Colour (Default is the theme's background, or a theme colour); Image (a link, or Upload, which copies the file into `assets/` beside the deck, adding -2 to the name if a different file has it); Tint, once there's an image; and Cards and Spectrum, on a slide with sections. Outside a text box (Esc leaves one), M slides the markdown out and back, ← → ↑ ↓ change slide and Esc shows every slide. Your typing is saved to `deck.md` about 300 ms after you stop. If the file changes on disk in the meantime, the editor doesn't overwrite it: it says so, and you reload the page. Set `PORT` to use another port.
+The toolbar under the preview sets the current slide's options by writing its `<!-- .slide: -->` line, which stays in the box: Auto, Split or Prose (tapping Split or Prose again goes back to Auto); Colour (0 is the theme's own background, then theme colours 1–5, card and ink); Image (a link, or Upload, which copies the file into `assets/` beside the deck, adding -2 to the name if a different file has it); Tint, once there's an image, which picks the photo's colour; and Cards and Spectrum, on a slide with sections. Outside a text box (Esc leaves one), M slides the markdown out and back, ← → ↑ ↓ change slide and Esc shows every slide. Your typing is saved to `deck.md` about 300 ms after you stop. If the file changes on disk in the meantime, the editor doesn't overwrite it: it says so, and you reload the page. Set `PORT` to use another port.
 
 ### 3. From code
 
@@ -299,6 +299,8 @@ A slide's background uses Reveal's own attributes: `data-background-color`, `dat
 
 `data-background-color` also takes the theme's colour names: `theme-1` to `theme-5`, `background`, `card`, `ink` and `line`. Any CSS colour works too.
 
+`data-tint` shows the background photo in one colour: the photo keeps its light and dark, in that colour, like a duotone. It takes the same colour names, or any CSS colour, and is separate from the background colour. `data-background-opacity` sets how strongly the photo shows over the background colour.
+
 ### Modifiers
 
 Modifiers go in the slide's `class="…"`, next to its type:
@@ -307,7 +309,6 @@ Modifiers go in the slide's `class="…"`, next to its type:
 | --- | --- | --- |
 | `dark` | any slide | Makes this slide dark. See [Light and dark](#light-and-dark). |
 | `light` | any slide | Makes this slide light on a dark deck. |
-| `tint` | any slide | Shows the slide's background photo in its `data-background-color`: the photo's light and dark, in that colour. `data-background-opacity` sets how strong the photo is. |
 | `cards` | a slide with [sections](#sections), or ending in a list | Makes each section a card: an outline with padding. With no sections, each item of the last list is one |
 | `spectrum` | a slide with [sections](#sections) | Fills each section in the next theme colour |
 

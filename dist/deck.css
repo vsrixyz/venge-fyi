@@ -682,11 +682,6 @@ footer, header, hgroup, main, menu, nav, section {
   text-rendering: optimizeLegibility;
 }
 
-/* tint: the background photo in the slide's background colour. Reveal copies slide classes onto the background. */
-.reveal .slide-background.tint .slide-background-content {
-  mix-blend-mode: luminosity;
-}
-
 /* --- Headings: one style; the size follows the level. # is --_h-size, set by
    the slide type; ## is 80% of it unless the type sets --_h2-size; ### is a
    little bigger than body text; #### is a label. --- */

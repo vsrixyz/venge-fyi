@@ -207,8 +207,9 @@ Slide classes that change the look but not the layout.
 
 - `dark`: a dark background with light text.
 - `light`: a light slide in a dark deck.
-- `tint`: shows the background photo in the slide's background colour.
 - `cards` and `spectrum`, above.
+
+A background photo can also be tinted: `data-tint` shows it in one colour, keeping its light and dark.
 
 ### Cluster classes
 A `<!-- .cluster: … -->` comment on the line right above a cluster changes the whole cluster.

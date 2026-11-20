@@ -20,7 +20,7 @@ Found while checking the example decks.
 - [ ] **Cards run almost to the slide edges?** About 40px from each side, where other layouts keep `--deck-inset-x` (128px). Found on the old `cards` layout; not rechecked on sections with `cards`.
 - [ ] **Bug: on `split`, per-picture captions overflow.** Two pictures with their own captions in one half share its height without counting the captions, so the last caption runs off the bottom (`examples/focus-mode`, "Decisions, decisions").
 - [ ] **Bug: `data-count` counts tiles, not pictures.** With one caption per picture, `deck-pictures` gets the number of tiles. The docs say it's the number of pictures. They differ when one captioned paragraph holds several pictures.
-- [ ] **Bug: the dev server doesn't pick up `lib/` changes.** `scripts/dev.js` rebuilds `dist/` when `src/` or `vendor/` changes, but `lib/render.js` and the front matter reader (`src/deck-config.js`) are loaded once at start. A new front matter option does nothing until `npm run dev` is restarted, and nothing says so.
+- [ ] **Bug: the dev server doesn't pick up `lib/` changes.** `scripts/dev.js` rebuilds `dist/` when `src/` or `vendor/` changes, but `lib/render.js` and the front matter reader (`src/deck-config.js`) are loaded once at start. A new front matter option does nothing until `npm run dev` is restarted, and nothing says so. The editor's server (`npm run venge`) has the same problem with `lib/edit.js` and `lib/library.js`: a server started before the upload code refused uploads with a bare 403.
 - [ ] **One way to fit content.** Today "too much on the slide" is handled six ways: the text shrink on sections, the picture cap on sections, the CSS height cap on picture groups, text that scales with cell width, the 9–10 "dense" step, and the `r-fit-text` box fit, each with its own numbers. Think through one fit step that every layout uses.
 
 ## Prompt QA
@@ -58,6 +58,11 @@ Fixed: a finding written as a `>` quote ("No top or recent title in the scan men
 ## Log
 
 Newest first. What changed and why, one entry per working session.
+
+### 2026-11-19: tint has its own colour (`editor`)
+
+- **Why:** the `tint` class blended the photo into the slide's background colour, so with the default background it did nothing, and the toolbar's Colour and Tint fought over one colour.
+- **Now:** `data-tint="theme-2"` (or any colour) tints the background photo by itself; `data-background-color` stays the background. The `tint` class is gone. `content-framework`'s 12 tinted slides moved to `data-tint` with their old colour. In the editor, Tint opens the swatches; 0 takes it off. Removing the image removes the tint.
 
 ### 2026-11-19: toolbar (`editor`)
 
